@@ -1,0 +1,42 @@
+<div class="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-4 py-12">
+  <div class="max-w-2xl w-full text-center">
+    <!-- Confetti effect (using emoji animation) -->
+    <div class="text-6xl mb-8 animate-bounce">
+      🎉
+    </div>
+
+    <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+      Herzlichen Glückwunsch, {{ name }}!
+    </h1>
+
+    <div class="bg-gradient-to-r from-[#FF3D00] to-[#FF6E40] rounded-2xl p-8 mb-8">
+      <p class="text-white text-2xl md:text-3xl font-bold">
+        Du hast einen <span class="text-5xl">30%</span> Gutschein gewonnen!
+      </p>
+    </div>
+
+    <p class="text-[#B0B0B0] text-lg mb-8">
+      Aktiviere jetzt unverbindlich deinen Gutschein per WhatsApp:
+    </p>
+
+    <a
+      [href]="whatsappLink"
+      target="_blank"
+      class="inline-block bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-lg px-12 py-4 rounded-lg transition-all duration-300 transform hover:scale-105 mb-6"
+    >
+      <span class="mr-2">💬</span>
+      Jetzt Gutschein aktivieren
+    </a>
+
+    <p class="text-[#808080] text-sm">
+      Oder kontaktiere uns unter: <span class="text-[#FF3D00]">{{ whatsappNumber }}</span>
+    </p>
+
+    <div class="mt-12 p-6 bg-[#1A1A1A] rounded-lg border border-[#333333]">
+      <p class="text-[#B0B0B0]">
+        ⚡ <strong class="text-white">Hinweis:</strong> Da bereits alle Gutscheine vergeben sind,
+        wird dein Gewinn nur durch das Senden einer kurzen Nachricht gesichert!
+      </p>
+    </div>
+  </div>
+</div>

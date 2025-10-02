@@ -1,0 +1,13 @@
+<div class="mb-8">
+  <div class="flex justify-between items-center mb-2">
+    <span class="text-sm text-[#B0B0B0]">Schritt {{ currentStep }} von {{ totalSteps }}</span>
+    <span class="text-sm text-[#FF3D00] font-semibold">{{ progress }}% abgeschlossen</span>
+  </div>
+
+  <div class="w-full bg-[#2A2A2A] rounded-full h-2 overflow-hidden">
+    <div
+      class="bg-[#FF3D00] h-full transition-all duration-300"
+      [style.width.%]="progress"
+    ></div>
+  </div>
+</div>

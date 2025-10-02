@@ -1,0 +1,20 @@
+<div class="mb-6">
+  <label *ngIf="label" class="block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+    {{ label }}
+    <span *ngIf="required" class="text-[#FF3D00] ml-1">*</span>
+  </label>
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    [disabled]="disabled"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onTouch()"
+    class="w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+           focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
+           transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+           placeholder:text-[#666666] text-base"
+    style="padding: 1rem 1.25rem;"
+  />
+  <p *ngIf="error" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">{{ error }}</p>
+</div>

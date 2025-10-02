@@ -1,0 +1,110 @@
+<form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    <!-- Name -->
+    <div style="margin-bottom: 2rem;">
+      <app-input
+        label="NAME"
+        type="text"
+        placeholder="Dein vollständiger Name"
+        formControlName="name"
+        [required]="true"
+        [error]="getErrorMessage('name')"
+      ></app-input>
+    </div>
+
+    <!-- Tattoo Description -->
+    <div style="margin-bottom: 2rem;">
+      <label class="block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+        BESCHREIBE DEIN WUNSCH TATTOO/S
+        <span class="text-[#FF3D00] ml-1">*</span>
+      </label>
+      <textarea
+        formControlName="tattooDescription"
+        placeholder="Beschreibe dein Tattoo so detailliert wie möglich..."
+        rows="4"
+        class="w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+               focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
+               transition-all duration-200 placeholder:text-[#666666] resize-none text-base"
+        style="padding: 0.875rem 1.25rem;"
+      ></textarea>
+      <p *ngIf="getErrorMessage('tattooDescription')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
+        {{ getErrorMessage('tattooDescription') }}
+      </p>
+    </div>
+
+    <!-- File Upload -->
+    <div style="margin-bottom: 2rem;">
+      <app-file-upload
+        (filesSelected)="onFilesSelected($event)"
+        (error)="onFileError($event)"
+      ></app-file-upload>
+    </div>
+
+    <!-- Email -->
+    <div style="margin-bottom: 2rem;">
+      <app-input
+        label="E-MAIL"
+        type="email"
+        placeholder="deine@email.de"
+        formControlName="email"
+        [required]="true"
+        [error]="getErrorMessage('email')"
+      ></app-input>
+    </div>
+
+    <!-- WhatsApp -->
+    <div style="margin-bottom: 2rem;">
+      <label class="block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+        WHATSAPP NUMMER (GEWINNER WERDEN KONTAKTIERT)
+        <span class="text-[#FF3D00] ml-1">*</span>
+      </label>
+      <div class="flex gap-4">
+        <input
+          type="text"
+          formControlName="whatsappCountryCode"
+          placeholder="+49"
+          class="w-28 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+                 focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
+                 transition-all duration-200 text-center font-medium text-base"
+          style="padding: 1rem 1.25rem;"
+        />
+        <input
+          type="tel"
+          formControlName="whatsappNumber"
+          placeholder="1516 4398197"
+          class="flex-1 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+                 focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
+                 transition-all duration-200 placeholder:text-[#666666] text-base"
+          style="padding: 1rem 1.25rem;"
+        />
+      </div>
+      <p *ngIf="getErrorMessage('whatsappNumber')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
+        {{ getErrorMessage('whatsappNumber') }}
+      </p>
+    </div>
+
+    <!-- Opt-in Message -->
+    <div class="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 1.75rem; margin-bottom: 2rem;">
+      <p class="text-[#B0B0B0] text-sm leading-relaxed" style="text-align: center;">
+        Nachdem alle Plätze vergeben sind, verlosen wir zusätzlich <span class="text-white font-semibold">30 x 30% Gutscheine</span>.
+        Klicke jetzt auf <span class="text-[#FF3D00] font-semibold">"JA, GERNE"</span> für die Extra-Chance auf einen Gratis-Gutschein!
+      </p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="bg-[#F44336]/10 border border-[#F44336] text-[#F44336] rounded-xl" style="padding: 1rem 1.25rem; margin-bottom: 2rem;">
+      {{ error }}
+    </div>
+
+    <!-- Submit -->
+    <div style="margin-top: 3.5rem; margin-bottom: 3rem;">
+      <app-button
+        type="submit"
+        variant="primary"
+        [fullWidth]="true"
+        [loading]="isLoading"
+        [disabled]="leadForm.invalid"
+      >
+        {{ isLoading ? 'Wird gesendet...' : 'JA, GERNE - Gewinnchance sichern!' }}
+      </app-button>
+    </div>
+</form>
