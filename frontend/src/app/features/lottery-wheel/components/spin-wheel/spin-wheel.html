@@ -1,0 +1,74 @@
+<div class="spin-wheel-container">
+  <!-- Background overlay -->
+  <div class="overlay"></div>
+
+  <!-- Main content -->
+  <div class="content">
+    <!-- Title -->
+    <h2 class="title">
+      <span class="title-highlight">GLÜCKSRAD DREHEN!</span>
+      <span class="subtitle">Gewinne jetzt deinen Rabatt!</span>
+    </h2>
+
+    <!-- Wheel wrapper -->
+    <div class="wheel-wrapper">
+      <!-- Pointer/Arrow at top -->
+      <div class="wheel-pointer">
+        <svg width="40" height="60" viewBox="0 0 40 60" fill="none">
+          <path d="M20 0L40 20L30 20L30 60L10 60L10 20L0 20Z" fill="#FF3D00"/>
+        </svg>
+      </div>
+
+      <!-- Spinning wheel -->
+      <div class="wheel" [style.transform]="getWheelRotation()" [class.spinning]="isSpinning">
+        <div class="wheel-inner">
+          <!-- Segments -->
+          <div *ngFor="let segment of segments; let i = index"
+               class="segment"
+               [style.transform]="'rotate(' + segment.degree + 'deg)'"
+               [style.background]="segment.color">
+            <div class="segment-text">{{ segment.label }}</div>
+          </div>
+
+          <!-- Center circle -->
+          <div class="wheel-center">
+            <div class="center-circle">
+              <svg width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="28" fill="#FF3D00" stroke="#FFFFFF" stroke-width="2"/>
+                <circle cx="30" cy="30" r="15" fill="#FFFFFF"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spin button -->
+    <div class="button-wrapper">
+      <button
+        *ngIf="!hasSpun"
+        class="spin-button"
+        [disabled]="isSpinning"
+        (click)="spinWheel()">
+        <span *ngIf="!isSpinning">🎰 JETZT DREHEN!</span>
+        <span *ngIf="isSpinning">DREHT...</span>
+      </button>
+    </div>
+
+    <!-- Prize announcement -->
+    <div *ngIf="hasSpun && !isSpinning" class="prize-announcement">
+      <div class="prize-box">
+        <div class="prize-icon">🎉</div>
+        <h3 class="prize-title">HERZLICHEN GLÜCKWUNSCH!</h3>
+        <p class="prize-text">Du hast gewonnen:</p>
+        <div class="prize-value">{{ prizeText }}</div>
+        <p class="prize-info">Dein Gutschein wird dir per E-Mail zugeschickt!</p>
+      </div>
+    </div>
+
+    <!-- Confetti effect -->
+    <div *ngIf="showConfetti" class="confetti-container">
+      <div class="confetti" *ngFor="let i of [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"></div>
+    </div>
+  </div>
+</div>

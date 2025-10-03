@@ -1,0 +1,390 @@
+@import '../../../../../styles.scss';
+
+.spin-wheel-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba($color-bg-primary, 0.98) 0%, rgba($color-bg-secondary, 0.95) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xl;
+  max-width: 600px;
+  width: 100%;
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+}
+
+// Title
+.title {
+  text-align: center;
+  margin-bottom: $spacing-2xl;
+  animation: slideDown 0.6s ease-out;
+
+  .title-highlight {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: $spacing-sm;
+
+    @include mobile {
+      font-size: 2rem;
+    }
+  }
+
+  .subtitle {
+    display: block;
+    font-size: 1.25rem;
+    color: $color-text-secondary;
+    font-weight: 500;
+
+    @include mobile {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Wheel wrapper
+.wheel-wrapper {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  margin-bottom: $spacing-2xl;
+
+  @include mobile {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba($color-primary, 0.5));
+  animation: pointerBounce 2s ease-in-out infinite;
+}
+
+// Wheel
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  box-shadow:
+    0 0 0 8px $color-primary,
+    0 0 0 12px $color-bg-secondary,
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+
+  &.spinning {
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  }
+}
+
+.wheel-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+}
+
+// Segments
+.segment {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.segment-text {
+  position: absolute;
+  top: 30%;
+  left: 20%;
+  transform: rotate(-22.5deg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $color-text-primary;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+  @include mobile {
+    font-size: 0.65rem;
+  }
+}
+
+// Center circle
+.wheel-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+}
+
+.center-circle {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+// Spin button
+.button-wrapper {
+  margin-bottom: $spacing-xl;
+  animation: slideUp 0.8s ease-out;
+}
+
+.spin-button {
+  @include gradient-primary;
+  border: none;
+  padding: $spacing-lg $spacing-3xl;
+  border-radius: $radius-full;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: $color-text-primary;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba($color-primary, 0.4);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  @include mobile {
+    font-size: 1.25rem;
+    padding: $spacing-md $spacing-2xl;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 12px 24px rgba($color-primary, 0.6);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+// Prize announcement
+.prize-announcement {
+  animation: scaleIn 0.5s ease-out;
+}
+
+.prize-box {
+  background: linear-gradient(135deg, $color-bg-secondary 0%, $color-bg-tertiary 100%);
+  border: 2px solid $color-primary;
+  border-radius: $radius-2xl;
+  padding: $spacing-2xl;
+  text-align: center;
+  box-shadow: 0 8px 32px rgba($color-primary, 0.3);
+
+  @include mobile {
+    padding: $spacing-lg;
+  }
+}
+
+.prize-icon {
+  font-size: 4rem;
+  margin-bottom: $spacing-md;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.prize-title {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: $color-primary;
+  margin-bottom: $spacing-md;
+
+  @include mobile {
+    font-size: 1.5rem;
+  }
+}
+
+.prize-text {
+  font-size: 1.125rem;
+  color: $color-text-secondary;
+  margin-bottom: $spacing-sm;
+}
+
+.prize-value {
+  font-size: 3rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: $spacing-md;
+  animation: glow 2s ease-in-out infinite;
+
+  @include mobile {
+    font-size: 2.5rem;
+  }
+}
+
+.prize-info {
+  font-size: 0.875rem;
+  color: $color-text-muted;
+}
+
+// Confetti
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: $color-primary;
+  top: -10%;
+  animation: confettiFall 3s linear;
+  opacity: 0;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      left: random(100) * 1%;
+      animation-delay: random(1000) * 0.001s;
+      background: nth((#FF3D00, #FF6E40, #FFD700, #00FF00, #0088FF), random(5));
+      transform: rotate(random(360) * 1deg);
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba($color-primary, 0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba($color-primary, 0.8));
+  }
+}
+
+@keyframes pointerBounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(5px);
+  }
+}
+
+@keyframes confettiFall {
+  0% {
+    top: -10%;
+    opacity: 1;
+  }
+  100% {
+    top: 110%;
+    opacity: 0;
+    transform: translateX(random(200) - 100px) rotate(random(720) * 1deg);
+  }
+}

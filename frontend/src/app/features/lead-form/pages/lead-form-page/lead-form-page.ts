@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lead-form-page',
@@ -7,5 +8,23 @@ import { Component } from '@angular/core';
   styleUrl: './lead-form-page.scss'
 })
 export class LeadFormPage {
+  showSpinWheel = false;
+  userName = '';
 
+  constructor(private router: Router) {}
+
+  onFormSubmitted(name: string): void {
+    this.userName = name;
+    this.showSpinWheel = true;
+  }
+
+  onSpinComplete(prize: string): void {
+    // Navigate to thank you page with prize info and user name
+    this.router.navigate(['/thank-you'], {
+      queryParams: {
+        name: this.userName,
+        prize: prize
+      }
+    });
+  }
 }

@@ -5,7 +5,13 @@
   <!-- Form Section - Centered and Responsive -->
   <div id="form-section" class="form-section-wrapper w-full flex justify-center" style="padding-top: 6rem; padding-bottom: 8rem;">
     <div class="form-section-container w-full max-w-3xl px-8 sm:px-12 lg:px-16">
-      <app-form-step-one></app-form-step-one>
+      <app-form-step-one (formSubmitted)="onFormSubmitted($event)"></app-form-step-one>
     </div>
   </div>
+
+  <!-- Spin Wheel Overlay (shown after form submission) -->
+  <app-spin-wheel
+    *ngIf="showSpinWheel"
+    (spinComplete)="onSpinComplete($event)">
+  </app-spin-wheel>
 </div>

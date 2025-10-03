@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LeadService } from '../../../../core/services/lead';
@@ -11,6 +11,8 @@ import { CreateLeadRequest } from '../../../../core/models/lead.model';
   styleUrl: './form-step-one.scss'
 })
 export class FormStepOne implements OnInit {
+  @Output() formSubmitted = new EventEmitter<string>();
+
   leadForm!: FormGroup;
   selectedFiles: File[] = [];
   isLoading = false;
@@ -70,10 +72,8 @@ export class FormStepOne implements OnInit {
       const response = await this.leadService.createLead(leadData).toPromise();
 
       if (response?.success) {
-        // Navigate to thank you page with lead name
-        this.router.navigate(['/thank-you'], {
-          queryParams: { name: this.leadForm.value.name }
-        });
+        // Emit event with user name to show spin wheel instead of navigating directly
+        this.formSubmitted.emit(this.leadForm.value.name);
       } else {
         this.error = response?.error || 'Ein Fehler ist aufgetreten';
       }
