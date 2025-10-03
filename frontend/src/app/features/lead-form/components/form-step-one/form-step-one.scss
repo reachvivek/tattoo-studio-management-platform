@@ -90,12 +90,12 @@
   transition: all 0.3s ease;
 
   &:hover {
-    border-color: #FF3D00;
+    border-color: #10B981;
     background: #2A2A2A;
     transform: translateX(4px);
 
     .custom-radio-label {
-      color: #FF3D00;
+      color: #10B981;
     }
   }
 
@@ -110,8 +110,8 @@
   cursor: pointer;
 
   &:checked ~ .custom-radio-box {
-    background: linear-gradient(135deg, #FF3D00 0%, #FF6E40 100%);
-    border-color: #FF3D00;
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    border-color: #10B981;
 
     .custom-radio-check {
       opacity: 1;
@@ -120,7 +120,7 @@
   }
 
   &:checked ~ .custom-radio-label {
-    color: #FF3D00;
+    color: #10B981;
     font-weight: 600;
   }
 }

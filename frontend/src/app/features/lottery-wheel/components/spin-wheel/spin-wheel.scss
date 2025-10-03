@@ -48,7 +48,7 @@
     display: block;
     font-size: 2.5rem;
     font-weight: 900;
-    background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+    background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -90,7 +90,7 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  filter: drop-shadow(0 4px 8px rgba($color-primary, 0.5));
+  filter: drop-shadow(0 4px 8px rgba(#10B981, 0.5));
   animation: pointerBounce 2s ease-in-out infinite;
 }
 
@@ -112,7 +112,7 @@
   justify-content: center;
   align-items: center;
   background: #FFFFFF;
-  color: $color-primary;
+  color: #10B981;
   border: none;
   border-radius: 50%;
   font-size: 1.2rem;
@@ -162,11 +162,11 @@
 
 .prize-box {
   background: linear-gradient(135deg, $color-bg-secondary 0%, $color-bg-tertiary 100%);
-  border: 2px solid $color-primary;
+  border: 2px solid #10B981;
   border-radius: $radius-2xl;
   padding: 1rem 1.5rem;
   text-align: center;
-  box-shadow: 0 8px 32px rgba($color-primary, 0.3);
+  box-shadow: 0 8px 32px rgba(#10B981, 0.3);
 
   @include mobile {
     padding: 0.75rem 1rem;
@@ -187,7 +187,7 @@
 .prize-title {
   font-size: 1.25rem;
   font-weight: 900;
-  color: $color-primary;
+  color: #10B981;
   margin-bottom: 0.5rem;
   line-height: 1.2;
 
@@ -211,7 +211,7 @@
 .prize-value {
   font-size: 2rem;
   font-weight: 900;
-  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -251,7 +251,7 @@
   position: absolute;
   width: 10px;
   height: 10px;
-  background: $color-primary;
+  background: #10B981;
   top: -10%;
   animation: confettiFall 3s linear;
   opacity: 0;
@@ -260,7 +260,7 @@
     &:nth-child(#{$i}) {
       left: random(100) * 1%;
       animation-delay: random(1000) * 0.001s;
-      background: nth((#FF3D00, #FF6E40, #FFD700, #00FF00, #0088FF), random(5));
+      background: nth((#10B981, #34D399, #FFD700, #00FF00, #0088FF), random(5));
       transform: rotate(random(360) * 1deg);
     }
   }
@@ -329,10 +329,10 @@
 
 @keyframes glow {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba($color-primary, 0.5));
+    filter: drop-shadow(0 0 10px rgba(#10B981, 0.5));
   }
   50% {
-    filter: drop-shadow(0 0 20px rgba($color-primary, 0.8));
+    filter: drop-shadow(0 0 20px rgba(#10B981, 0.8));
   }
 }
 
