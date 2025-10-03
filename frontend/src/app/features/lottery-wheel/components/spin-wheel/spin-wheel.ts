@@ -21,11 +21,10 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   private rad = this.dia / 2;
   private PI = Math.PI;
   private TAU = 2 * Math.PI;
-  private friction = 0.991;
   angVel = 0;  // Made public for template binding
   private ang = 0;
-  private spinButtonClicked = false;
-  private animationId?: number;
+  private isSpinning = false;
+  private spinAnimationId?: number;
 
   hasSpun = false;
   showConfetti = false;
@@ -55,12 +54,11 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
 
     this.sectors.forEach((sector, i) => this.drawSector(sector, i));
     this.rotate();
-    this.engine();
   }
 
   ngOnDestroy(): void {
-    if (this.animationId) {
-      cancelAnimationFrame(this.animationId);
+    if (this.spinAnimationId) {
+      cancelAnimationFrame(this.spinAnimationId);
     }
   }
 
@@ -95,33 +93,14 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   }
 
   private rotate(): void {
-    const sector = this.sectors[this.getIndex()];
     this.canvasRef.nativeElement.style.transform = `rotate(${this.ang - this.PI / 2}rad)`;
-    this.spinButtonText = !this.angVel ? 'DREHEN' : sector.label;
-  }
-
-  private frame(): void {
-    if (!this.angVel && this.spinButtonClicked) {
-      const finalSector = this.sectors[this.getIndex()];
-      this.onSpinEnd(finalSector);
-      this.spinButtonClicked = false;
-      return;
-    }
-
-    this.angVel *= this.friction;
-    if (this.angVel < 0.002) this.angVel = 0;
-    this.ang += this.angVel;
-    this.ang %= this.TAU;
-    this.rotate();
-  }
-
-  private engine(): void {
-    this.frame();
-    this.animationId = requestAnimationFrame(() => this.engine());
   }
 
   spinWheel(): void {
-    if (this.angVel || this.hasSpun) return;
+    if (this.isSpinning || this.hasSpun) return;
+
+    this.isSpinning = true;
+    this.angVel = 1; // Indicate spinning
 
     // Always target index 0 (30%)
     const targetIndex = 0;
@@ -131,14 +110,10 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     const targetAngle = targetIndex * segmentAngle + (segmentAngle / 2);
 
     // Add 5-7 full rotations for effect
-    const extraRotations = 5 + Math.floor(Math.random() * 3); // 5, 6, or 7 rotations
+    const extraRotations = 5 + Math.floor(Math.random() * 3);
     const totalRotation = (extraRotations * this.TAU) + targetAngle;
 
-    // Set target angle for precise landing
-    this.ang = 0; // Reset current angle
-    const finalAngle = totalRotation;
-
-    // Animate with custom easing to land exactly on target
+    // Animation settings
     const duration = 4000; // 4 seconds
     const startTime = Date.now();
     const startAngle = this.ang;
@@ -150,22 +125,25 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
       // Cubic ease-out for smooth deceleration
       const easeProgress = 1 - Math.pow(1 - progress, 3);
 
-      this.ang = startAngle + (finalAngle * easeProgress);
-      this.ang %= this.TAU;
+      // Calculate current angle WITHOUT modulo to prevent interruptions
+      this.ang = startAngle + (totalRotation * easeProgress);
       this.rotate();
 
       if (progress < 1) {
-        requestAnimationFrame(animate);
+        this.spinAnimationId = requestAnimationFrame(animate);
       } else {
-        // Ensure we land exactly on 30%
-        this.ang = targetAngle % this.TAU;
+        // Normalize angle after spin completes
+        this.ang = targetAngle;
         this.rotate();
         this.angVel = 0;
-        this.spinButtonClicked = true;
+        this.isSpinning = false;
+
+        // Trigger prize announcement
+        const finalSector = this.sectors[targetIndex];
+        this.onSpinEnd(finalSector);
       }
     };
 
-    this.angVel = 1; // Set to non-zero to indicate spinning
     animate();
   }
 
