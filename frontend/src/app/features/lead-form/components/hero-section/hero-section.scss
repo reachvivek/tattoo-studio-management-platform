@@ -1,0 +1,73 @@
+// Mobile responsive styles for hero section
+.hero-container {
+  @media (max-width: 640px) {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+.hero-content {
+  @media (max-width: 640px) {
+    margin-bottom: 1.25rem !important;
+  }
+}
+
+.hero-badge {
+  @media (max-width: 640px) {
+    padding: 0.35rem 1rem !important;
+    margin-bottom: 0.875rem !important;
+  }
+}
+
+.hero-title {
+  @media (max-width: 640px) {
+    font-size: 1.75rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    margin-bottom: 0.875rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+.hero-subtitle {
+  @media (max-width: 640px) {
+    margin-top: 0.5rem !important;
+  }
+}
+
+.hero-description {
+  @media (max-width: 640px) {
+    font-size: 0.875rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+.hero-gallery-wrapper {
+  @media (max-width: 640px) {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+.hero-gallery {
+  @media (max-width: 640px) {
+    gap: 0.5rem !important;
+  }
+}
+
+.hero-scroll-indicator {
+  @media (max-width: 640px) {
+    display: none !important;
+  }
+}
+
+// Make hero section take less space on mobile
+.hero-section-root {
+  @media (max-width: 640px) {
+    min-height: auto !important;
+    max-height: 45vh !important;
+  }
+}

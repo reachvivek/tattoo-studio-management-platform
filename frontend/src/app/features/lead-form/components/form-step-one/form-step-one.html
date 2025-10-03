@@ -1,6 +1,6 @@
-<form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="space-y-8">
+<form [formGroup]="leadForm" (ngSubmit)="onSubmit()" class="form-container space-y-8">
     <!-- Name -->
-    <div style="margin-bottom: 2rem;">
+    <div class="form-field" style="margin-bottom: 2rem;">
       <app-input
         label="NAME"
         type="text"
@@ -12,8 +12,8 @@
     </div>
 
     <!-- Tattoo Description -->
-    <div style="margin-bottom: 2rem;">
-      <label class="block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+    <div class="form-field" style="margin-bottom: 2rem;">
+      <label class="form-label block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
         BESCHREIBE DEIN WUNSCH TATTOO/S
         <span class="text-[#FF3D00] ml-1">*</span>
       </label>
@@ -21,7 +21,7 @@
         formControlName="tattooDescription"
         placeholder="Beschreibe dein Tattoo so detailliert wie möglich..."
         rows="4"
-        class="w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+        class="form-textarea w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
                transition-all duration-200 placeholder:text-[#666666] resize-none text-base"
         style="padding: 0.875rem 1.25rem;"
@@ -32,7 +32,7 @@
     </div>
 
     <!-- File Upload -->
-    <div style="margin-bottom: 2rem;">
+    <div class="form-field" style="margin-bottom: 2rem;">
       <app-file-upload
         (filesSelected)="onFilesSelected($event)"
         (error)="onFileError($event)"
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Email -->
-    <div style="margin-bottom: 2rem;">
+    <div class="form-field" style="margin-bottom: 2rem;">
       <app-input
         label="E-MAIL"
         type="email"
@@ -52,17 +52,17 @@
     </div>
 
     <!-- WhatsApp -->
-    <div style="margin-bottom: 2rem;">
-      <label class="block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+    <div class="form-field" style="margin-bottom: 2rem;">
+      <label class="form-label block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
         WHATSAPP NUMMER (GEWINNER WERDEN KONTAKTIERT)
         <span class="text-[#FF3D00] ml-1">*</span>
       </label>
-      <div class="flex gap-4">
+      <div class="whatsapp-container flex gap-4">
         <input
           type="text"
           formControlName="whatsappCountryCode"
           placeholder="+49"
-          class="w-28 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+          class="whatsapp-code w-28 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
                  transition-all duration-200 text-center font-medium text-base"
           style="padding: 1rem 1.25rem;"
@@ -71,7 +71,7 @@
           type="tel"
           formControlName="whatsappNumber"
           placeholder="1516 4398197"
-          class="flex-1 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
+          class="whatsapp-number flex-1 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
                  transition-all duration-200 placeholder:text-[#666666] text-base"
           style="padding: 1rem 1.25rem;"
@@ -83,20 +83,20 @@
     </div>
 
     <!-- Opt-in Message -->
-    <div class="bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 1.75rem; margin-bottom: 2rem;">
-      <p class="text-[#B0B0B0] text-sm leading-relaxed" style="text-align: center;">
+    <div class="opt-in-box bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 1.75rem; margin-bottom: 2rem;">
+      <p class="opt-in-text text-[#B0B0B0] text-sm leading-relaxed" style="text-align: center;">
         Nachdem alle Plätze vergeben sind, verlosen wir zusätzlich <span class="text-white font-semibold">30 x 30% Gutscheine</span>.
         Klicke jetzt auf <span class="text-[#FF3D00] font-semibold">"JA, GERNE"</span> für die Extra-Chance auf einen Gratis-Gutschein!
       </p>
     </div>
 
     <!-- Error Message -->
-    <div *ngIf="error" class="bg-[#F44336]/10 border border-[#F44336] text-[#F44336] rounded-xl" style="padding: 1rem 1.25rem; margin-bottom: 2rem;">
+    <div *ngIf="error" class="error-message bg-[#F44336]/10 border border-[#F44336] text-[#F44336] rounded-xl" style="padding: 1rem 1.25rem; margin-bottom: 2rem;">
       {{ error }}
     </div>
 
     <!-- Submit -->
-    <div style="margin-top: 3.5rem; margin-bottom: 3rem;">
+    <div class="submit-container" style="margin-top: 3.5rem; margin-bottom: 3rem;">
       <app-button
         type="submit"
         variant="primary"
