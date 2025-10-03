@@ -24,7 +24,7 @@ export class ButtonComponent {
     const base = 'px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0';
     const width = this.fullWidth ? 'w-full' : '';
     const variants = {
-      primary: 'bg-gradient-to-r from-[#FF3D00] to-[#FF6E40] text-white hover:from-[#FF5722] hover:to-[#FF7043] shadow-[#FF3D00]/50',
+      primary: 'bg-gradient-to-r from-[#10B981] to-[#34D399] text-white hover:from-[#059669] hover:to-[#10B981] shadow-[#10B981]/50',
       secondary: 'bg-[#1A1A1A] text-white border border-[#333333] hover:bg-[#2A2A2A] shadow-black/50'
     };
     return `${base} ${width} ${variants[this.variant]}`;
