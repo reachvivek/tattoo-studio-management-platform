@@ -1,7 +1,7 @@
 // Mobile responsive styles for form
 .form-container {
   @media (max-width: 640px) {
-    padding-top: 2.5rem;
+    padding-top: 1.25rem;
 
     .space-y-8 > * + * {
       margin-top: 1.5rem !important;
