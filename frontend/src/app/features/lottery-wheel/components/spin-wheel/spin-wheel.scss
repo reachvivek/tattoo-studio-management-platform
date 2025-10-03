@@ -74,13 +74,13 @@
 // Wheel wrapper
 .wheel-wrapper {
   position: relative;
-  width: 400px;
-  height: 400px;
+  display: inline-block;
+  overflow: hidden;
   margin-bottom: $spacing-2xl;
+  pointer-events: none; // Prevent mouse interference during spin
 
   @include mobile {
-    width: 320px;
-    height: 320px;
+    transform: scale(0.8);
   }
 }
 
@@ -94,115 +94,63 @@
   animation: pointerBounce 2s ease-in-out infinite;
 }
 
-// Wheel
-.wheel {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  position: relative;
-  box-shadow:
-    0 0 0 8px $color-primary,
-    0 0 0 12px $color-bg-secondary,
-    0 20px 40px rgba(0, 0, 0, 0.5);
+// Canvas wheel
+.wheel-canvas {
+  display: block;
   transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-
-  &.spinning {
-    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-  }
 }
 
-.wheel-inner {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  overflow: hidden;
-  position: relative;
-}
-
-// Segments
-.segment {
-  position: absolute;
-  width: 50%;
-  height: 50%;
-  top: 50%;
-  left: 50%;
-  transform-origin: 0 0;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.segment-text {
-  position: absolute;
-  top: 30%;
-  left: 20%;
-  transform: rotate(-22.5deg);
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: $color-text-primary;
-  text-align: center;
-  text-transform: uppercase;
-  white-space: nowrap;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-
-  @include mobile {
-    font-size: 0.65rem;
-  }
-}
-
-// Center circle
-.wheel-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 5;
-}
-
-.center-circle {
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-}
-
-// Spin button
-.button-wrapper {
-  margin-bottom: $spacing-xl;
-  animation: slideUp 0.8s ease-out;
-}
-
+// Center spin button
 .spin-button {
-  @include gradient-primary;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30%;
+  height: 30%;
+  margin: -15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  color: $color-primary;
   border: none;
-  padding: $spacing-lg $spacing-3xl;
-  border-radius: $radius-full;
-  font-size: 1.5rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
   font-weight: 800;
-  color: $color-text-primary;
   cursor: pointer;
-  box-shadow: 0 8px 16px rgba($color-primary, 0.4);
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  box-shadow:
+    0 0 0 8px currentColor,
+    0 0px 15px 5px rgba(0, 0, 0, 0.6);
+  transition: 0.3s;
+  z-index: 5;
+  user-select: none;
+  pointer-events: all; // Re-enable pointer events only for button
 
   @include mobile {
-    font-size: 1.25rem;
-    padding: $spacing-md $spacing-2xl;
+    font-size: 1rem;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: -17px;
+    border: 10px solid transparent;
+    border-bottom-color: currentColor;
+    border-top: none;
   }
 
   &:hover:not(:disabled) {
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 12px 24px rgba($color-primary, 0.6);
+    transform: scale(1.05);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
+    transform: scale(0.95);
   }
 
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
-    animation: pulse 1.5s ease-in-out infinite;
+    pointer-events: none; // Disable pointer during spin
   }
 }
 

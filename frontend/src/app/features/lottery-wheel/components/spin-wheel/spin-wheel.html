@@ -10,7 +10,7 @@
       <span class="subtitle">Gewinne jetzt deinen Rabatt!</span>
     </h2>
 
-    <!-- Wheel wrapper -->
+    <!-- Wheel wrapper with canvas -->
     <div class="wheel-wrapper">
       <!-- Pointer/Arrow at top -->
       <div class="wheel-pointer">
@@ -19,44 +19,21 @@
         </svg>
       </div>
 
-      <!-- Spinning wheel -->
-      <div class="wheel" [style.transform]="getWheelRotation()" [class.spinning]="isSpinning">
-        <div class="wheel-inner">
-          <!-- Segments -->
-          <div *ngFor="let segment of segments; let i = index"
-               class="segment"
-               [style.transform]="'rotate(' + segment.degree + 'deg)'"
-               [style.background]="segment.color">
-            <div class="segment-text">{{ segment.label }}</div>
-          </div>
+      <!-- Canvas wheel -->
+      <canvas #wheelCanvas class="wheel-canvas" width="500" height="500"></canvas>
 
-          <!-- Center circle -->
-          <div class="wheel-center">
-            <div class="center-circle">
-              <svg width="60" height="60" viewBox="0 0 60 60">
-                <circle cx="30" cy="30" r="28" fill="#FF3D00" stroke="#FFFFFF" stroke-width="2"/>
-                <circle cx="30" cy="30" r="15" fill="#FFFFFF"/>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Spin button -->
-    <div class="button-wrapper">
+      <!-- Center spin button -->
       <button
         *ngIf="!hasSpun"
         class="spin-button"
-        [disabled]="isSpinning"
+        [disabled]="angVel > 0"
         (click)="spinWheel()">
-        <span *ngIf="!isSpinning">🎰 JETZT DREHEN!</span>
-        <span *ngIf="isSpinning">DREHT...</span>
+        {{ spinButtonText }}
       </button>
     </div>
 
     <!-- Prize announcement -->
-    <div *ngIf="hasSpun && !isSpinning" class="prize-announcement">
+    <div *ngIf="hasSpun" class="prize-announcement">
       <div class="prize-box">
         <div class="prize-icon">🎉</div>
         <h3 class="prize-title">HERZLICHEN GLÜCKWUNSCH!</h3>

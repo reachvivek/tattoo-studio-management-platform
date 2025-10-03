@@ -43,6 +43,13 @@ export class FormStepOne implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
+    // TEMPORARY: Skip validation and API calls for testing spin wheel
+    const testName = this.leadForm.value.name || 'Test User';
+    this.formSubmitted.emit(testName);
+    return;
+
+    // Original code (commented out for testing)
+    /*
     if (this.leadForm.invalid) {
       Object.keys(this.leadForm.controls).forEach(key => {
         this.leadForm.get(key)?.markAsTouched();
@@ -82,6 +89,7 @@ export class FormStepOne implements OnInit {
     } finally {
       this.isLoading = false;
     }
+    */
   }
 
   getErrorMessage(field: string): string {
