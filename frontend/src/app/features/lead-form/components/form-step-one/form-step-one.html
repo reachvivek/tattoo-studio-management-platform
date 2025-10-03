@@ -15,7 +15,6 @@
     <div class="form-field" style="margin-bottom: 2rem;">
       <label class="form-label block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
         BESCHREIBE DEIN WUNSCH TATTOO/S
-        <span class="text-[#FF3D00] ml-1">*</span>
       </label>
       <textarea
         formControlName="tattooDescription"
@@ -82,12 +81,49 @@
       </p>
     </div>
 
-    <!-- Opt-in Message -->
-    <div class="opt-in-box bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 1.75rem; margin-bottom: 2rem;">
-      <p class="opt-in-text text-[#B0B0B0] text-sm leading-relaxed" style="text-align: center;">
-        Nachdem alle Plätze vergeben sind, verlosen wir zusätzlich <span class="text-white font-semibold">30 x 30% Gutscheine</span>.
-        Klicke jetzt auf <span class="text-[#FF3D00] font-semibold">"JA, GERNE"</span> für die Extra-Chance auf einen Gratis-Gutschein!
+    <!-- Opt-in Section -->
+    <div class="opt-in-section bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 2rem; margin-bottom: 2rem;">
+      <p class="text-[#B0B0B0] text-sm font-medium uppercase tracking-wide text-center" style="margin-bottom: 1.5rem;">
+        NACHDEM ALLE PLÄTZE VERGEBEN SIND, VERLOSEN WIR ZUSÄTZLICH 30 X 30% GUTSCHEINE.
+        KLICKE JETZT AUF "JA, GERNE" FÜR DIE EXTRA CHANCE AUF EINEN GRATIS GUTSCHEIN
       </p>
+
+      <!-- Custom Radio Options -->
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        <label class="custom-radio-option">
+          <input
+            type="radio"
+            formControlName="optInChoice"
+            value="yes"
+            class="custom-radio-input"
+          />
+          <span class="custom-radio-box">
+            <svg class="custom-radio-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="custom-radio-label">
+            JA GERNE, COOLE AKTION
+          </span>
+        </label>
+
+        <label class="custom-radio-option">
+          <input
+            type="radio"
+            formControlName="optInChoice"
+            value="no"
+            class="custom-radio-input"
+          />
+          <span class="custom-radio-box">
+            <svg class="custom-radio-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+          <span class="custom-radio-label">
+            NEIN. ICH BIN NUR HIER UM ETWAS KOSTENLOSES ABZUSTAUBEN!
+          </span>
+        </label>
+      </div>
     </div>
 
     <!-- Error Message -->

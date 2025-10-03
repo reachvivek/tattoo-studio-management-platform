@@ -30,7 +30,8 @@ export class FormStepOne implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       whatsappCountryCode: ['+49', Validators.required],
       whatsappNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      tattooDescription: ['', [Validators.required, Validators.minLength(10)]]
+      tattooDescription: [''], // Made optional - no validators
+      optInChoice: ['yes'] // Default to "yes" option
     });
   }
 
