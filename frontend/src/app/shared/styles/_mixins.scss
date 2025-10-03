@@ -1,0 +1,46 @@
+// Mobile-first responsive mixin
+@mixin mobile {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: $breakpoint-mobile + 1) and (max-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: $breakpoint-tablet + 1) {
+    @content;
+  }
+}
+
+// Gradient mixins
+@mixin gradient-primary {
+  background: linear-gradient(to right, $color-primary, $color-primary-light);
+}
+
+@mixin gradient-background {
+  background: linear-gradient(to bottom right, $color-bg-secondary, $color-bg-primary);
+}
+
+// Focus state
+@mixin focus-ring {
+  outline: none;
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+}
+
+// Hover effect for interactive elements
+@mixin hover-lift {
+  transition: all 0.3s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($color-primary, 0.3);
+  }
+  &:active {
+    transform: translateY(0);
+  }
+}

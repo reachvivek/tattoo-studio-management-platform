@@ -1,0 +1,41 @@
+// Design Tokens - Brand Colors
+$color-primary: #FF3D00;
+$color-primary-light: #FF6E40;
+$color-primary-dark: #FF5722;
+
+$color-bg-primary: #0A0A0A;
+$color-bg-secondary: #1A1A1A;
+$color-bg-tertiary: #2A2A2A;
+
+$color-border: #333333;
+$color-border-light: rgba($color-primary, 0.2);
+
+$color-text-primary: #FFFFFF;
+$color-text-secondary: #B0B0B0;
+$color-text-muted: #808080;
+$color-text-disabled: #666666;
+
+$color-error: #F44336;
+$color-error-bg: rgba($color-error, 0.1);
+
+// Spacing Scale
+$spacing-xs: 0.5rem;   // 8px
+$spacing-sm: 0.75rem;  // 12px
+$spacing-md: 1rem;     // 16px
+$spacing-lg: 1.5rem;   // 24px
+$spacing-xl: 2rem;     // 32px
+$spacing-2xl: 2.5rem;  // 40px
+$spacing-3xl: 3rem;    // 48px
+
+// Border Radius
+$radius-sm: 0.5rem;
+$radius-md: 0.75rem;
+$radius-lg: 1rem;
+$radius-xl: 1.25rem;
+$radius-2xl: 1.5rem;
+$radius-full: 9999px;
+
+// Breakpoints
+$breakpoint-mobile: 640px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop: 1024px;
