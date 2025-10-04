@@ -19,11 +19,11 @@
       <textarea
         formControlName="tattooDescription"
         placeholder="Beschreibe dein Tattoo so detailliert wie möglich..."
-        rows="1"
+        rows="2"
         class="form-textarea w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
-               transition-all duration-200 placeholder:text-[#666666] resize-none text-base"
-        style="padding: 0.875rem 1.25rem; height: 3.5rem; min-height: 3.5rem; max-height: 3.5rem;"
+               transition-all duration-200 placeholder:text-[#666666] resize-none text-sm sm:text-base"
+        style="padding: 0.8rem 1.25rem; height: 5.5rem; min-height: 5.5rem; max-height: 5.5rem;"
       ></textarea>
       <p *ngIf="getErrorMessage('tattooDescription')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
         {{ getErrorMessage('tattooDescription') }}
@@ -63,8 +63,8 @@
           placeholder="+49"
           class="whatsapp-code w-28 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
-                 transition-all duration-200 text-center font-medium text-base"
-          style="padding: 1rem 1.25rem;"
+                 transition-all duration-200 text-center font-medium text-sm sm:text-base"
+          style="padding: 0.9rem 1.25rem;"
         />
         <input
           type="tel"
@@ -72,8 +72,8 @@
           placeholder="1516 4398197"
           class="whatsapp-number flex-1 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
-                 transition-all duration-200 placeholder:text-[#666666] text-base"
-          style="padding: 1rem 1.25rem;"
+                 transition-all duration-200 placeholder:text-[#666666] text-sm sm:text-base"
+          style="padding: 0.9rem 1.25rem;"
         />
       </div>
       <p *ngIf="getErrorMessage('whatsappNumber')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
@@ -82,8 +82,8 @@
     </div>
 
     <!-- Opt-in Section -->
-    <div class="opt-in-section bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 2rem; margin-bottom: 2rem;">
-      <p class="text-[#B0B0B0] text-sm font-medium uppercase tracking-wide text-center" style="margin-bottom: 1.5rem;">
+    <div class="opt-in-section bg-gradient-to-br from-[#1A1A1A] to-[#0A0A0A] border border-[#333333] rounded-2xl" style="padding: 1rem 0.5rem; margin-bottom: 2rem;">
+      <p class="text-[#B0B0B0] font-medium uppercase text-center opt-in-text" style="margin-bottom: 1rem; padding: 0;">
         NACHDEM ALLE PLÄTZE VERGEBEN SIND, VERLOSEN WIR ZUSÄTZLICH 30 X 30% GUTSCHEINE.
         KLICKE JETZT AUF "JA, GERNE" FÜR DIE EXTRA CHANCE AUF EINEN GRATIS GUTSCHEIN
       </p>

@@ -72,3 +72,65 @@ html {
   background-color: var(--accent-primary);
   color: var(--text-primary);
 }
+
+/* Global form input styles */
+input::placeholder,
+textarea::placeholder {
+  font-size: 14px !important;
+}
+
+@media (min-width: 640px) {
+  input::placeholder,
+  textarea::placeholder {
+    font-size: 16px !important;
+  }
+}
+
+/* Opt-in section responsive text */
+.opt-in-text {
+  font-size: 5px;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+@media (min-width: 640px) {
+  .opt-in-text {
+    font-size: 14px;
+    line-height: 1.5;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Radio label responsive text with fluid scaling */
+.custom-radio-label {
+  font-size: clamp(7px, 2.5vw, 9px) !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.01em !important;
+  word-spacing: -0.05em !important;
+}
+
+@media (min-width: 640px) {
+  .custom-radio-label {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.05em !important;
+    word-spacing: normal !important;
+  }
+}
+
+/* Form labels responsive - consistent sizing */
+.form-label,
+label.block {
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.02em !important;
+}
+
+@media (min-width: 640px) {
+  .form-label,
+  label.block {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.05em !important;
+  }
+}
