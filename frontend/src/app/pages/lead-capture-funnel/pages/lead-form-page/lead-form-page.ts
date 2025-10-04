@@ -21,12 +21,7 @@ export class LeadFormPage {
   }
 
   onSpinComplete(prize: string): void {
-    // Navigate to thank you page with prize info and user name
-    this.router.navigate(['/thank-you'], {
-      queryParams: {
-        name: this.userName,
-        prize: prize
-      }
-    });
+    // Navigate to thank you page (data is in shared service)
+    this.router.navigate(['thank-you']);
   }
 }

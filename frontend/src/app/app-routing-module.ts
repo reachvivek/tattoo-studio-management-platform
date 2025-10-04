@@ -4,11 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadChildren: () => import('./features/lead-form/lead-form-module').then(m => m.LeadFormModule)
-  },
-  {
-    path: 'thank-you',
-    loadChildren: () => import('./features/thank-you/thank-you-module').then(m => m.ThankYouModule)
+    loadChildren: () => import('./pages/lead-capture-funnel/lead-capture-funnel.module').then(m => m.LeadCaptureFunnelModule)
   },
   {
     path: '**',

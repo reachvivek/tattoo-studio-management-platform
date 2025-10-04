@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { LeadCaptureStateService } from '../../services/lead-capture-state.service';
 
 interface WheelSector {
   color: string;
@@ -14,6 +15,8 @@ interface WheelSector {
 })
 export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   @Output() spinComplete = new EventEmitter<string>();
+
+  constructor(private leadCaptureState: LeadCaptureStateService) {}
   @ViewChild('wheelCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private ctx!: CanvasRenderingContext2D;
@@ -158,6 +161,9 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     this.hasSpun = true;
     this.prizeText = sector.label === '30%' ? '30% RABATT!' : `${sector.label} RABATT!`;
     this.showConfetti = true;
+
+    // Store discount in shared service
+    this.leadCaptureState.setDiscount(30);
 
     setTimeout(() => {
       this.showConfetti = false;

@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LeadService } from '../../../../core/services/lead';
+import { LeadCaptureStateService } from '../../services/lead-capture-state.service';
 import { CreateLeadRequest } from '../../../../core/models/lead.model';
 
 @Component({
@@ -21,6 +22,7 @@ export class FormStepOne implements OnInit {
   constructor(
     private fb: FormBuilder,
     private leadService: LeadService,
+    private leadCaptureState: LeadCaptureStateService,
     private router: Router
   ) {}
 
@@ -46,6 +48,15 @@ export class FormStepOne implements OnInit {
   async onSubmit(): Promise<void> {
     console.log('onSubmit called!');
     console.log('Form value:', this.leadForm.value);
+
+    // Store form data in shared service
+    this.leadCaptureState.setLeadData({
+      name: this.leadForm.value.name || 'Test User',
+      email: this.leadForm.value.email,
+      whatsappCountryCode: this.leadForm.value.whatsappCountryCode,
+      whatsappNumber: this.leadForm.value.whatsappNumber,
+      tattooDescription: this.leadForm.value.tattooDescription
+    });
 
     // TEMPORARY: Skip validation and API calls for testing spin wheel
     const testName = this.leadForm.value.name || 'Test User';
