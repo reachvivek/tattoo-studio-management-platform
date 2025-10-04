@@ -170,9 +170,9 @@ label.block {
     inset 0 -2px 4px rgba(0, 0, 0, 0.2),
     0 0 30px rgba(16, 185, 129, 0.4);
   color: white;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.15em;
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.08em;
   text-align: center;
   display: flex;
   align-items: center;
@@ -183,12 +183,14 @@ label.block {
     0 2px 8px rgba(0, 0, 0, 0.5),
     0 0 10px rgba(16, 185, 129, 0.8);
   animation: pulse-glow-mobile 2.5s ease-in-out infinite;
+  white-space: nowrap;
 }
 
 @media (min-width: 640px) {
   .submit-button-glass {
     padding: 1rem 2rem;
-    font-size: 20px;
+    font-size: 18px;
+    letter-spacing: 0.12em;
   }
 }
 
