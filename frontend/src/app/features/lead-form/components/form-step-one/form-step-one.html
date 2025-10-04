@@ -13,17 +13,17 @@
 
     <!-- Tattoo Description -->
     <div class="form-field" style="margin-bottom: 2rem;">
-      <label class="form-label block text-[#B0B0B0] text-sm font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
+      <label class="form-label block text-[#B0B0B0] text-base font-medium uppercase tracking-wide" style="margin-bottom: 0.75rem;">
         BESCHREIBE DEIN WUNSCH TATTOO/S
       </label>
       <textarea
         formControlName="tattooDescription"
         placeholder="Beschreibe dein Tattoo so detailliert wie möglich..."
-        rows="4"
+        rows="1"
         class="form-textarea w-full bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                focus:border-[#FF3D00] focus:ring-2 focus:ring-[#FF3D00]/20 focus:outline-none
                transition-all duration-200 placeholder:text-[#666666] resize-none text-base"
-        style="padding: 0.875rem 1.25rem;"
+        style="padding: 0.875rem 1.25rem; height: 3.5rem; min-height: 3.5rem; max-height: 3.5rem;"
       ></textarea>
       <p *ngIf="getErrorMessage('tattooDescription')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
         {{ getErrorMessage('tattooDescription') }}
