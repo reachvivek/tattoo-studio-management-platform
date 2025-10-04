@@ -44,8 +44,12 @@ export class FormStepOne implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
+    console.log('onSubmit called!');
+    console.log('Form value:', this.leadForm.value);
+
     // TEMPORARY: Skip validation and API calls for testing spin wheel
     const testName = this.leadForm.value.name || 'Test User';
+    console.log('Emitting formSubmitted with name:', testName);
     this.formSubmitted.emit(testName);
     return;
 

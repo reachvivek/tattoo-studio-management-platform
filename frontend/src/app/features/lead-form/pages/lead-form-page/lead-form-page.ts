@@ -14,8 +14,10 @@ export class LeadFormPage {
   constructor(private router: Router) {}
 
   onFormSubmitted(name: string): void {
+    console.log('onFormSubmitted received in parent, name:', name);
     this.userName = name;
     this.showSpinWheel = true;
+    console.log('showSpinWheel set to:', this.showSpinWheel);
   }
 
   onSpinComplete(prize: string): void {
