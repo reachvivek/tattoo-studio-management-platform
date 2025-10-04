@@ -1,0 +1,174 @@
+/* Thank You Page - Elegant Dark Theme */
+
+.thankyou-container {
+  min-height: 100vh;
+  background: #0A0A0A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.thankyou-content {
+  max-width: 42rem;
+  width: 100%;
+  text-align: center;
+}
+
+/* Celebration Emoji - Single, Clean */
+.celebration-emoji {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+  animation: float-celebration 3s ease-in-out infinite;
+}
+
+@keyframes float-celebration {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1.1);
+  }
+}
+
+/* Title */
+.thankyou-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 768px) {
+  .thankyou-title {
+    font-size: 3.75rem;
+  }
+}
+
+/* Prize Card - Green Theme */
+.prize-card {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  box-shadow:
+    0 10px 40px rgba(16, 185, 129, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: pulse-prize 3s ease-in-out infinite;
+}
+
+@keyframes pulse-prize {
+  0%, 100% {
+    box-shadow:
+      0 10px 40px rgba(16, 185, 129, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow:
+      0 15px 50px rgba(16, 185, 129, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+}
+
+.prize-text {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (min-width: 768px) {
+  .prize-text {
+    font-size: 1.875rem;
+  }
+}
+
+.prize-percentage {
+  font-size: 3rem;
+  font-weight: 800;
+  display: inline-block;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  .prize-percentage {
+    font-size: 4rem;
+  }
+}
+
+/* Activation Text */
+.activation-text {
+  color: #B0B0B0;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+/* WhatsApp Button - Clean & Elegant */
+.whatsapp-button {
+  display: inline-block;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white;
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 1rem 3rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:
+    0 8px 30px rgba(37, 211, 102, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.whatsapp-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:
+    0 12px 40px rgba(37, 211, 102, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.whatsapp-button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow:
+    0 6px 20px rgba(37, 211, 102, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Contact Text */
+.contact-text {
+  color: #808080;
+  font-size: 0.875rem;
+  margin-bottom: 3rem;
+}
+
+.contact-number {
+  color: #10B981;
+  font-weight: 600;
+}
+
+/* Info Notice */
+.info-notice {
+  margin-top: 3rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #1A1A1A 0%, #0F0F0F 100%);
+  border-radius: 0.75rem;
+  border: 2px solid #333333;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.notice-text {
+  color: #B0B0B0;
+  margin: 0;
+  line-height: 1.6;
+  font-size: 0.9375rem;
+}
+
+.notice-label {
+  color: white;
+  font-weight: 700;
+}
