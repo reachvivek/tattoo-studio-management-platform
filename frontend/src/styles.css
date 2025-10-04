@@ -160,7 +160,7 @@ label.block {
   overflow: hidden;
   width: 100%;
   max-width: 400px;
-  padding: 0.75rem 1.5rem;
+  padding: 0.65rem 1.5rem;
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
@@ -171,7 +171,7 @@ label.block {
     0 0 15px rgba(16, 185, 129, 0.2);
   color: white;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.15em;
   text-align: center;
   display: flex;
