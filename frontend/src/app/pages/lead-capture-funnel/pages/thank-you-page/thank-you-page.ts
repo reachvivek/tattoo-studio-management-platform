@@ -29,9 +29,16 @@ export class ThankYouPage implements OnInit {
 
     this.whatsappLink = `https://wa.me/${environment.whatsappNumber.replace(/\s+/g, '')}?text=${message}`;
 
-    // Auto-redirect to WhatsApp (use location.href instead of window.open to avoid popup blockers)
+    // Auto-open WhatsApp in new tab
+    // Using setTimeout and creating an anchor element to avoid popup blockers
     setTimeout(() => {
-      window.location.href = this.whatsappLink;
-    }, 800);
+      const link = document.createElement('a');
+      link.href = this.whatsappLink;
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, 500);
   }
 }
