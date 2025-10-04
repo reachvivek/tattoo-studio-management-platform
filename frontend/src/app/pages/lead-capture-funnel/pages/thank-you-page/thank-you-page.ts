@@ -29,9 +29,9 @@ export class ThankYouPage implements OnInit {
 
     this.whatsappLink = `https://wa.me/${environment.whatsappNumber.replace(/\s+/g, '')}?text=${message}`;
 
-    // Auto-open WhatsApp after 5 seconds delay
+    // Auto-open WhatsApp after 5 seconds delay (same tab for mobile compatibility)
     setTimeout(() => {
-      window.open(this.whatsappLink, '_blank');
+      window.location.href = this.whatsappLink;
     }, 5000);
   }
 }
