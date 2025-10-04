@@ -1,4 +1,4 @@
-@import '../../../../../styles.scss';
+@use '../../../../shared/styles' as *;
 
 .spin-wheel-container {
   position: fixed;
@@ -29,44 +29,55 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $spacing-xl;
+  justify-content: flex-start;
+  padding: 1rem 1rem;
+  padding-top: 2rem;
   max-width: 600px;
   width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
 
   @include mobile {
-    padding: $spacing-lg;
+    padding: 0.75rem;
+    padding-top: 1.5rem;
+    min-height: 100vh;
   }
 }
 
 // Title
 .title {
   text-align: center;
-  margin-bottom: $spacing-2xl;
+  margin-bottom: 3.5rem;
   animation: slideDown 0.6s ease-out;
+  flex-shrink: 0;
+
+  @include mobile {
+    margin-bottom: 3rem;
+  }
 
   .title-highlight {
     display: block;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 900;
     background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: $spacing-sm;
+    margin-bottom: 0.25rem;
 
     @include mobile {
-      font-size: 2rem;
+      font-size: 1.125rem;
     }
   }
 
   .subtitle {
     display: block;
-    font-size: 1.25rem;
+    font-size: 0.875rem;
     color: $color-text-secondary;
     font-weight: 500;
 
     @include mobile {
-      font-size: 1rem;
+      font-size: 0.75rem;
     }
   }
 }
@@ -75,29 +86,46 @@
 .wheel-wrapper {
   position: relative;
   display: inline-block;
-  overflow: hidden;
-  margin-bottom: $spacing-2xl;
-  pointer-events: none; // Prevent mouse interference during spin
+  margin-bottom: 1rem;
+  pointer-events: none;
+  width: 400px;
+  height: 400px;
 
   @include mobile {
-    transform: scale(0.8);
+    width: min(85vw, 320px);
+    height: min(85vw, 320px);
   }
 }
 
 .wheel-pointer {
   position: absolute;
-  top: -30px;
+  top: -50px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   filter: drop-shadow(0 4px 8px rgba(#10B981, 0.5));
   animation: pointerBounce 2s ease-in-out infinite;
+
+  @include mobile {
+    top: -45px;
+  }
+
+  svg {
+    width: 30px;
+    height: 45px;
+
+    @include mobile {
+      width: 25px;
+      height: 40px;
+    }
+  }
 }
 
 // Canvas wheel
 .wheel-canvas {
   display: block;
-  transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+  width: 100%;
+  height: 100%;
 }
 
 // Center spin button
@@ -157,81 +185,82 @@
 // Prize announcement
 .prize-announcement {
   animation: scaleIn 0.5s ease-out;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+  width: 100%;
 }
 
 .prize-box {
   background: linear-gradient(135deg, $color-bg-secondary 0%, $color-bg-tertiary 100%);
   border: 2px solid #10B981;
   border-radius: $radius-2xl;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   text-align: center;
   box-shadow: 0 8px 32px rgba(#10B981, 0.3);
 
   @include mobile {
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
   }
 }
 
 .prize-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
   animation: bounce 1s ease-in-out infinite;
 
   @include mobile {
-    font-size: 2rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.15rem;
   }
 }
 
 .prize-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 900;
   color: #10B981;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   line-height: 1.2;
 
   @include mobile {
-    font-size: 1rem;
-    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
+    margin-bottom: 0.15rem;
   }
 }
 
 .prize-text {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: $color-text-secondary;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 
   @include mobile {
-    font-size: 0.8rem;
-    margin-bottom: 0.25rem;
+    font-size: 0.7rem;
+    margin-bottom: 0.15rem;
   }
 }
 
 .prize-value {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 900;
   background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
   animation: glow 2s ease-in-out infinite;
   line-height: 1.1;
 
   @include mobile {
-    font-size: 1.5rem;
-    margin-bottom: 0.25rem;
+    font-size: 1.25rem;
+    margin-bottom: 0.15rem;
   }
 }
 
 .prize-info {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: $color-text-muted;
   line-height: 1.3;
 
   @include mobile {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
   }
 }
 
@@ -256,14 +285,27 @@
   animation: confettiFall 3s linear;
   opacity: 0;
 
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) {
-      left: random(100) * 1%;
-      animation-delay: random(1000) * 0.001s;
-      background: nth((#10B981, #34D399, #FFD700, #00FF00, #0088FF), random(5));
-      transform: rotate(random(360) * 1deg);
-    }
-  }
+  // Individual confetti variations
+  &:nth-child(1) { left: 5%; animation-delay: 0s; background: #10B981; transform: rotate(45deg); }
+  &:nth-child(2) { left: 15%; animation-delay: 0.1s; background: #34D399; transform: rotate(90deg); }
+  &:nth-child(3) { left: 25%; animation-delay: 0.2s; background: #FFD700; transform: rotate(135deg); }
+  &:nth-child(4) { left: 35%; animation-delay: 0.3s; background: #00FF00; transform: rotate(180deg); }
+  &:nth-child(5) { left: 45%; animation-delay: 0.4s; background: #0088FF; transform: rotate(225deg); }
+  &:nth-child(6) { left: 55%; animation-delay: 0.5s; background: #10B981; transform: rotate(270deg); }
+  &:nth-child(7) { left: 65%; animation-delay: 0.6s; background: #34D399; transform: rotate(315deg); }
+  &:nth-child(8) { left: 75%; animation-delay: 0.7s; background: #FFD700; transform: rotate(360deg); }
+  &:nth-child(9) { left: 85%; animation-delay: 0.8s; background: #00FF00; transform: rotate(45deg); }
+  &:nth-child(10) { left: 95%; animation-delay: 0.9s; background: #0088FF; transform: rotate(90deg); }
+  &:nth-child(11) { left: 10%; animation-delay: 0.05s; background: #10B981; transform: rotate(135deg); }
+  &:nth-child(12) { left: 20%; animation-delay: 0.15s; background: #34D399; transform: rotate(180deg); }
+  &:nth-child(13) { left: 30%; animation-delay: 0.25s; background: #FFD700; transform: rotate(225deg); }
+  &:nth-child(14) { left: 40%; animation-delay: 0.35s; background: #00FF00; transform: rotate(270deg); }
+  &:nth-child(15) { left: 50%; animation-delay: 0.45s; background: #0088FF; transform: rotate(315deg); }
+  &:nth-child(16) { left: 60%; animation-delay: 0.55s; background: #10B981; transform: rotate(0deg); }
+  &:nth-child(17) { left: 70%; animation-delay: 0.65s; background: #34D399; transform: rotate(45deg); }
+  &:nth-child(18) { left: 80%; animation-delay: 0.75s; background: #FFD700; transform: rotate(90deg); }
+  &:nth-child(19) { left: 90%; animation-delay: 0.85s; background: #00FF00; transform: rotate(135deg); }
+  &:nth-child(20) { left: 100%; animation-delay: 0.95s; background: #0088FF; transform: rotate(180deg); }
 }
 
 // Animations
@@ -349,10 +391,11 @@
   0% {
     top: -10%;
     opacity: 1;
+    transform: translateX(0) rotate(0deg);
   }
   100% {
     top: 110%;
     opacity: 0;
-    transform: translateX(random(200) - 100px) rotate(random(720) * 1deg);
+    transform: translateX(100px) rotate(720deg);
   }
 }

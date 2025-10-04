@@ -1,8 +1,7 @@
 /* Global Styles */
 
 // Import shared utilities
-@import 'app/shared/styles/variables';
-@import 'app/shared/styles/mixins';
+@use 'app/shared/styles' as *;
 
 // Global resets and base styles
 * {

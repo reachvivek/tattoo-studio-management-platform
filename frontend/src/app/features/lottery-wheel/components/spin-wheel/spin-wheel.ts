@@ -106,17 +106,22 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     const targetIndex = 0;
     const segmentAngle = this.TAU / this.sectors.length;
 
-    // Calculate exact angle to land on center of target segment
-    const targetAngle = targetIndex * segmentAngle + (segmentAngle / 2);
+    // The arrow points down at top center
+    // Segment 0 is drawn from 0 to segmentAngle, center at segmentAngle/2
+    // The rotate() applies: rotate(ang - PI/2)
+    // For segment 0 center to point down (where arrow is), we need:
+    // (segmentAngle/2 - PI/2) pointing down, which means ang should be PI/2 - segmentAngle/2
+    const targetAngle = this.PI / 2 - (segmentAngle / 2);
 
-    // Add 5-7 full rotations for effect
+    // Add 5-7 full rotations for visual effect
     const extraRotations = 5 + Math.floor(Math.random() * 3);
+
+    // Total rotation should be from 0 to target
     const totalRotation = (extraRotations * this.TAU) + targetAngle;
 
     // Animation settings
     const duration = 4000; // 4 seconds
     const startTime = Date.now();
-    const startAngle = this.ang;
 
     const animate = () => {
       const elapsed = Date.now() - startTime;
@@ -125,8 +130,8 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
       // Cubic ease-out for smooth deceleration
       const easeProgress = 1 - Math.pow(1 - progress, 3);
 
-      // Calculate current angle WITHOUT modulo to prevent interruptions
-      this.ang = startAngle + (totalRotation * easeProgress);
+      // Calculate current angle starting from 0, moving to totalRotation
+      this.ang = totalRotation * easeProgress;
       this.rotate();
 
       if (progress < 1) {
@@ -138,9 +143,11 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
         this.angVel = 0;
         this.isSpinning = false;
 
-        // Trigger prize announcement
-        const finalSector = this.sectors[targetIndex];
-        this.onSpinEnd(finalSector);
+        // Wait a moment before showing prize (wheel has fully stopped)
+        setTimeout(() => {
+          const finalSector = this.sectors[targetIndex];
+          this.onSpinEnd(finalSector);
+        }, 300);
       }
     };
 
