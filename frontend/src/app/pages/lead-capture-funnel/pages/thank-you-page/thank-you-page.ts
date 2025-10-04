@@ -29,16 +29,9 @@ export class ThankYouPage implements OnInit {
 
     this.whatsappLink = `https://wa.me/${environment.whatsappNumber.replace(/\s+/g, '')}?text=${message}`;
 
-    // Auto-open WhatsApp in new tab
-    // Using setTimeout and creating an anchor element to avoid popup blockers
+    // Auto-open WhatsApp after 5 seconds delay
     setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = this.whatsappLink;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }, 500);
+      window.open(this.whatsappLink, '_blank');
+    }, 5000);
   }
 }
