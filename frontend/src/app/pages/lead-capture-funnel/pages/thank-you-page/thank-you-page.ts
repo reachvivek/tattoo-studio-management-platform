@@ -22,18 +22,16 @@ export class ThankYouPage implements OnInit {
     this.name = leadData.name || 'Teilnehmer';
     this.discountPercentage = leadData.discountPercentage || 30;
 
-    // Generate WhatsApp link with lead data
-    const phone = leadData.whatsappCountryCode && leadData.whatsappNumber
-      ? `${leadData.whatsappCountryCode}${leadData.whatsappNumber}`.replace(/\s+/g, '')
-      : environment.whatsappNumber;
-
+    // Generate WhatsApp link to business number (not user's number)
     const message = encodeURIComponent(
       `Hallo! Ich habe gerade einen ${this.discountPercentage}% Gutschein gewonnen und möchte diesen aktivieren.`
     );
 
-    this.whatsappLink = `https://wa.me/${phone}?text=${message}`;
+    this.whatsappLink = `https://wa.me/${environment.whatsappNumber.replace(/\s+/g, '')}?text=${message}`;
 
-    // Auto-redirect to WhatsApp
-    window.open(this.whatsappLink, '_blank');
+    // Auto-redirect to WhatsApp (use location.href instead of window.open to avoid popup blockers)
+    setTimeout(() => {
+      window.location.href = this.whatsappLink;
+    }, 800);
   }
 }
