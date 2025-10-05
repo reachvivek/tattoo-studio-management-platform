@@ -28,6 +28,7 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   private ang = 0;
   private isSpinning = false;
   private spinAnimationId?: number;
+  private textShuffleInterval?: any;
 
   hasSpun = false;
   showConfetti = false;
@@ -62,6 +63,9 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.spinAnimationId) {
       cancelAnimationFrame(this.spinAnimationId);
+    }
+    if (this.textShuffleInterval) {
+      clearInterval(this.textShuffleInterval);
     }
   }
 
@@ -105,6 +109,9 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     this.isSpinning = true;
     this.angVel = 1; // Indicate spinning
 
+    // Start text shuffling independently
+    this.startTextShuffle();
+
     // Always target index 0 (30%)
     const targetIndex = 0;
     const segmentAngle = this.TAU / this.sectors.length;
@@ -146,6 +153,10 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
         this.angVel = 0;
         this.isSpinning = false;
 
+        // Stop text shuffling and show final result
+        this.stopTextShuffle();
+        this.spinButtonText = '30%';
+
         // Wait a moment before showing prize (wheel has fully stopped)
         setTimeout(() => {
           const finalSector = this.sectors[targetIndex];
@@ -155,6 +166,36 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     };
 
     animate();
+  }
+
+  private startTextShuffle(): void {
+    const duration = 4000; // Match wheel animation duration
+    const startTime = Date.now();
+    let currentInterval = 100; // Start at 100ms
+
+    const shuffle = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Slow down the shuffling as we approach the end (ease-out)
+      currentInterval = 100 + (progress * 400); // From 100ms to 500ms
+
+      if (progress < 1) {
+        const randomIndex = Math.floor(Math.random() * this.sectors.length);
+        this.spinButtonText = this.sectors[randomIndex].label;
+
+        setTimeout(shuffle, currentInterval);
+      } else {
+        // Stop at 30%
+        this.spinButtonText = '30%';
+      }
+    };
+
+    shuffle();
+  }
+
+  private stopTextShuffle(): void {
+    // No longer needed since shuffle stops itself
   }
 
   private onSpinEnd(sector: WheelSector): void {
