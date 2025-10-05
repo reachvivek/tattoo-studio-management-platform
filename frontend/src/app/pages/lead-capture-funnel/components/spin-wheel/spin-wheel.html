@@ -37,25 +37,52 @@
       <div class="prize-box">
         <div class="prize-icon">
           <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle class="prize-ring-outer" cx="60" cy="60" r="55" stroke="url(#prizeGrad1)" stroke-width="3" fill="none"/>
-            <circle cx="60" cy="60" r="45" fill="url(#prizeGrad2)"/>
-            <g class="prize-particles">
-              <circle cx="30" cy="30" r="3" fill="#FFD700"/>
-              <circle cx="90" cy="30" r="3" fill="#10B981"/>
-              <circle cx="30" cy="90" r="3" fill="#34D399"/>
-              <circle cx="90" cy="90" r="3" fill="#FFD700"/>
+            <!-- Present box base -->
+            <g class="present-box">
+              <rect x="30" y="60" width="60" height="50" rx="4" fill="url(#presentGrad1)" stroke="#10B981" stroke-width="2.5"/>
+              <!-- Vertical ribbon -->
+              <rect x="57" y="60" width="6" height="50" fill="#FFD700" opacity="0.8"/>
+              <!-- Horizontal stripes -->
+              <rect x="30" y="75" width="60" height="3" fill="#FFD700" opacity="0.6"/>
+              <rect x="30" y="92" width="60" height="3" fill="#FFD700" opacity="0.6"/>
             </g>
-            <path class="prize-check-path" d="M40 60L52 72L80 44" stroke="#FFFFFF" stroke-width="6"
-                  stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+            <!-- Lid opening with animation -->
+            <g class="prize-lid">
+              <rect x="28" y="52" width="64" height="12" rx="3" fill="url(#presentGrad2)" stroke="#059669" stroke-width="2.5"/>
+              <rect x="28" y="56" width="64" height="4" fill="#FFD700" opacity="0.8"/>
+            </g>
+
+            <!-- Big bow on top -->
+            <g class="prize-bow">
+              <path d="M40 50 Q35 40 45 40 Q50 40 60 45 Q70 40 75 40 Q85 40 80 50"
+                    fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>
+              <circle cx="60" cy="50" r="7" fill="#FFD700"/>
+              <ellipse cx="42" cy="43" rx="10" ry="7" fill="#FFD700"/>
+              <ellipse cx="78" cy="43" rx="10" ry="7" fill="#FFD700"/>
+            </g>
+
+            <!-- Confetti bursting out -->
+            <g class="prize-confetti">
+              <rect class="confetti-piece" x="54" y="30" width="5" height="10" fill="#FFD700" rx="1.5"/>
+              <circle class="confetti-piece" cx="68" cy="28" r="4" fill="#10B981"/>
+              <rect class="confetti-piece" x="40" y="32" width="8" height="5" fill="#34D399" rx="1.5"/>
+              <circle class="confetti-piece" cx="50" cy="25" r="3" fill="#FFD700"/>
+              <rect class="confetti-piece" x="70" y="35" width="5" height="7" fill="#10B981" rx="1.5"/>
+            </g>
+
+            <!-- Glow from inside box -->
+            <ellipse cx="60" cy="80" rx="20" ry="10" fill="#FFD700" opacity="0.3" class="prize-glow"/>
+
             <defs>
-              <linearGradient id="prizeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient id="presentGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#10B981"/>
                 <stop offset="100%" stop-color="#059669"/>
               </linearGradient>
-              <radialGradient id="prizeGrad2">
-                <stop offset="0%" stop-color="#10B981"/>
-                <stop offset="100%" stop-color="#059669"/>
-              </radialGradient>
+              <linearGradient id="presentGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#34D399"/>
+                <stop offset="100%" stop-color="#10B981"/>
+              </linearGradient>
             </defs>
           </svg>
         </div>

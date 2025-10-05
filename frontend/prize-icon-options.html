@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prize Icon Options - Spin Wheel</title>
+    <style>
+        body {
+            background: #0A0A0A;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #10B981;
+            margin-bottom: 3rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .option {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+            border: 2px solid #10B981;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        .option h2 {
+            color: #10B981;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+        .icon-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.5));
+        }
+        .icon-wrapper svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Option 1: Gift Box with Ribbon */
+        .option1 .box {
+            animation: box-bounce 2s ease-in-out infinite;
+        }
+        .option1 .ribbon {
+            animation: ribbon-wave 3s ease-in-out infinite;
+        }
+        .option1 .sparkle {
+            animation: sparkle-pop 2s ease-in-out infinite;
+        }
+        .option1 .sparkle:nth-child(2) { animation-delay: 0.3s; }
+        .option1 .sparkle:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes box-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes ribbon-wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.1); }
+        }
+        @keyframes sparkle-pop {
+            0%, 100% { opacity: 0.4; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Option 2: Wrapped Present */
+        .option2 .present-box {
+            animation: present-shake 3s ease-in-out infinite;
+        }
+        .option2 .bow {
+            animation: bow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes present-shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-2deg); }
+            75% { transform: rotate(2deg); }
+        }
+        @keyframes bow-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        /* Option 3: Open Gift with Confetti */
+        .option3 .lid {
+            animation: lid-open 3s ease-in-out infinite;
+            transform-origin: bottom left;
+        }
+        .option3 .confetti-piece {
+            animation: confetti-burst 2s ease-out infinite;
+        }
+        .option3 .confetti-piece:nth-child(1) { animation-delay: 0s; }
+        .option3 .confetti-piece:nth-child(2) { animation-delay: 0.1s; }
+        .option3 .confetti-piece:nth-child(3) { animation-delay: 0.2s; }
+
+        @keyframes lid-open {
+            0%, 40%, 100% { transform: rotate(0deg); }
+            60%, 80% { transform: rotate(-25deg); }
+        }
+        @keyframes confetti-burst {
+            0% { transform: translateY(0) scale(0); opacity: 0; }
+            30% { opacity: 1; }
+            100% { transform: translateY(-40px) scale(1); opacity: 0; }
+        }
+
+        /* Option 4: Prize Ticket */
+        .option4 .ticket {
+            animation: ticket-wave 4s ease-in-out infinite;
+        }
+        .option4 .star {
+            animation: star-twinkle 2s ease-in-out infinite;
+        }
+        .option4 .star:nth-child(2) { animation-delay: 0.3s; }
+        .option4 .star:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes ticket-wave {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        @keyframes star-twinkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Option 5: Discount Badge */
+        .option5 .badge {
+            animation: badge-spin 6s linear infinite;
+            transform-origin: center;
+        }
+        .option5 .percentage {
+            animation: percentage-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badge-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes percentage-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Option 6: Surprise Box */
+        .option6 .surprise-box {
+            animation: surprise-shake 0.5s ease-in-out infinite;
+        }
+        .option6 .question {
+            animation: question-bounce 2s ease-in-out infinite;
+        }
+        .option6 .glow {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes surprise-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+        @keyframes question-bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prize Icon Options for Spin Wheel</h1>
+
+        <div class="grid">
+            <!-- Option 1: Gift Box with Ribbon -->
+            <div class="option option1">
+                <h2>Option 1: Gift Box with Ribbon</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="box">
+                            <!-- Box -->
+                            <rect x="20" y="45" width="60" height="40" rx="3" fill="url(#gift1)" stroke="#10B981" stroke-width="2"/>
+                            <!-- Ribbon vertical -->
+                            <rect x="47" y="45" width="6" height="40" fill="#FFD700"/>
+                            <!-- Lid -->
+                            <rect x="18" y="35" width="64" height="12" rx="2" fill="url(#gift2)" stroke="#059669" stroke-width="2"/>
+                            <!-- Ribbon horizontal on lid -->
+                            <rect x="18" y="39" width="64" height="4" fill="#FFD700"/>
+                            <!-- Bow -->
+                            <ellipse class="ribbon" cx="35" cy="38" rx="8" ry="4" fill="#FFD700"/>
+                            <ellipse class="ribbon" cx="65" cy="38" rx="8" ry="4" fill="#FFD700"/>
+                            <circle cx="50" cy="38" r="5" fill="#FFD700"/>
+                        </g>
+                        <!-- Sparkles -->
+                        <circle class="sparkle" cx="15" cy="30" r="3" fill="#10B981"/>
+                        <circle class="sparkle" cx="85" cy="25" r="2.5" fill="#34D399"/>
+                        <circle class="sparkle" cx="85" cy="60" r="2" fill="#FFD700"/>
+                        <defs>
+                            <linearGradient id="gift1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="gift2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#34D399"/>
+                                <stop offset="100%" stop-color="#10B981"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Classic gift box with bouncing animation</p>
+            </div>
+
+            <!-- Option 2: Wrapped Present -->
+            <div class="option option2">
+                <h2>Option 2: Wrapped Present</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="present-box">
+                            <!-- Present box -->
+                            <rect x="25" y="40" width="50" height="45" rx="4" fill="url(#present1)" stroke="#10B981" stroke-width="2"/>
+                            <!-- Stripes -->
+                            <rect x="25" y="52" width="50" height="3" fill="#FFD700" opacity="0.7"/>
+                            <rect x="25" y="65" width="50" height="3" fill="#FFD700" opacity="0.7"/>
+                            <rect x="47.5" y="40" width="5" height="45" fill="#FFD700" opacity="0.7"/>
+                        </g>
+                        <!-- Big bow on top -->
+                        <g class="bow">
+                            <path d="M35 35 Q30 25 40 25 Q45 25 50 30 Q55 25 60 25 Q70 25 65 35" fill="#FFD700" stroke="#FFD700" stroke-width="1"/>
+                            <circle cx="50" cy="35" r="6" fill="#FFD700"/>
+                            <ellipse cx="35" cy="28" rx="8" ry="6" fill="#FFD700"/>
+                            <ellipse cx="65" cy="28" rx="8" ry="6" fill="#FFD700"/>
+                        </g>
+                        <defs>
+                            <linearGradient id="present1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Elegant wrapped present with bow</p>
+            </div>
+
+            <!-- Option 3: Open Gift with Confetti -->
+            <div class="option option3">
+                <h2>Option 3: Opening Gift Box</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Box base -->
+                        <rect x="25" y="50" width="50" height="35" rx="3" fill="url(#open1)" stroke="#10B981" stroke-width="2"/>
+                        <rect x="47" y="50" width="6" height="35" fill="#FFD700"/>
+                        <!-- Lid opening -->
+                        <g class="lid">
+                            <rect x="23" y="45" width="54" height="10" rx="2" fill="url(#open2)" stroke="#059669" stroke-width="2"/>
+                            <rect x="23" y="47" width="54" height="4" fill="#FFD700"/>
+                        </g>
+                        <!-- Confetti bursting out -->
+                        <g class="confetti">
+                            <rect class="confetti-piece" x="45" y="30" width="4" height="8" fill="#FFD700" rx="1"/>
+                            <circle class="confetti-piece" cx="55" cy="28" r="3" fill="#10B981"/>
+                            <rect class="confetti-piece" x="35" y="32" width="6" height="4" fill="#34D399" rx="1"/>
+                        </g>
+                        <!-- Glow from inside -->
+                        <ellipse cx="50" cy="65" rx="15" ry="8" fill="#FFD700" opacity="0.3"/>
+                        <defs>
+                            <linearGradient id="open1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="open2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#34D399"/>
+                                <stop offset="100%" stop-color="#10B981"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Gift opening with confetti burst</p>
+            </div>
+
+            <!-- Option 4: Prize Ticket -->
+            <div class="option option4">
+                <h2>Option 4: Golden Ticket</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="ticket">
+                            <!-- Ticket -->
+                            <rect x="15" y="30" width="70" height="40" rx="4" fill="url(#ticket1)" stroke="#FFD700" stroke-width="2"/>
+                            <!-- Perforated edge -->
+                            <circle cx="20" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="28" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="36" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="44" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="52" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="60" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="68" cy="50" r="2" fill="#0A0A0A"/>
+                            <circle cx="76" cy="50" r="2" fill="#0A0A0A"/>
+                            <!-- Stars -->
+                            <path class="star" d="M30 42 L32 46 L36 46 L33 49 L34 53 L30 50 L26 53 L27 49 L24 46 L28 46 Z" fill="#10B981"/>
+                            <path class="star" d="M50 58 L52 62 L56 62 L53 65 L54 69 L50 66 L46 69 L47 65 L44 62 L48 62 Z" fill="#10B981"/>
+                            <path class="star" d="M70 42 L72 46 L76 46 L73 49 L74 53 L70 50 L66 53 L67 49 L64 46 L68 46 Z" fill="#10B981"/>
+                            <!-- Text placeholder -->
+                            <text x="50" y="62" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="bold">WINNER</text>
+                        </g>
+                        <defs>
+                            <linearGradient id="ticket1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#FFD700"/>
+                                <stop offset="50%" stop-color="#FFA500"/>
+                                <stop offset="100%" stop-color="#FFD700"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Classic golden prize ticket</p>
+            </div>
+
+            <!-- Option 5: Discount Badge -->
+            <div class="option option5">
+                <h2>Option 5: Spinning Discount Badge</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="badge">
+                            <!-- Star badge -->
+                            <path d="M50 10 L58 38 L88 42 L64 60 L72 90 L50 74 L28 90 L36 60 L12 42 L42 38 Z"
+                                  fill="url(#badge1)" stroke="#FFD700" stroke-width="2"/>
+                            <!-- Inner circle -->
+                            <circle cx="50" cy="50" r="20" fill="url(#badge2)"/>
+                            <!-- Percentage text -->
+                            <text class="percentage" x="50" y="58" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="bold">30%</text>
+                        </g>
+                        <defs>
+                            <linearGradient id="badge1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <radialGradient id="badge2">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Rotating discount badge with percentage</p>
+            </div>
+
+            <!-- Option 6: Mystery Surprise Box -->
+            <div class="option option6">
+                <h2>Option 6: Mystery Surprise Box</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Glow effect -->
+                        <circle class="glow" cx="50" cy="55" r="35" fill="#10B981" opacity="0.2"/>
+                        <g class="surprise-box">
+                            <!-- Box -->
+                            <rect x="25" y="45" width="50" height="40" rx="4" fill="url(#surprise1)" stroke="#10B981" stroke-width="2"/>
+                            <!-- Lid -->
+                            <rect x="23" y="35" width="54" height="12" rx="2" fill="url(#surprise2)" stroke="#059669" stroke-width="2"/>
+                            <!-- Question mark -->
+                            <text class="question" x="50" y="73" text-anchor="middle" fill="#FFD700" font-size="28" font-weight="bold">?</text>
+                        </g>
+                        <!-- Magic sparkles -->
+                        <circle cx="20" cy="30" r="2" fill="#FFD700" opacity="0.8"/>
+                        <circle cx="80" cy="35" r="3" fill="#34D399" opacity="0.8"/>
+                        <circle cx="75" cy="65" r="2.5" fill="#10B981" opacity="0.8"/>
+                        <defs>
+                            <linearGradient id="surprise1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="surprise2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#34D399"/>
+                                <stop offset="100%" stop-color="#10B981"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Mystery box with question mark</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
