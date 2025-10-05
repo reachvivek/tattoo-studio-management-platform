@@ -36,15 +36,26 @@
     <div *ngIf="hasSpun" class="prize-announcement">
       <div class="prize-box">
         <div class="prize-icon">
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="28" fill="url(#gradient1)" />
-            <path d="M32 12L35.09 24.18L46.39 18.61L42.18 30L54 32L42.18 34L46.39 45.39L35.09 39.82L32 52L28.91 39.82L17.61 45.39L21.82 34L10 32L21.82 30L17.61 18.61L28.91 24.18L32 12Z" fill="#FFD700"/>
-            <circle cx="32" cy="32" r="8" fill="#059669"/>
+          <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="prize-ring-outer" cx="60" cy="60" r="55" stroke="url(#prizeGrad1)" stroke-width="3" fill="none"/>
+            <circle cx="60" cy="60" r="45" fill="url(#prizeGrad2)"/>
+            <g class="prize-particles">
+              <circle cx="30" cy="30" r="3" fill="#FFD700"/>
+              <circle cx="90" cy="30" r="3" fill="#10B981"/>
+              <circle cx="30" cy="90" r="3" fill="#34D399"/>
+              <circle cx="90" cy="90" r="3" fill="#FFD700"/>
+            </g>
+            <path class="prize-check-path" d="M40 60L52 72L80 44" stroke="#FFFFFF" stroke-width="6"
+                  stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             <defs>
-              <linearGradient id="gradient1" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#059669"/>
-                <stop offset="100%" stop-color="#10B981"/>
+              <linearGradient id="prizeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#059669"/>
               </linearGradient>
+              <radialGradient id="prizeGrad2">
+                <stop offset="0%" stop-color="#10B981"/>
+                <stop offset="100%" stop-color="#059669"/>
+              </radialGradient>
             </defs>
           </svg>
         </div>

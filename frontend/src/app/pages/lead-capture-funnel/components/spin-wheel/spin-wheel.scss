@@ -220,21 +220,50 @@
 }
 
 .prize-icon {
-  width: 3.5rem;
-  height: 3.5rem;
-  margin: 0 auto 0.5rem;
-  animation: spin-shine 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(#10B981, 0.5));
+  width: 4rem;
+  height: 4rem;
+  margin: 0 auto 0.75rem;
+  filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.5));
 
   @include mobile {
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-bottom: 0.35rem;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
   }
 
   svg {
     width: 100%;
     height: 100%;
+  }
+
+  // Pulsing outer ring
+  .prize-ring-outer {
+    animation: prize-ring-pulse 2.5s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  // Animated checkmark path
+  .prize-check-path {
+    animation: prize-check-draw 3s ease-in-out infinite;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+
+  // Floating particles
+  .prize-particles circle {
+    animation: prize-particle-float 3s ease-in-out infinite;
+  }
+
+  .prize-particles circle:nth-child(2) {
+    animation-delay: 0.3s;
+  }
+
+  .prize-particles circle:nth-child(3) {
+    animation-delay: 0.6s;
+  }
+
+  .prize-particles circle:nth-child(4) {
+    animation-delay: 0.9s;
   }
 }
 
@@ -426,20 +455,35 @@
   }
 }
 
-@keyframes spin-shine {
+// Prize icon animations
+@keyframes prize-ring-pulse {
   0%, 100% {
-    transform: rotate(0deg) scale(1);
-    filter: drop-shadow(0 4px 12px rgba(#10B981, 0.5));
-  }
-  25% {
-    transform: rotate(-10deg) scale(1.05);
+    transform: scale(1);
+    opacity: 0.5;
   }
   50% {
-    transform: rotate(0deg) scale(1.1);
-    filter: drop-shadow(0 8px 20px rgba(#10B981, 0.8)) drop-shadow(0 0 30px rgba(#FFD700, 0.5));
+    transform: scale(1.1);
+    opacity: 0.8;
   }
-  75% {
-    transform: rotate(10deg) scale(1.05);
+}
+
+@keyframes prize-check-draw {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  50%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes prize-particle-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 1;
   }
 }
 
