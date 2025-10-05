@@ -67,16 +67,16 @@
   }
 }
 
-/* Premium Celebration Icon */
+/* Premium Celebration Icon - Glowing Success Circle */
 .celebration-icon {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 5rem;
+  height: 5rem;
   margin: 0 auto 1rem;
   filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.5));
 
   @media (min-width: 768px) {
-    width: 6rem;
-    height: 6rem;
+    width: 6.5rem;
+    height: 6.5rem;
     margin-bottom: 1.5rem;
   }
 
@@ -85,86 +85,68 @@
     height: 100%;
   }
 
-  // Animated rings
-  .icon-ring-outer {
-    animation: ring-pulse 3s ease-in-out infinite;
+  // Pulsing outer ring
+  .circle-outer {
+    animation: pulse-ring 2.5s ease-in-out infinite;
     transform-origin: center;
   }
 
-  .icon-ring-middle {
-    animation: ring-pulse 3s ease-in-out infinite 0.3s;
-    transform-origin: center;
+  // Animated checkmark path
+  .check-path {
+    animation: draw-check 3s ease-in-out infinite;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
   }
 
-  // Star badge rotation
-  .icon-star {
-    animation: star-rotate 6s linear infinite;
-    transform-origin: 60px 52.5px;
+  // Floating particles
+  .particles circle {
+    animation: particle-float 3s ease-in-out infinite;
   }
 
-  // Sparkle animations
-  .icon-sparkle-1 {
-    animation: sparkle-twinkle 2s ease-in-out infinite;
+  .particles circle:nth-child(2) {
+    animation-delay: 0.3s;
   }
 
-  .icon-sparkle-2 {
-    animation: sparkle-twinkle 2s ease-in-out infinite 0.4s;
+  .particles circle:nth-child(3) {
+    animation-delay: 0.6s;
   }
 
-  .icon-sparkle-3 {
-    animation: sparkle-twinkle 2s ease-in-out infinite 0.8s;
-  }
-
-  // Checkmark animation
-  .icon-check {
-    animation: check-pop 3s ease-in-out infinite;
-    transform-origin: 60px 52.5px;
+  .particles circle:nth-child(4) {
+    animation-delay: 0.9s;
   }
 }
 
-// Ring pulse animation
-@keyframes ring-pulse {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
-}
-
-// Star rotation
-@keyframes star-rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-// Sparkle twinkle
-@keyframes sparkle-twinkle {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(0.8);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-// Checkmark pop
-@keyframes check-pop {
+// Pulsing ring animation
+@keyframes pulse-ring {
   0%, 100% {
     transform: scale(1);
-    opacity: 1;
+    opacity: 0.5;
   }
   50% {
     transform: scale(1.1);
-    opacity: 0.9;
+    opacity: 0.8;
+  }
+}
+
+// Checkmark drawing animation
+@keyframes draw-check {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  50%, 100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+// Particle floating animation
+@keyframes particle-float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.2);
+    opacity: 1;
   }
 }
 

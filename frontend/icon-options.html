@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Icon Options - Thank You Page</title>
+    <style>
+        body {
+            background: #0A0A0A;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #10B981;
+            margin-bottom: 3rem;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .option {
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
+            border: 2px solid #10B981;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        .option h2 {
+            color: #10B981;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+        .icon-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.5));
+        }
+        .icon-wrapper svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Option 1: Glowing Success Circle */
+        .option1 .circle-outer {
+            animation: pulse-ring 2.5s ease-in-out infinite;
+        }
+        .option1 .check-path {
+            animation: draw-check 3s ease-in-out infinite;
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+        }
+        .option1 .particles circle {
+            animation: particle-float 3s ease-in-out infinite;
+        }
+        .option1 .particles circle:nth-child(2) { animation-delay: 0.3s; }
+        .option1 .particles circle:nth-child(3) { animation-delay: 0.6s; }
+        .option1 .particles circle:nth-child(4) { animation-delay: 0.9s; }
+
+        @keyframes pulse-ring {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        @keyframes draw-check {
+            0% { stroke-dashoffset: 100; }
+            50%, 100% { stroke-dashoffset: 0; }
+        }
+        @keyframes particle-float {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-10px) scale(1.2); opacity: 1; }
+        }
+
+        /* Option 2: Diamond Badge */
+        .option2 .diamond {
+            animation: diamond-spin 6s linear infinite;
+            transform-origin: 60px 60px;
+        }
+        .option2 .shine {
+            animation: shine-sweep 3s ease-in-out infinite;
+        }
+        .option2 .glow-circle {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes diamond-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes shine-sweep {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.8; }
+        }
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        /* Option 3: Confetti Burst */
+        .option3 .confetti {
+            animation: confetti-burst 4s ease-out infinite;
+        }
+        .option3 .confetti rect:nth-child(1) { animation-delay: 0s; }
+        .option3 .confetti rect:nth-child(2) { animation-delay: 0.1s; }
+        .option3 .confetti rect:nth-child(3) { animation-delay: 0.2s; }
+        .option3 .confetti rect:nth-child(4) { animation-delay: 0.3s; }
+        .option3 .confetti rect:nth-child(5) { animation-delay: 0.4s; }
+        .option3 .confetti rect:nth-child(6) { animation-delay: 0.5s; }
+
+        @keyframes confetti-burst {
+            0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-30px) scale(1) rotate(180deg); opacity: 0; }
+        }
+
+        /* Option 4: Luxury Crown */
+        .option4 .crown {
+            animation: crown-float 3s ease-in-out infinite;
+        }
+        .option4 .gem {
+            animation: gem-sparkle 2s ease-in-out infinite;
+        }
+        .option4 .gem:nth-child(2) { animation-delay: 0.3s; }
+        .option4 .gem:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes crown-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes gem-sparkle {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
+        }
+
+        /* Option 5: Award Medal */
+        .option5 .medal {
+            animation: medal-swing 4s ease-in-out infinite;
+            transform-origin: 60px 20px;
+        }
+        .option5 .ribbon {
+            animation: ribbon-wave 2s ease-in-out infinite;
+        }
+
+        @keyframes medal-swing {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        @keyframes ribbon-wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Premium Icon Options for Thank You Page</h1>
+
+        <div class="grid">
+            <!-- Option 1: Glowing Success Circle -->
+            <div class="option option1">
+                <h2>Option 1: Glowing Success Circle</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="circle-outer" cx="60" cy="60" r="55" stroke="url(#grad1)" stroke-width="3" fill="none"/>
+                        <circle cx="60" cy="60" r="45" fill="url(#grad2)"/>
+                        <g class="particles">
+                            <circle cx="30" cy="30" r="3" fill="#FFD700"/>
+                            <circle cx="90" cy="30" r="3" fill="#10B981"/>
+                            <circle cx="30" cy="90" r="3" fill="#34D399"/>
+                            <circle cx="90" cy="90" r="3" fill="#FFD700"/>
+                        </g>
+                        <path class="check-path" d="M40 60L52 72L80 44" stroke="#FFFFFF" stroke-width="6"
+                              stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <radialGradient id="grad2">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Clean, professional with animated checkmark</p>
+            </div>
+
+            <!-- Option 2: Diamond Badge -->
+            <div class="option option2">
+                <h2>Option 2: Rotating Diamond Badge</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle class="glow-circle" cx="60" cy="60" r="50" stroke="url(#grad3)" stroke-width="2" opacity="0.3"/>
+                        <g class="diamond">
+                            <path d="M60 20L80 40L80 80L60 100L40 80L40 40L60 20Z"
+                                  fill="url(#grad4)" stroke="url(#grad3)" stroke-width="2"/>
+                            <path d="M60 20L80 40L60 60L40 40L60 20Z" fill="url(#grad3)" opacity="0.5"/>
+                            <circle cx="60" cy="60" r="15" fill="#FFFFFF" opacity="0.3"/>
+                        </g>
+                        <rect class="shine" x="50" y="10" width="3" height="100" fill="#FFFFFF" opacity="0"/>
+                        <text x="60" y="68" text-anchor="middle" fill="#FFFFFF" font-size="24" font-weight="bold">✓</text>
+                        <defs>
+                            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#059669" stop-opacity="0.5"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Elegant diamond with rotation</p>
+            </div>
+
+            <!-- Option 3: Confetti Burst -->
+            <div class="option option3">
+                <h2>Option 3: Celebration Burst</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="35" fill="url(#grad5)"/>
+                        <g class="confetti">
+                            <rect x="58" y="25" width="4" height="8" fill="#FFD700" rx="1"/>
+                            <rect x="35" y="40" width="6" height="4" fill="#10B981" rx="1"/>
+                            <rect x="85" y="45" width="4" height="6" fill="#34D399" rx="1"/>
+                            <rect x="30" y="70" width="5" height="5" fill="#FFD700" rx="1"/>
+                            <rect x="80" y="75" width="6" height="4" fill="#10B981" rx="1"/>
+                            <rect x="55" y="85" width="4" height="6" fill="#34D399" rx="1"/>
+                        </g>
+                        <path d="M45 60L54 69L75 48" stroke="#FFFFFF" stroke-width="5"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <radialGradient id="grad5">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Fun confetti animation with energy</p>
+            </div>
+
+            <!-- Option 4: Luxury Crown -->
+            <div class="option option4">
+                <h2>Option 4: Premium Crown</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="70" r="40" fill="url(#grad6)" opacity="0.2"/>
+                        <g class="crown">
+                            <path d="M30 55L35 40L45 50L60 35L75 50L85 40L90 55L85 75H35L30 55Z"
+                                  fill="url(#grad7)" stroke="#FFD700" stroke-width="2"/>
+                            <rect x="35" y="75" width="50" height="8" rx="2" fill="url(#grad7)"/>
+                            <circle class="gem" cx="45" cy="50" r="3" fill="#FFD700"/>
+                            <circle class="gem" cx="60" cy="40" r="4" fill="#FFD700"/>
+                            <circle class="gem" cx="75" cy="50" r="3" fill="#FFD700"/>
+                        </g>
+                        <defs>
+                            <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="grad7" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Luxurious crown with floating effect</p>
+            </div>
+
+            <!-- Option 5: Award Medal -->
+            <div class="option option5">
+                <h2>Option 5: Winner's Medal</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g class="medal">
+                            <path class="ribbon" d="M45 15L50 40L60 35L70 40L75 15L60 25L45 15Z"
+                                  fill="url(#grad8)"/>
+                            <circle cx="60" cy="65" r="30" fill="url(#grad9)" stroke="#FFD700" stroke-width="3"/>
+                            <circle cx="60" cy="65" r="22" fill="none" stroke="#FFD700" stroke-width="1.5" opacity="0.5"/>
+                            <text x="60" y="75" text-anchor="middle" fill="#FFFFFF" font-size="32" font-weight="bold">1</text>
+                            <path d="M45 60L54 69L75 48" stroke="#FFFFFF" stroke-width="3" opacity="0.3"
+                                  stroke-linecap="round" stroke-linejoin="round"/>
+                        </g>
+                        <defs>
+                            <linearGradient id="grad8" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <radialGradient id="grad9">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Winner's medal with swinging animation</p>
+            </div>
+
+            <!-- Option 6: Current (Star Badge) -->
+            <div class="option">
+                <h2>Current: Rotating Star Badge</h2>
+                <div class="icon-wrapper">
+                    <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="60" cy="60" r="55" stroke="url(#gradC)" stroke-width="2" opacity="0.3"/>
+                        <path d="M60 15L67.5 45L97.5 52.5L67.5 60L60 90L52.5 60L22.5 52.5L52.5 45L60 15Z"
+                              fill="url(#gradC2)" stroke="url(#gradC)" stroke-width="2"/>
+                        <circle cx="60" cy="52.5" r="18" fill="url(#gradC3)"/>
+                        <path d="M52 52.5L57 57.5L68 46.5" stroke="#FFFFFF" stroke-width="3"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="gradC" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </linearGradient>
+                            <linearGradient id="gradC2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10B981" stop-opacity="0.2"/>
+                                <stop offset="100%" stop-color="#059669" stop-opacity="0.3"/>
+                            </linearGradient>
+                            <radialGradient id="gradC3">
+                                <stop offset="0%" stop-color="#10B981"/>
+                                <stop offset="100%" stop-color="#059669"/>
+                            </radialGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <p>Current rotating star design</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

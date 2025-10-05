@@ -5,48 +5,22 @@
       <!-- Premium celebration icon -->
       <div class="celebration-icon">
         <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer glow ring -->
-          <circle class="icon-ring-outer" cx="60" cy="60" r="55" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
-          <circle class="icon-ring-middle" cx="60" cy="60" r="48" stroke="url(#gradient1)" stroke-width="1.5" opacity="0.5"/>
-
-          <!-- Main star/badge shape -->
-          <g class="icon-star">
-            <path d="M60 15L67.5 45L97.5 52.5L67.5 60L60 90L52.5 60L22.5 52.5L52.5 45L60 15Z"
-                  fill="url(#gradient2)" stroke="url(#gradient1)" stroke-width="2"/>
-            <circle cx="60" cy="52.5" r="18" fill="url(#gradient3)"/>
+          <circle class="circle-outer" cx="60" cy="60" r="55" stroke="url(#grad1)" stroke-width="3" fill="none"/>
+          <circle cx="60" cy="60" r="45" fill="url(#grad2)"/>
+          <g class="particles">
+            <circle cx="30" cy="30" r="3" fill="#FFD700"/>
+            <circle cx="90" cy="30" r="3" fill="#10B981"/>
+            <circle cx="30" cy="90" r="3" fill="#34D399"/>
+            <circle cx="90" cy="90" r="3" fill="#FFD700"/>
           </g>
-
-          <!-- Inner sparkles -->
-          <g class="icon-sparkle-1">
-            <circle cx="40" cy="35" r="2" fill="#FFD700"/>
-            <circle cx="80" cy="35" r="2" fill="#FFD700"/>
-          </g>
-          <g class="icon-sparkle-2">
-            <circle cx="35" cy="60" r="2.5" fill="#10B981"/>
-            <circle cx="85" cy="60" r="2.5" fill="#10B981"/>
-          </g>
-          <g class="icon-sparkle-3">
-            <circle cx="45" cy="75" r="1.5" fill="#34D399"/>
-            <circle cx="75" cy="75" r="1.5" fill="#34D399"/>
-          </g>
-
-          <!-- Center checkmark -->
-          <g class="icon-check">
-            <path d="M52 52.5L57 57.5L68 46.5" stroke="#FFFFFF" stroke-width="3"
-                  stroke-linecap="round" stroke-linejoin="round"/>
-          </g>
-
-          <!-- Gradient definitions -->
+          <path class="check-path" d="M40 60L52 72L80 44" stroke="#FFFFFF" stroke-width="6"
+                stroke-linecap="round" stroke-linejoin="round" fill="none"/>
           <defs>
-            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#10B981"/>
               <stop offset="100%" stop-color="#059669"/>
             </linearGradient>
-            <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#10B981" stop-opacity="0.2"/>
-              <stop offset="100%" stop-color="#059669" stop-opacity="0.3"/>
-            </linearGradient>
-            <radialGradient id="gradient3" cx="50%" cy="50%" r="50%">
+            <radialGradient id="grad2">
               <stop offset="0%" stop-color="#10B981"/>
               <stop offset="100%" stop-color="#059669"/>
             </radialGradient>
