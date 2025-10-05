@@ -242,16 +242,10 @@
     transform-origin: center bottom;
   }
 
-  // Lid opening animation
+  // Lid opening animation (bow is inside, so it rotates with lid)
   .prize-lid {
     animation: prize-lid-open 3s ease-in-out infinite;
     transform-origin: bottom left;
-  }
-
-  // Bow pulsing
-  .prize-bow {
-    animation: prize-bow-pulse 2s ease-in-out infinite;
-    transform-origin: 60px 45px;
   }
 
   // Confetti bursting out
@@ -494,15 +488,6 @@
   }
   60%, 80% {
     transform: rotate(-25deg);
-  }
-}
-
-@keyframes prize-bow-pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
   }
 }
 
