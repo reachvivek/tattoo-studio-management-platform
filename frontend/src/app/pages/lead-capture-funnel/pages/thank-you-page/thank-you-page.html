@@ -2,16 +2,55 @@
   <div class="thankyou-content">
     <!-- Single unified card -->
     <div class="unified-card">
-      <!-- Trophy icon -->
+      <!-- Premium celebration icon -->
       <div class="celebration-icon">
-        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M32 4C32 4 28 4 28 8V12H36V8C36 4 32 4 32 4Z" fill="#FFD700"/>
-          <path d="M44 12H20C18.8954 12 18 12.8954 18 14V20C18 26.6274 23.3726 32 30 32H34C40.6274 32 46 26.6274 46 20V14C46 12.8954 45.1046 12 44 12Z" fill="#10B981"/>
-          <path d="M30 32V48H34V32H30Z" fill="#FFD700"/>
-          <path d="M26 48H38C39.1046 48 40 48.8954 40 50V52C40 53.1046 39.1046 54 38 54H26C24.8954 54 24 53.1046 24 52V50C24 48.8954 24.8954 48 26 48Z" fill="#10B981"/>
-          <circle cx="32" cy="20" r="6" fill="#FFD700" opacity="0.6"/>
-          <path d="M16 14H12C10.8954 14 10 14.8954 10 16V18C10 22.4183 13.5817 26 18 26C18 20.4772 18 14 18 14H16Z" fill="#34D399"/>
-          <path d="M48 14H52C53.1046 14 54 14.8954 54 16V18C54 22.4183 50.4183 26 46 26C46 20.4772 46 14 46 14H48Z" fill="#34D399"/>
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer glow ring -->
+          <circle class="icon-ring-outer" cx="60" cy="60" r="55" stroke="url(#gradient1)" stroke-width="2" opacity="0.3"/>
+          <circle class="icon-ring-middle" cx="60" cy="60" r="48" stroke="url(#gradient1)" stroke-width="1.5" opacity="0.5"/>
+
+          <!-- Main star/badge shape -->
+          <g class="icon-star">
+            <path d="M60 15L67.5 45L97.5 52.5L67.5 60L60 90L52.5 60L22.5 52.5L52.5 45L60 15Z"
+                  fill="url(#gradient2)" stroke="url(#gradient1)" stroke-width="2"/>
+            <circle cx="60" cy="52.5" r="18" fill="url(#gradient3)"/>
+          </g>
+
+          <!-- Inner sparkles -->
+          <g class="icon-sparkle-1">
+            <circle cx="40" cy="35" r="2" fill="#FFD700"/>
+            <circle cx="80" cy="35" r="2" fill="#FFD700"/>
+          </g>
+          <g class="icon-sparkle-2">
+            <circle cx="35" cy="60" r="2.5" fill="#10B981"/>
+            <circle cx="85" cy="60" r="2.5" fill="#10B981"/>
+          </g>
+          <g class="icon-sparkle-3">
+            <circle cx="45" cy="75" r="1.5" fill="#34D399"/>
+            <circle cx="75" cy="75" r="1.5" fill="#34D399"/>
+          </g>
+
+          <!-- Center checkmark -->
+          <g class="icon-check">
+            <path d="M52 52.5L57 57.5L68 46.5" stroke="#FFFFFF" stroke-width="3"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+
+          <!-- Gradient definitions -->
+          <defs>
+            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10B981"/>
+              <stop offset="100%" stop-color="#059669"/>
+            </linearGradient>
+            <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10B981" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#059669" stop-opacity="0.3"/>
+            </linearGradient>
+            <radialGradient id="gradient3" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#10B981"/>
+              <stop offset="100%" stop-color="#059669"/>
+            </radialGradient>
+          </defs>
         </svg>
       </div>
 

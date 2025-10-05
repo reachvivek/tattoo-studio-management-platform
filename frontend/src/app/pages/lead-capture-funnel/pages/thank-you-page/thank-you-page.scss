@@ -67,40 +67,104 @@
   }
 }
 
-/* Celebration Trophy Icon */
+/* Premium Celebration Icon */
 .celebration-icon {
-  width: 3rem;
-  height: 3rem;
-  margin: 0 auto 0.5rem;
-  animation: trophy-shine 3s ease-in-out infinite;
-  filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.4));
+  width: 4.5rem;
+  height: 4.5rem;
+  margin: 0 auto 1rem;
+  filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.5));
 
   @media (min-width: 768px) {
-    width: 5rem;
-    height: 5rem;
-    margin-bottom: 1rem;
+    width: 6rem;
+    height: 6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  // Animated rings
+  .icon-ring-outer {
+    animation: ring-pulse 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  .icon-ring-middle {
+    animation: ring-pulse 3s ease-in-out infinite 0.3s;
+    transform-origin: center;
+  }
+
+  // Star badge rotation
+  .icon-star {
+    animation: star-rotate 6s linear infinite;
+    transform-origin: 60px 52.5px;
+  }
+
+  // Sparkle animations
+  .icon-sparkle-1 {
+    animation: sparkle-twinkle 2s ease-in-out infinite;
+  }
+
+  .icon-sparkle-2 {
+    animation: sparkle-twinkle 2s ease-in-out infinite 0.4s;
+  }
+
+  .icon-sparkle-3 {
+    animation: sparkle-twinkle 2s ease-in-out infinite 0.8s;
+  }
+
+  // Checkmark animation
+  .icon-check {
+    animation: check-pop 3s ease-in-out infinite;
+    transform-origin: 60px 52.5px;
   }
 }
 
-.celebration-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-@keyframes trophy-shine {
+// Ring pulse animation
+@keyframes ring-pulse {
   0%, 100% {
-    transform: translateY(0) scale(1) rotate(0deg);
-    filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.4));
-  }
-  25% {
-    transform: translateY(-8px) scale(1.05) rotate(-5deg);
+    opacity: 0.3;
+    transform: scale(1);
   }
   50% {
-    transform: translateY(-10px) scale(1.1) rotate(0deg);
-    filter: drop-shadow(0 8px 20px rgba(16, 185, 129, 0.6)) drop-shadow(0 0 30px rgba(255, 215, 0, 0.4));
+    opacity: 0.6;
+    transform: scale(1.05);
   }
-  75% {
-    transform: translateY(-8px) scale(1.05) rotate(5deg);
+}
+
+// Star rotation
+@keyframes star-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// Sparkle twinkle
+@keyframes sparkle-twinkle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+// Checkmark pop
+@keyframes check-pop {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
   }
 }
 
