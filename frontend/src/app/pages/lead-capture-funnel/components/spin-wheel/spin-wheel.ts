@@ -37,13 +37,13 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
 
   // Wheel segments - 8 segments alternating 30% and Kostenloses Tattoo (30% always wins at index 0)
   sectors: WheelSector[] = [
-    { color: '#FF3D00', text: '#FFFFFF', label: '30%' },
+    { color: '#059669', text: '#FFFFFF', label: '30%' },
     { color: '#1A1A1A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#FF6E40', text: '#FFFFFF', label: 'Nochmals drehen' },
+    { color: '#059669', text: '#FFFFFF', label: 'Nochmals drehen' },
     { color: '#2A2A2A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#FF5722', text: '#FFFFFF', label: '30%' },
+    { color: '#059669', text: '#FFFFFF', label: '30%' },
     { color: '#1A1A1A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#FF4500', text: '#FFFFFF', label: '30%' },
+    { color: '#059669', text: '#FFFFFF', label: '30%' },
     { color: '#2A2A2A', text: '#FFFFFF', label: 'Kostenloses Tattoo' }
   ];
 
