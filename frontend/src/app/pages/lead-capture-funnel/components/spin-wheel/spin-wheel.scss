@@ -139,16 +139,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #FFFFFF;
-  color: #10B981;
+  background: linear-gradient(135deg, #FF3D00 0%, #FF6E40 100%);
+  color: #FFFFFF;
   border: none;
   border-radius: 50%;
   font-size: 1.2rem;
   font-weight: 800;
   cursor: pointer;
   box-shadow:
-    0 0 0 8px currentColor,
-    0 0px 15px 5px rgba(0, 0, 0, 0.6);
+    0 0 0 8px #1A1A1A,
+    0 0px 15px 5px rgba(255, 61, 0, 0.5);
   transition: 0.3s;
   z-index: 5;
   user-select: none;
@@ -163,7 +163,7 @@
     position: absolute;
     top: -17px;
     border: 10px solid transparent;
-    border-bottom-color: currentColor;
+    border-bottom-color: #1A1A1A;
     border-top: none;
   }
 
