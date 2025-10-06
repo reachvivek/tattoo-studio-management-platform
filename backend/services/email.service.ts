@@ -259,10 +259,27 @@ export class EmailService {
     };
 
     try {
-      await this.transporter.sendMail(mailOptions);
-      console.log(`✅ Admin email sent for Lead #${lead.id}`);
+      console.log(`📧 [EMAIL] Attempting to send admin notification for Lead #${lead.id}`);
+      console.log(`📧 [EMAIL] From: ${mailOptions.from}`);
+      console.log(`📧 [EMAIL] To: ${mailOptions.to}`);
+      console.log(`📧 [EMAIL] Subject: ${mailOptions.subject}`);
+      console.log(`📧 [EMAIL] Attachments: ${attachments.length}`);
+      console.log(`📧 [EMAIL] SMTP Host: smtp.gmail.com:587`);
+
+      const info = await this.transporter.sendMail(mailOptions);
+
+      console.log(`✅ [EMAIL] Admin email sent successfully for Lead #${lead.id}`);
+      console.log(`✅ [EMAIL] Message ID: ${info.messageId}`);
+      console.log(`✅ [EMAIL] Response: ${info.response}`);
+      console.log(`✅ [EMAIL] Accepted: ${JSON.stringify(info.accepted)}`);
+      console.log(`✅ [EMAIL] Rejected: ${JSON.stringify(info.rejected)}`);
     } catch (error: any) {
-      console.error(`❌ Failed to send admin email for Lead #${lead.id}: ${error.message}`);
+      console.error(`❌ [EMAIL] Failed to send admin email for Lead #${lead.id}`);
+      console.error(`❌ [EMAIL] Error Message: ${error.message}`);
+      console.error(`❌ [EMAIL] Error Code: ${error.code}`);
+      console.error(`❌ [EMAIL] Error Command: ${error.command}`);
+      console.error(`❌ [EMAIL] Error Response: ${error.response}`);
+      console.error(`❌ [EMAIL] Full Error: ${JSON.stringify(error, null, 2)}`);
       throw error;
     }
   }
@@ -341,10 +358,23 @@ export class EmailService {
     };
 
     try {
-      await this.transporter.sendMail(mailOptions);
-      console.log(`✅ Confirmation email sent to ${lead.email}`);
+      console.log(`📧 [EMAIL] Attempting to send user confirmation to ${lead.email}`);
+      console.log(`📧 [EMAIL] From: ${mailOptions.from}`);
+      console.log(`📧 [EMAIL] To: ${mailOptions.to}`);
+      console.log(`📧 [EMAIL] Subject: ${mailOptions.subject}`);
+      console.log(`📧 [EMAIL] Attachments: ${attachments.length}`);
+
+      const info = await this.transporter.sendMail(mailOptions);
+
+      console.log(`✅ [EMAIL] Confirmation sent successfully to ${lead.email}`);
+      console.log(`✅ [EMAIL] Message ID: ${info.messageId}`);
+      console.log(`✅ [EMAIL] Response: ${info.response}`);
     } catch (error: any) {
-      console.error(`❌ Failed to send confirmation to ${lead.email}: ${error.message}`);
+      console.error(`❌ [EMAIL] Failed to send confirmation to ${lead.email}`);
+      console.error(`❌ [EMAIL] Error Message: ${error.message}`);
+      console.error(`❌ [EMAIL] Error Code: ${error.code}`);
+      console.error(`❌ [EMAIL] Error Command: ${error.command}`);
+      console.error(`❌ [EMAIL] Full Error: ${JSON.stringify(error, null, 2)}`);
       throw error;
     }
   }
