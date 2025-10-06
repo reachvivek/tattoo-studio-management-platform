@@ -15,6 +15,12 @@ export class Dashboard implements OnInit {
   isLoading = true;
   searchTerm = '';
   statusFilter = 'all';
+  showDeleteModal = false;
+  leadToDelete: { id: number; name: string } | null = null;
+  isDeleting = false;
+  showToast = false;
+  toastMessage = '';
+  toastType: 'success' | 'error' = 'success';
 
   statusOptions = [
     { value: 'all', label: 'Alle' },
@@ -101,5 +107,57 @@ export class Dashboard implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  deleteLead(id: number, name: string): void {
+    this.leadToDelete = { id, name };
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.leadToDelete = null;
+    this.isDeleting = false;
+  }
+
+  confirmDelete(): void {
+    if (!this.leadToDelete) return;
+
+    this.isDeleting = true;
+    const leadId = this.leadToDelete.id;
+
+    this.leadService.delete(leadId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Remove the lead from the local arrays
+          this.leads = this.leads.filter(lead => lead.id !== leadId);
+          this.applyFilters();
+
+          // Close modal and show success toast
+          this.showDeleteModal = false;
+          this.leadToDelete = null;
+          this.isDeleting = false;
+          this.showToastMessage('Lead wurde erfolgreich gelöscht.', 'success');
+        }
+      },
+      error: (error) => {
+        console.error('Failed to delete lead:', error);
+        this.isDeleting = false;
+        this.showDeleteModal = false;
+        this.leadToDelete = null;
+        this.showToastMessage('Fehler beim Löschen des Leads. Bitte versuchen Sie es erneut.', 'error');
+      }
+    });
+  }
+
+  showToastMessage(message: string, type: 'success' | 'error'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.showToast = true;
+
+    // Auto-hide toast after 3 seconds
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
   }
 }

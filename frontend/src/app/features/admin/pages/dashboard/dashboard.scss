@@ -266,10 +266,16 @@
   font-weight: 600;
 }
 
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
 .details-button {
-  width: 100%;
+  flex: 1;
   padding: 0.625rem 1rem;
-  background: #dc2626;
+  background: #1d4ed8;
   color: #ffffff;
   font-size: 0.875rem;
   font-weight: 500;
@@ -277,9 +283,33 @@
   border-radius: 0.5rem;
   cursor: pointer;
   transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .details-button:hover {
+  background: #1e40af;
+}
+
+.delete-button-mobile {
+  padding: 0.625rem 1rem;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.delete-button-mobile:hover {
   background: #b91c1c;
 }
 
@@ -399,18 +429,290 @@
     white-space: nowrap;
   }
 
+  .table-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
   .table-button {
     padding: 0.5rem 0.75rem;
-    background: #dc2626;
+    background: #1d4ed8;
     color: #ffffff;
     font-size: 0.875rem;
     border: none;
     border-radius: 0.375rem;
     cursor: pointer;
     transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
 
   .table-button:hover {
+    background: #1e40af;
+  }
+
+  .delete-button {
+    padding: 0.5rem 0.75rem;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .delete-button:hover {
     background: #b91c1c;
+  }
+}
+
+/* Modal Overlay & Container */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-container {
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 1rem;
+  max-width: 28rem;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #3f3f46;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal-icon {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(220, 38, 38, 0.2);
+  border: 2px solid rgba(220, 38, 38, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  text-align: center;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modal-message {
+  font-size: 0.9375rem;
+  color: #d4d4d8;
+  margin: 0;
+  text-align: center;
+  line-height: 1.5;
+}
+
+.modal-message strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.modal-warning {
+  font-size: 0.875rem;
+  color: #a1a1aa;
+  margin: 0;
+  text-align: center;
+}
+
+/* Modal Actions */
+.modal-actions {
+  padding: 1rem 1.5rem 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-direction: column;
+}
+
+.modal-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.modal-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-button-secondary {
+  background: #3f3f46;
+  color: #ffffff;
+}
+
+.modal-button-secondary:hover:not(:disabled) {
+  background: #52525b;
+}
+
+.modal-button-danger {
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.modal-button-danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+/* Spinner */
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #27272a;
+  border: 1px solid #3f3f46;
+  border-radius: 0.75rem;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  animation: slideInRight 0.3s ease;
+  max-width: calc(100vw - 2rem);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+  background: rgba(34, 197, 94, 0.2);
+  color: #22c55e;
+}
+
+.toast-error .toast-icon {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.toast-message {
+  font-size: 0.9375rem;
+  color: #d4d4d8;
+  font-weight: 500;
+}
+
+/* Tablet and larger screens - Modal Actions */
+@media (min-width: 640px) {
+  .modal-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .modal-button {
+    flex: 0 1 auto;
+    min-width: 8rem;
+  }
+}
+
+/* Desktop - Toast positioning */
+@media (min-width: 768px) {
+  .toast {
+    bottom: 2rem;
+    right: 2rem;
+    max-width: 24rem;
   }
 }

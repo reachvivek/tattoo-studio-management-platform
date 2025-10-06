@@ -4,6 +4,7 @@ export declare class LeadController {
     getAll(req: Request, res: Response): Promise<void>;
     getById(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
     updateStatus(req: Request, res: Response): Promise<void>;
+    delete(req: Request, res: Response): Promise<Response<any, Record<string, any>> | undefined>;
 }
 export declare const leadController: LeadController;
 //# sourceMappingURL=lead.controller.d.ts.map
