@@ -37,14 +37,14 @@ LOTTERY_ENABLED=false
 DEFAULT_DISCOUNT=30
 
 JWT_SECRET=bookink_production_secret_2025_xyz_random_string_change_this
-CORS_ORIGIN=https://bookink-frontend.onrender.com
+CORS_ORIGIN=https://gratis-tattoo.vercel.app
 ```
 
 ## 🔒 Security Notes
 
 - **JWT_SECRET**: Change to a random string before deploying
 - **DB_PASSWORD**: Already configured with your database password
-- **CORS_ORIGIN**: Will be updated after frontend deploys
+- **CORS_ORIGIN**: Set to Vercel frontend URL `https://gratis-tattoo.vercel.app`
 
 ## 📝 How to Add on Render
 
@@ -58,14 +58,17 @@ CORS_ORIGIN=https://bookink-frontend.onrender.com
 
 The service will automatically redeploy with new variables.
 
-### Important After Frontend Deploys:
+### Frontend URL Already Configured:
 
-Once you have your frontend URL (e.g., `https://bookink-frontend.onrender.com`), update:
+✅ Frontend is deployed on Vercel: `https://gratis-tattoo.vercel.app`
+✅ CORS_ORIGIN is already set correctly in the environment variables above
+
+If you deploy a new frontend or change the URL:
 
 1. Backend service → Environment tab
 2. Find `CORS_ORIGIN`
-3. Change from `https://bookink-frontend.onrender.com` to your actual frontend URL
-4. Save changes
+3. Update to your new frontend URL
+4. Save changes (backend will auto-redeploy)
 
 ## ⚙️ Backend Service Settings
 
