@@ -1,110 +1,177 @@
-import { pool } from '../config/database';
+import { pool } from "../config/database";
 
 export async function initializeDatabase(): Promise<void> {
   try {
-    console.log('\n🗄️  ========================================');
-    console.log('   Database Schema Initialization');
-    console.log('========================================');
+    console.log("\n🗄️  ========================================");
+    console.log("   Database Schema Initialization");
+    console.log("========================================");
 
-    // Check if tables exist
+    // Check existing tables
     const checkTablesQuery = `
       SELECT table_name
       FROM information_schema.tables
       WHERE table_schema = 'public'
-      AND table_name IN ('users', 'leads', 'activities')
+      AND table_name IN ('leads', 'crm_notes', 'crm_activities', 'campaign_stats', 'admin_users')
     `;
-
     const existingTables = await pool.query(checkTablesQuery);
     const tableNames = existingTables.rows.map((row: any) => row.table_name);
 
-    console.log('Existing tables:', tableNames.length > 0 ? tableNames.join(', ') : 'None');
+    console.log(
+      "Existing tables:",
+      tableNames.length > 0 ? tableNames.join(", ") : "None"
+    );
 
-    if (tableNames.length === 3) {
-      console.log('✅ All required tables already exist');
-      console.log('========================================\n');
-      return;
-    }
-
-    console.log('⚙️  Creating missing tables...\n');
-
-    // Create users table
-    if (!tableNames.includes('users')) {
-      console.log('Creating users table...');
-      await pool.query(`
-        CREATE TABLE IF NOT EXISTS users (
-          id SERIAL PRIMARY KEY,
-          username VARCHAR(255) UNIQUE NOT NULL,
-          email VARCHAR(255) UNIQUE NOT NULL,
-          password VARCHAR(255) NOT NULL,
-          role VARCHAR(50) DEFAULT 'admin',
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
-      console.log('✅ Users table created');
-    }
-
-    // Create leads table
-    if (!tableNames.includes('leads')) {
-      console.log('Creating leads table...');
+    // Leads Table
+    if (!tableNames.includes("leads")) {
+      console.log("Creating leads table...");
       await pool.query(`
         CREATE TABLE IF NOT EXISTS leads (
           id SERIAL PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
           email VARCHAR(255) NOT NULL,
-          whatsapp_country_code VARCHAR(10) NOT NULL,
-          whatsapp_number VARCHAR(50) NOT NULL,
+          whatsapp_country_code VARCHAR(10) DEFAULT '+49',
+          whatsapp_number VARCHAR(20) NOT NULL,
           tattoo_description TEXT NOT NULL,
-          reference_images JSONB DEFAULT '[]',
+          reference_images JSON,
           discount_percentage INTEGER DEFAULT 30,
-          whatsapp_sent BOOLEAN DEFAULT FALSE,
-          email_sent BOOLEAN DEFAULT FALSE,
+          whatsapp_sent BOOLEAN DEFAULT false,
+          email_sent BOOLEAN DEFAULT false,
           status VARCHAR(50) DEFAULT 'new',
-          lead_source VARCHAR(100),
-          utm_source VARCHAR(255),
-          utm_medium VARCHAR(255),
-          utm_campaign VARCHAR(255),
-          ip_address VARCHAR(100),
-          user_agent TEXT,
           submission_number INTEGER DEFAULT 1,
-          is_repeat_customer BOOLEAN DEFAULT FALSE,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          is_repeat_customer BOOLEAN DEFAULT false,
+          lead_source VARCHAR(100),
+          utm_source VARCHAR(100),
+          utm_medium VARCHAR(100),
+          utm_campaign VARCHAR(100),
+          ip_address INET,
+          user_agent TEXT,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
         )
       `);
-      console.log('✅ Leads table created');
+      console.log("✅ Leads table created");
 
-      // Create index on email for faster lookups
       await pool.query(`
-        CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email)
+        CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
+        CREATE INDEX IF NOT EXISTS idx_leads_email_created ON leads(email, created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status);
+        CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads(created_at DESC);
+        CREATE INDEX IF NOT EXISTS idx_leads_whatsapp ON leads(whatsapp_number);
+        CREATE INDEX IF NOT EXISTS idx_leads_is_repeat ON leads(is_repeat_customer);
       `);
-      console.log('✅ Email index created');
+      console.log("✅ Leads indexes created");
     }
 
-    // Create activities table
-    if (!tableNames.includes('activities')) {
-      console.log('Creating activities table...');
+    // CRM Notes Table
+    if (!tableNames.includes("crm_notes")) {
+      console.log("Creating crm_notes table...");
       await pool.query(`
-        CREATE TABLE IF NOT EXISTS activities (
+        CREATE TABLE IF NOT EXISTS crm_notes (
           id SERIAL PRIMARY KEY,
           lead_id INTEGER REFERENCES leads(id) ON DELETE CASCADE,
-          activity_type VARCHAR(100) NOT NULL,
-          description TEXT,
-          metadata JSONB,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          admin_user_id INTEGER,
+          note_text TEXT NOT NULL,
+          created_at TIMESTAMP DEFAULT NOW()
         )
       `);
-      console.log('✅ Activities table created');
+      console.log("✅ CRM Notes table created");
 
-      // Create index on lead_id for faster lookups
       await pool.query(`
-        CREATE INDEX IF NOT EXISTS idx_activities_lead_id ON activities(lead_id)
+        CREATE INDEX IF NOT EXISTS idx_crm_notes_lead_id ON crm_notes(lead_id)
       `);
-      console.log('✅ Activities index created');
+      console.log("✅ CRM Notes index created");
     }
 
-    // Create trigger for submission_number auto-increment
-    console.log('Creating submission number trigger...');
+    // CRM Activities Table
+    if (!tableNames.includes("crm_activities")) {
+      console.log("Creating crm_activities table...");
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS crm_activities (
+          id SERIAL PRIMARY KEY,
+          lead_id INTEGER REFERENCES leads(id) ON DELETE CASCADE,
+          activity_type VARCHAR(50) NOT NULL,
+          description TEXT,
+          metadata JSON,
+          created_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      console.log("✅ CRM Activities table created");
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_crm_activities_lead_id ON crm_activities(lead_id)
+      `);
+      console.log("✅ CRM Activities index created");
+    }
+
+    // Campaign Stats Table
+    if (!tableNames.includes("campaign_stats")) {
+      console.log("Creating campaign_stats table...");
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS campaign_stats (
+          id SERIAL PRIMARY KEY,
+          total_leads INTEGER DEFAULT 0,
+          total_winners INTEGER DEFAULT 0,
+          total_discount_winners INTEGER DEFAULT 0,
+          daily_leads INTEGER DEFAULT 0,
+          last_reset_date DATE DEFAULT CURRENT_DATE,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      console.log("✅ Campaign Stats table created");
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_campaign_stats_id ON campaign_stats(id)
+      `);
+      console.log("✅ Campaign Stats index created");
+
+      await pool.query(`
+        INSERT INTO campaign_stats (total_leads, total_winners, total_discount_winners, daily_leads)
+        VALUES (0, 0, 0, 0)
+        ON CONFLICT DO NOTHING
+      `);
+      console.log("✅ Campaign Stats initial data inserted");
+    }
+
+    // Admin Users Table
+    if (!tableNames.includes("admin_users")) {
+      console.log("Creating admin_users table...");
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS admin_users (
+          id SERIAL PRIMARY KEY,
+          username VARCHAR(100) NOT NULL UNIQUE,
+          password_hash VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL,
+          role VARCHAR(50) DEFAULT 'admin',
+          created_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      console.log("✅ Admin Users table created");
+    }
+
+    // Trigger: updated_at auto-update
+    await pool.query(`
+      CREATE OR REPLACE FUNCTION update_updated_at_column()
+      RETURNS TRIGGER AS $$
+      BEGIN
+         NEW.updated_at = NOW();
+         RETURN NEW;
+      END;
+      $$ LANGUAGE plpgsql;
+
+      DROP TRIGGER IF EXISTS update_leads_updated_at ON leads;
+      CREATE TRIGGER update_leads_updated_at
+      BEFORE UPDATE ON leads
+      FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+      DROP TRIGGER IF EXISTS update_campaign_stats_updated_at ON campaign_stats;
+      CREATE TRIGGER update_campaign_stats_updated_at
+      BEFORE UPDATE ON campaign_stats
+      FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    `);
+    console.log("✅ updated_at triggers created");
+
+    // Trigger: submission_number auto-set
     await pool.query(`
       CREATE OR REPLACE FUNCTION set_submission_number()
       RETURNS TRIGGER AS $$
@@ -119,40 +186,26 @@ export async function initializeDatabase(): Promise<void> {
         RETURN NEW;
       END;
       $$ LANGUAGE plpgsql;
-    `);
 
-    await pool.query(`
-      DROP TRIGGER IF EXISTS set_submission_number_trigger ON leads;
-      CREATE TRIGGER set_submission_number_trigger
+      DROP TRIGGER IF EXISTS set_lead_submission_number ON leads;
+      CREATE TRIGGER set_lead_submission_number
       BEFORE INSERT ON leads
-      FOR EACH ROW
-      EXECUTE FUNCTION set_submission_number();
+      FOR EACH ROW EXECUTE FUNCTION set_submission_number();
     `);
-    console.log('✅ Submission number trigger created');
+    console.log("✅ Submission number trigger created");
 
-    console.log('\n✅ Database schema initialization completed successfully!');
-    console.log('========================================');
-    console.log('Tables created:');
-    console.log('  - users (admin accounts)');
-    console.log('  - leads (customer submissions)');
-    console.log('  - activities (tracking logs)');
-    console.log('========================================\n');
-
+    console.log("\n✅ Database schema initialization completed successfully!");
+    console.log("========================================\n");
   } catch (error: any) {
-    console.error('\n❌ Database initialization failed:');
-    console.error('Error:', error.message);
-
-    if (error.code === 'ECONNREFUSED') {
-      console.error('⚠️  Could not connect to database. Check DATABASE_URL configuration.');
-    } else if (error.code === '42P07') {
-      console.log('ℹ️  Tables already exist (this is fine)');
+    console.error("\n❌ Database initialization failed:", error.message);
+    if (error.code === "ECONNREFUSED") {
+      console.error(
+        "⚠️ Could not connect to database. Check DATABASE_URL configuration."
+      );
+    } else if (error.code === "42P07") {
+      console.log("ℹ️ Tables already exist (this is fine)");
     } else {
-      console.error('Full error:', error);
+      console.error("Full error:", error);
     }
-
-    console.log('========================================\n');
-
-    // Don't throw - let the app continue even if DB init fails
-    // The error will show in logs but won't crash the server
   }
 }
