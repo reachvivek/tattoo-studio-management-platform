@@ -23,36 +23,24 @@ export class SimpleEmailQueueService {
   private readonly DELAY_BETWEEN_SENDS: number;
 
   constructor() {
-    console.log('\n📬 ========================================');
-    console.log('   Simple Email Queue Service');
-    console.log('========================================');
-
     this.HOURLY_LIMIT = parseInt(process.env.EMAIL_RATE_LIMIT_PER_HOUR || '50');
     this.DAILY_LIMIT = parseInt(process.env.EMAIL_RATE_LIMIT_PER_DAY || '500');
     this.DELAY_BETWEEN_SENDS = parseInt(process.env.EMAIL_DELAY_BETWEEN_SENDS || '2000');
 
-    console.log('Hourly Limit:', this.HOURLY_LIMIT);
-    console.log('Daily Limit:', this.DAILY_LIMIT);
-    console.log('Delay Between Sends:', this.DELAY_BETWEEN_SENDS, 'ms');
-
-    // Initialize rate limits
     const now = new Date();
     this.rateLimits = {
       hourly: {
         count: 0,
-        resetTime: new Date(now.getTime() + 3600000) // 1 hour from now
+        resetTime: new Date(now.getTime() + 3600000)
       },
       daily: {
         count: 0,
-        resetTime: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0) // Tomorrow midnight
+        resetTime: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0)
       }
     };
 
-    // Start queue processor
     this.startQueueProcessor();
-
-    console.log('✅ Simple email queue initialized');
-    console.log('========================================\n');
+    console.log('✅ Email queue initialized');
   }
 
   /**
@@ -66,7 +54,6 @@ export class SimpleEmailQueueService {
     };
 
     this.queue.push(job);
-    console.log(`📬 Queued ${type} email for Lead #${lead.id} (Queue size: ${this.queue.length})`);
 
     // Trigger processing if not already running
     if (!this.processing) {
@@ -135,10 +122,6 @@ export class SimpleEmailQueueService {
 
       // Send email
       try {
-        console.log(`\n📨 Processing ${job.type} for Lead #${job.lead.id}`);
-        console.log(`Rate limits - Hourly: ${this.rateLimits.hourly.count}/${this.HOURLY_LIMIT}, Daily: ${this.rateLimits.daily.count}/${this.DAILY_LIMIT}`);
-
-        // Dynamic import to avoid circular dependency
         const { emailService } = await import('./email.service');
 
         if (job.type === 'user_confirmation') {
@@ -147,33 +130,23 @@ export class SimpleEmailQueueService {
           await emailService.sendAdminNotificationEmail(job.lead);
         }
 
-        // Increment counters
         this.rateLimits.hourly.count++;
         this.rateLimits.daily.count++;
 
-        console.log(`✅ Email sent successfully. New counts - Hourly: ${this.rateLimits.hourly.count}/${this.HOURLY_LIMIT}, Daily: ${this.rateLimits.daily.count}/${this.DAILY_LIMIT}`);
-
-        // Add delay between sends
         if (this.queue.length > 0) {
-          console.log(`⏱️  Waiting ${this.DELAY_BETWEEN_SENDS}ms before next email...`);
           await this.delay(this.DELAY_BETWEEN_SENDS);
         }
       } catch (error: any) {
-        console.error(`❌ Failed to send ${job.type} email:`, error.message);
+        console.error(`❌ Failed to send ${job.type} for Lead #${job.lead.id}: ${error.message}`);
 
-        // Retry logic
         job.retries++;
         if (job.retries < 3) {
-          console.log(`🔄 Retrying (attempt ${job.retries + 1}/3)...`);
-          this.queue.push(job); // Re-queue at end
-        } else {
-          console.error(`❌ Max retries reached for Lead #${job.lead.id}. Email discarded.`);
+          this.queue.push(job);
         }
       }
     }
 
     this.processing = false;
-    console.log(`\n📊 Queue processing completed. Remaining jobs: ${this.queue.length}\n`);
   }
 
   /**

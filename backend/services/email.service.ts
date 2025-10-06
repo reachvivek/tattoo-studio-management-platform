@@ -25,34 +25,19 @@ export class EmailService {
   private transporter;
 
   constructor() {
-    console.log('\n📧 ========================================');
-    console.log('   Email Service Initialization');
-    console.log('========================================');
-    console.log('EMAIL_USER:', process.env.EMAIL_USER);
-    console.log('EMAIL_FROM:', process.env.EMAIL_FROM);
-    console.log('EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
-    console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
-    console.log('EMAIL_SERVICE:', process.env.EMAIL_SERVICE || 'gmail');
-
-    if (!process.env.EMAIL_USER) {
-      console.error('❌ EMAIL_USER is not set in .env file!');
-    }
-    if (!process.env.EMAIL_PASSWORD) {
-      console.error('❌ EMAIL_PASSWORD is not set in .env file!');
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+      console.error('❌ Email configuration missing in .env file');
     }
 
     this.transporter = nodemailer.createTransport({
       service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD?.replace(/\s/g, ''), // Remove spaces
+        pass: process.env.EMAIL_PASSWORD?.replace(/\s/g, ''),
       },
-      debug: true, // Enable debug logging
-      logger: true  // Enable logging
     });
 
-    console.log('✅ Email transporter created');
-    console.log('========================================\n');
+    console.log('✅ Email service initialized');
   }
 
   // Helper method to prepare image attachments
@@ -60,30 +45,25 @@ export class EmailService {
     const attachments: any[] = [];
     const uploadsDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
 
-    console.log(`\n📎 Preparing ${images.length} image attachment(s)...`);
-
     for (const imagePath of images) {
       try {
-        // Handle Cloudinary URLs (https://res.cloudinary.com/...)
+        // Handle Cloudinary URLs
         if (imagePath.startsWith('https://res.cloudinary.com/') || imagePath.startsWith('http://res.cloudinary.com/')) {
-          console.log(`✅ Adding Cloudinary URL as attachment: ${imagePath}`);
           const filename = imagePath.split('/').pop() || 'image.jpg';
           attachments.push({
             filename: filename,
-            path: imagePath, // Nodemailer can handle URLs directly
+            path: imagePath,
           });
           continue;
         }
 
-        // Handle other external URLs (just add as link, don't attach)
+        // Handle other external URLs (skip)
         if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-          console.log(`⚠️ Skipping external URL (not Cloudinary): ${imagePath}`);
           continue;
         }
 
-        // Extract filename from path (handle local paths)
+        // Extract filename from local path
         let filename = imagePath;
-
         if (imagePath.includes('/api/images/')) {
           filename = imagePath.split('/api/images/').pop() || imagePath;
         } else if (imagePath.includes('/uploads/')) {
@@ -92,26 +72,17 @@ export class EmailService {
 
         const fullPath = path.join(uploadsDir, filename);
 
-        // Check if file exists locally
-        if (!fs.existsSync(fullPath)) {
-          console.log(`⚠️ Image file not found locally: ${fullPath}`);
-          continue;
+        if (fs.existsSync(fullPath)) {
+          attachments.push({
+            filename: filename,
+            path: fullPath,
+          });
         }
-
-        // Get file stats to verify it's readable
-        const stats = fs.statSync(fullPath);
-        console.log(`✅ Found local image: ${filename} (${(stats.size / 1024).toFixed(2)} KB)`);
-
-        attachments.push({
-          filename: filename,
-          path: fullPath,
-        });
       } catch (error: any) {
-        console.error(`❌ Error preparing attachment for ${imagePath}:`, error.message);
+        console.error(`Error preparing attachment: ${error.message}`);
       }
     }
 
-    console.log(`📎 Successfully prepared ${attachments.length} attachment(s)\n`);
     return attachments;
   }
 
@@ -283,26 +254,10 @@ export class EmailService {
     };
 
     try {
-      console.log(`\n📧 Sending admin notification for Lead #${lead.id}...`);
-      console.log(`From: ${mailOptions.from}`);
-      console.log(`To: ${mailOptions.to}`);
-      console.log(`Subject: ${mailOptions.subject}`);
-      console.log(`Attachments: ${attachments.length} image(s)`);
-
-      const info = await this.transporter.sendMail(mailOptions);
-
-      console.log('✅ Admin notification email sent successfully!');
-      console.log('Message ID:', info.messageId);
-      console.log('Response:', info.response);
-      console.log('Accepted:', info.accepted);
-      console.log('Rejected:', info.rejected);
+      await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Admin email sent for Lead #${lead.id}`);
     } catch (error: any) {
-      console.error('\n❌ Failed to send admin notification:');
-      console.error('Error message:', error.message);
-      console.error('Error code:', error.code);
-      console.error('Error response:', error.response);
-      console.error('Error command:', error.command);
-      console.error('Full error:', error);
+      console.error(`❌ Failed to send admin email for Lead #${lead.id}: ${error.message}`);
       throw error;
     }
   }
@@ -381,26 +336,10 @@ export class EmailService {
     };
 
     try {
-      console.log(`\n📧 Sending user confirmation to ${lead.email}...`);
-      console.log(`From: ${mailOptions.from}`);
-      console.log(`To: ${mailOptions.to}`);
-      console.log(`Subject: ${mailOptions.subject}`);
-      console.log(`Attachments: ${attachments.length} image(s)`);
-
-      const info = await this.transporter.sendMail(mailOptions);
-
-      console.log('✅ User confirmation email sent successfully!');
-      console.log('Message ID:', info.messageId);
-      console.log('Response:', info.response);
-      console.log('Accepted:', info.accepted);
-      console.log('Rejected:', info.rejected);
+      await this.transporter.sendMail(mailOptions);
+      console.log(`✅ Confirmation email sent to ${lead.email}`);
     } catch (error: any) {
-      console.error('\n❌ Failed to send user confirmation:');
-      console.error('Error message:', error.message);
-      console.error('Error code:', error.code);
-      console.error('Error response:', error.response);
-      console.error('Error command:', error.command);
-      console.error('Full error:', error);
+      console.error(`❌ Failed to send confirmation to ${lead.email}: ${error.message}`);
       throw error;
     }
   }
