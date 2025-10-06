@@ -17,7 +17,7 @@ export class AuthController {
 
       // Get admin user
       const result = await pool.query(
-        'SELECT * FROM admin_users WHERE username = $1',
+        'SELECT * FROM users WHERE username = $1',
         [username]
       );
 
@@ -31,7 +31,7 @@ export class AuthController {
       const admin = result.rows[0];
 
       // Check password
-      const isValid = await bcrypt.compare(password, admin.password_hash);
+      const isValid = await bcrypt.compare(password, admin.password);
       if (!isValid) {
         return res.status(401).json({
           success: false,
