@@ -53,3 +53,4 @@ temp/
 # OS
 Thumbs.db
 Desktop.ini
+backend/*.env
