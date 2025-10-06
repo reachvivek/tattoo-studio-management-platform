@@ -33,7 +33,7 @@ export class FormStepOne implements OnInit {
       whatsappCountryCode: ['+49', Validators.required],
       whatsappNumber: [
         '',
-        [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)],
+        [Validators.required, Validators.pattern(/^[0-9]{5,15}$/)],
       ],
       tattooDescription: [''], // Optional now
       optInChoice: ['yes'],
