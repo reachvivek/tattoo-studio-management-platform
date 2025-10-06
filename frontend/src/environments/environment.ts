@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
-  backendUrl: 'http://localhost:3000',
+  apiUrl: 'https://bookink-backend.onrender.com/api',
+  backendUrl: 'https://bookink-backend.onrender.com',
   maxFileSize: 10485760, // 10MB
   allowedFileTypes: ['image/jpeg', 'image/png', 'image/webp'],
   maxFiles: 5,
