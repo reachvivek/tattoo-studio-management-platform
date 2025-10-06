@@ -257,9 +257,17 @@ export class EmailService {
 
           <p><strong>Schnellaktionen:</strong></p>
           <p>
-            <a href="mailto:${lead.email}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-right: 10px; margin-bottom: 10px;">Per E-Mail antworten</a>
-            <a href="https://wa.me/${lead.whatsapp_country_code.replace('+', '')}${lead.whatsapp_number}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-bottom: 10px;">WhatsApp</a>
+            <a href="https://gratis-tattoo.vercel.app/admin/leads/${lead.id}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-right: 10px; margin-bottom: 10px; border-radius: 5px;">📊 Lead im CRM ansehen</a>
+            <a href="mailto:${lead.email}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-right: 10px; margin-bottom: 10px; border-radius: 5px;">✉️ Per E-Mail antworten</a>
+            <a href="https://wa.me/${lead.whatsapp_country_code.replace('+', '')}${lead.whatsapp_number}" style="display: inline-block; background: #25D366; color: #fff; padding: 10px 20px; text-decoration: none; margin-bottom: 10px; border-radius: 5px;">💬 WhatsApp</a>
           </p>
+
+          <div style="background: #f0f9ff; padding: 15px; border-left: 3px solid #000; margin: 20px 0;">
+            <p style="margin: 0; font-weight: bold;">🎯 CRM Dashboard:</p>
+            <p style="margin: 5px 0 0 0;">
+              <a href="https://gratis-tattoo.vercel.app/admin/dashboard" style="color: #000; text-decoration: underline;">Alle Leads anzeigen →</a>
+            </p>
+          </div>
 
           <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
 
