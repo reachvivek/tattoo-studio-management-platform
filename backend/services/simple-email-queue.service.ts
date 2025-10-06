@@ -122,6 +122,9 @@ export class SimpleEmailQueueService {
 
       // Send email
       try {
+        console.log(`📬 [QUEUE] Processing ${job.type} for Lead #${job.lead.id}`);
+        console.log(`📬 [QUEUE] Rate limits - Hourly: ${this.rateLimits.hourly.count}/${this.HOURLY_LIMIT}, Daily: ${this.rateLimits.daily.count}/${this.DAILY_LIMIT}`);
+
         const { emailService } = await import('./email.service');
 
         if (job.type === 'user_confirmation') {
@@ -133,15 +136,23 @@ export class SimpleEmailQueueService {
         this.rateLimits.hourly.count++;
         this.rateLimits.daily.count++;
 
+        console.log(`✅ [QUEUE] Email sent successfully. New counts - Hourly: ${this.rateLimits.hourly.count}/${this.HOURLY_LIMIT}, Daily: ${this.rateLimits.daily.count}/${this.DAILY_LIMIT}`);
+
         if (this.queue.length > 0) {
+          console.log(`⏱️  [QUEUE] Waiting ${this.DELAY_BETWEEN_SENDS}ms before next email...`);
           await this.delay(this.DELAY_BETWEEN_SENDS);
         }
       } catch (error: any) {
-        console.error(`❌ Failed to send ${job.type} for Lead #${job.lead.id}: ${error.message}`);
+        console.error(`❌ [QUEUE] Failed to send ${job.type} for Lead #${job.lead.id}`);
+        console.error(`❌ [QUEUE] Error: ${error.message}`);
+        console.error(`❌ [QUEUE] Error Code: ${error.code}`);
 
         job.retries++;
         if (job.retries < 3) {
+          console.log(`🔄 [QUEUE] Retry ${job.retries}/3 - Re-queuing job`);
           this.queue.push(job);
+        } else {
+          console.error(`❌ [QUEUE] Max retries reached. Discarding email for Lead #${job.lead.id}`);
         }
       }
     }
