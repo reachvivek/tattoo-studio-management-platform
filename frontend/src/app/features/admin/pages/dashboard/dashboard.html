@@ -1,0 +1,132 @@
+<div class="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+  <!-- Header -->
+  <header class="bg-zinc-800/50 border-b border-zinc-700 backdrop-blur-sm">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-white">Rico Tattoo CRM</h1>
+        <p class="text-sm text-zinc-400">Lead Management Dashboard</p>
+      </div>
+      <button
+        (click)="logout()"
+        class="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg transition"
+      >
+        Abmelden
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
+        <div class="text-zinc-400 text-sm mb-1">Gesamt Leads</div>
+        <div class="text-3xl font-bold text-white">{{ leads.length }}</div>
+      </div>
+      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
+        <div class="text-zinc-400 text-sm mb-1">Neue</div>
+        <div class="text-3xl font-bold text-blue-400">{{ (leads | filter:'status':'new').length }}</div>
+      </div>
+      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
+        <div class="text-zinc-400 text-sm mb-1">Qualifiziert</div>
+        <div class="text-3xl font-bold text-purple-400">{{ (leads | filter:'status':'qualified').length }}</div>
+      </div>
+      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
+        <div class="text-zinc-400 text-sm mb-1">Konvertiert</div>
+        <div class="text-3xl font-bold text-green-400">{{ (leads | filter:'status':'converted').length }}</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-zinc-300 mb-2">Suche</label>
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearch()"
+            placeholder="Name, E-Mail oder Telefon..."
+            class="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-red-600"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-zinc-300 mb-2">Status Filter</label>
+          <select
+            [(ngModel)]="statusFilter"
+            (change)="onStatusFilterChange()"
+            class="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-600"
+          >
+            @for (option of statusOptions; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg overflow-hidden">
+      @if (isLoading) {
+        <div class="p-12 text-center text-zinc-400">
+          Lade Leads...
+        </div>
+      } @else if (filteredLeads.length === 0) {
+        <div class="p-12 text-center text-zinc-400">
+          Keine Leads gefunden
+        </div>
+      } @else {
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-zinc-900/50 border-b border-zinc-700">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Name</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Kontakt</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Rabatt</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Erstellt</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Aktionen</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-zinc-700">
+              @for (lead of filteredLeads; track lead.id) {
+                <tr class="hover:bg-zinc-900/30 transition">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-white">{{ lead.name }}</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-zinc-300">{{ lead.email }}</div>
+                    <div class="text-xs text-zinc-500">{{ lead.whatsapp_country_code }} {{ lead.whatsapp_number }}</div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span [class]="'px-3 py-1 text-xs font-medium rounded-full border ' + getStatusBadgeClass(lead.status)">
+                      {{ lead.status }}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="text-sm font-semibold text-red-400">{{ lead.discount_percentage }}%</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-400">
+                    {{ formatDate(lead.created_at) }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <button
+                      (click)="viewLead(lead.id)"
+                      class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
+                    >
+                      Details
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+
+    <div class="mt-4 text-sm text-zinc-500 text-center">
+      Zeige {{ filteredLeads.length }} von {{ leads.length }} Leads
+    </div>
+  </main>
+</div>

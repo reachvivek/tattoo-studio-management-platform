@@ -31,10 +31,16 @@ app.listen(PORT, async () => {
   console.log('');
   console.log('📍 Available endpoints:');
   console.log(`   GET  /health`);
+  console.log(`   POST ${process.env.API_PREFIX || '/api'}/auth/login`);
+  console.log(`   POST ${process.env.API_PREFIX || '/api'}/auth/create-admin`);
   console.log(`   POST ${process.env.API_PREFIX || '/api'}/leads`);
-  console.log(`   GET  ${process.env.API_PREFIX || '/api'}/leads`);
+  console.log(`   GET  ${process.env.API_PREFIX || '/api'}/leads (protected)`);
+  console.log(`   GET  ${process.env.API_PREFIX || '/api'}/leads/:id (protected)`);
+  console.log(`   PATCH ${process.env.API_PREFIX || '/api'}/leads/:id/status (protected)`);
   console.log(`   GET  ${process.env.API_PREFIX || '/api'}/analytics/stats`);
   console.log(`   POST ${process.env.API_PREFIX || '/api'}/upload`);
+  console.log('');
+  console.log('🔐 CRM Dashboard: http://localhost:4200/admin/login');
   console.log('');
   console.log('==========================================');
   console.log('');

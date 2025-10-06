@@ -4,6 +4,7 @@ import path from 'path';
 import leadRoutes from './routes/lead.routes';
 import uploadRoutes from './routes/upload.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import authRoutes from './routes/auth.routes';
 import { errorHandler } from './middleware/error-handler';
 import { logger } from './middleware/logger';
 
@@ -33,6 +34,7 @@ app.get('/health', (req: Request, res: Response) => {
 
 // API Routes
 const apiPrefix = process.env.API_PREFIX || '/api';
+app.use(`${apiPrefix}/auth`, authRoutes);
 app.use(`${apiPrefix}/leads`, leadRoutes);
 app.use(`${apiPrefix}/upload`, uploadRoutes);
 app.use(`${apiPrefix}/analytics`, analyticsRoutes);
@@ -44,6 +46,7 @@ app.get('/', (req: Request, res: Response) => {
     version: '1.0.0',
     endpoints: {
       health: '/health',
+      auth: `${apiPrefix}/auth`,
       leads: `${apiPrefix}/leads`,
       upload: `${apiPrefix}/upload`,
       analytics: `${apiPrefix}/analytics`,

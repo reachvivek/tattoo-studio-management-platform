@@ -7,6 +7,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/lead-capture-funnel/lead-capture-funnel.module').then(m => m.LeadCaptureFunnelModule)
   },
   {
+    path: 'admin',
+    loadChildren: () => import('./features/admin/admin-module').then(m => m.AdminModule)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

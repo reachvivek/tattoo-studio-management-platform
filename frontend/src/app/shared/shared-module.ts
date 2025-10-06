@@ -4,12 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonComponent } from './components/button/button';
 import { InputComponent } from './components/input/input';
 import { FileUploadComponent } from './components/file-upload/file-upload';
+import { FilterPipe } from './pipes/filter-pipe';
 
 @NgModule({
   declarations: [
     ButtonComponent,
     InputComponent,
-    FileUploadComponent
+    FileUploadComponent,
+    FilterPipe
   ],
   imports: [
     CommonModule,
@@ -20,6 +22,7 @@ import { FileUploadComponent } from './components/file-upload/file-upload';
     ButtonComponent,
     InputComponent,
     FileUploadComponent,
+    FilterPipe,
     CommonModule,
     FormsModule,
     ReactiveFormsModule
