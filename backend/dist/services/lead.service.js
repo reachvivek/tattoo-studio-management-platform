@@ -90,6 +90,32 @@ class LeadService {
         }
         return result.rows[0];
     }
+    async deleteLead(id) {
+        const client = await database_1.pool.connect();
+        try {
+            await client.query('BEGIN');
+            // First check if lead exists
+            const leadCheck = await client.query('SELECT id FROM leads WHERE id = $1', [id]);
+            if (leadCheck.rows.length === 0) {
+                throw new Error('Lead nicht gefunden');
+            }
+            // Delete related activities first (foreign key constraint)
+            await client.query('DELETE FROM crm_activities WHERE lead_id = $1', [id]);
+            // Delete the lead
+            await client.query('DELETE FROM leads WHERE id = $1', [id]);
+            // Update campaign stats
+            await client.query('UPDATE campaign_stats SET total_leads = GREATEST(total_leads - 1, 0)');
+            await client.query('COMMIT');
+            return true;
+        }
+        catch (error) {
+            await client.query('ROLLBACK');
+            throw error;
+        }
+        finally {
+            client.release();
+        }
+    }
 }
 exports.LeadService = LeadService;
 exports.leadService = new LeadService();

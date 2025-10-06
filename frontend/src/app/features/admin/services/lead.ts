@@ -61,4 +61,8 @@ export class Lead {
   updateStatus(id: number, status: string): Observable<LeadResponse> {
     return this.http.patch<LeadResponse>(`${environment.apiUrl}/leads/${id}/status`, { status }, this.getHeaders());
   }
+
+  delete(id: number): Observable<{success: boolean; message: string}> {
+    return this.http.delete<{success: boolean; message: string}>(`${environment.apiUrl}/leads/${id}`, this.getHeaders());
+  }
 }

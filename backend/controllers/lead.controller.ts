@@ -100,6 +100,28 @@ export class LeadController {
       });
     }
   }
+
+  async delete(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id);
+      await leadService.deleteLead(id);
+      res.json({
+        success: true,
+        message: 'Lead erfolgreich gelöscht'
+      });
+    } catch (error: any) {
+      if (error.message === 'Lead nicht gefunden') {
+        return res.status(404).json({
+          success: false,
+          error: error.message
+        });
+      }
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
 }
 
 export const leadController = new LeadController();

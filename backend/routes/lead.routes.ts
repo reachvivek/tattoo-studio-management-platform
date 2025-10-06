@@ -11,5 +11,6 @@ router.post('/', leadController.create.bind(leadController));
 router.get('/', authenticateToken, leadController.getAll.bind(leadController));
 router.get('/:id', authenticateToken, leadController.getById.bind(leadController));
 router.patch('/:id/status', authenticateToken, leadController.updateStatus.bind(leadController));
+router.delete('/:id', authenticateToken, leadController.delete.bind(leadController));
 
 export default router;
