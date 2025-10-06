@@ -17,11 +17,16 @@ class EmailService {
             console.error('❌ Email configuration missing in .env file');
         }
         this.transporter = nodemailer_1.default.createTransport({
-            service: process.env.EMAIL_SERVICE || 'gmail',
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASSWORD?.replace(/\s/g, ''),
             },
+            tls: {
+                rejectUnauthorized: false
+            }
         });
         console.log('✅ Email service initialized');
     }
