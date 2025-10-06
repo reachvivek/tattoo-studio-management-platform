@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app';
 import { pool } from './config/database';
+import { initializeAdminUser } from './utils/init-admin';
 
 dotenv.config();
 
@@ -22,6 +23,9 @@ app.listen(PORT, async () => {
   try {
     await pool.query('SELECT NOW()');
     console.log('✅ Database connection verified');
+
+    // Initialize default admin user
+    await initializeAdminUser();
   } catch (error) {
     console.error('❌ Database connection failed:', error);
     console.log('');
