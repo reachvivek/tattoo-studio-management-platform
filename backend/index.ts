@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import app from './app';
 import { pool } from './config/database';
+import { initializeDatabase } from './utils/init-database';
 import { initializeAdminUser } from './utils/init-admin';
 
 dotenv.config();
@@ -19,12 +20,15 @@ app.listen(PORT, async () => {
   console.log(`🌐 CORS enabled for: ${process.env.CORS_ORIGIN || 'http://localhost:4200'}`);
   console.log('');
 
-  // Test database connection
+  // Test database connection and auto-initialize
   try {
     await pool.query('SELECT NOW()');
     console.log('✅ Database connection verified');
 
-    // Initialize default admin user
+    // Auto-create database tables if they don't exist
+    await initializeDatabase();
+
+    // Auto-create default admin user if not exists
     await initializeAdminUser();
   } catch (error) {
     console.error('❌ Database connection failed:', error);
