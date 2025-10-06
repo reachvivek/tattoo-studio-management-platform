@@ -61,15 +61,19 @@
           type="text"
           formControlName="whatsappCountryCode"
           placeholder="+49"
+          readonly
           class="whatsapp-code w-28 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 focus:outline-none
                  transition-all duration-200 text-center font-medium text-sm sm:text-base"
-          style="padding: 0.9rem 1.25rem;"
+          style="padding: 0.9rem 1.25rem; cursor: not-allowed; opacity: 0.8;"
         />
         <input
           type="tel"
           formControlName="whatsappNumber"
           placeholder="1516 4398197"
+          (keypress)="onNumberKeyPress($event)"
+          (paste)="onNumberPaste($event)"
+          maxlength="15"
           class="whatsapp-number flex-1 bg-[#1A1A1A] text-white border border-[#333333] rounded-xl
                  focus:border-[#10B981] focus:ring-2 focus:ring-[#10B981]/20 focus:outline-none
                  transition-all duration-200 placeholder:text-[#666666] text-sm sm:text-base"
@@ -78,6 +82,9 @@
       </div>
       <p *ngIf="getErrorMessage('whatsappNumber')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
         {{ getErrorMessage('whatsappNumber') }}
+      </p>
+      <p *ngIf="getErrorMessage('whatsappCountryCode')" class="text-[#F44336] text-xs" style="margin-top: 0.5rem; margin-left: 0.25rem;">
+        {{ getErrorMessage('whatsappCountryCode') }}
       </p>
     </div>
 

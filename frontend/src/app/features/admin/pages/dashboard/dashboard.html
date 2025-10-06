@@ -1,61 +1,56 @@
-<div class="min-h-screen bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900">
+<div class="dashboard-container">
   <!-- Header -->
-  <header class="bg-zinc-800/50 border-b border-zinc-700 backdrop-blur-sm">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <div>
-        <h1 class="text-2xl font-bold text-white">Rico Tattoo CRM</h1>
-        <p class="text-sm text-zinc-400">Lead Management Dashboard</p>
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="header-title">
+        <h1>BookInk</h1>
+        <p>Lead Management</p>
       </div>
-      <button
-        (click)="logout()"
-        class="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg transition"
-      >
+      <button (click)="logout()" class="logout-button">
         Abmelden
       </button>
     </div>
   </header>
 
   <!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 py-8">
+  <main class="dashboard-main">
     <!-- Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
-        <div class="text-zinc-400 text-sm mb-1">Gesamt Leads</div>
-        <div class="text-3xl font-bold text-white">{{ leads.length }}</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Gesamt Leads</div>
+        <div class="stat-value">{{ leads.length }}</div>
       </div>
-      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
-        <div class="text-zinc-400 text-sm mb-1">Neue</div>
-        <div class="text-3xl font-bold text-blue-400">{{ (leads | filter:'status':'new').length }}</div>
+      <div class="stat-card">
+        <div class="stat-label">Neue</div>
+        <div class="stat-value stat-blue">{{ (leads | filter:'status':'new').length }}</div>
       </div>
-      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
-        <div class="text-zinc-400 text-sm mb-1">Qualifiziert</div>
-        <div class="text-3xl font-bold text-purple-400">{{ (leads | filter:'status':'qualified').length }}</div>
+      <div class="stat-card">
+        <div class="stat-label">Qualifiziert</div>
+        <div class="stat-value stat-purple">{{ (leads | filter:'status':'qualified').length }}</div>
       </div>
-      <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6">
-        <div class="text-zinc-400 text-sm mb-1">Konvertiert</div>
-        <div class="text-3xl font-bold text-green-400">{{ (leads | filter:'status':'converted').length }}</div>
+      <div class="stat-card">
+        <div class="stat-label">Konvertiert</div>
+        <div class="stat-value stat-green">{{ (leads | filter:'status':'converted').length }}</div>
       </div>
     </div>
 
     <!-- Filters -->
-    <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg p-6 mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-zinc-300 mb-2">Suche</label>
+    <div class="filters-card">
+      <div class="filters-grid">
+        <div class="filter-group">
+          <label>Suche</label>
           <input
             type="text"
             [(ngModel)]="searchTerm"
             (input)="onSearch()"
             placeholder="Name, E-Mail oder Telefon..."
-            class="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-red-600"
           />
         </div>
-        <div>
-          <label class="block text-sm font-medium text-zinc-300 mb-2">Status Filter</label>
+        <div class="filter-group">
+          <label>Status Filter</label>
           <select
             [(ngModel)]="statusFilter"
             (change)="onStatusFilterChange()"
-            class="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-red-600"
           >
             @for (option of statusOptions; track option.value) {
               <option [value]="option.value">{{ option.label }}</option>
@@ -65,55 +60,88 @@
       </div>
     </div>
 
-    <!-- Leads Table -->
-    <div class="bg-zinc-800/50 border border-zinc-700 rounded-lg overflow-hidden">
+    <!-- Leads List -->
+    <div class="leads-container">
       @if (isLoading) {
-        <div class="p-12 text-center text-zinc-400">
+        <div class="empty-state">
           Lade Leads...
         </div>
       } @else if (filteredLeads.length === 0) {
-        <div class="p-12 text-center text-zinc-400">
+        <div class="empty-state">
           Keine Leads gefunden
         </div>
       } @else {
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-zinc-900/50 border-b border-zinc-700">
+        <!-- Mobile: Card View -->
+        <div class="leads-mobile">
+          @for (lead of filteredLeads; track lead.id) {
+            <div class="lead-card-mobile">
+              <div class="lead-card-header">
+                <div class="lead-name">{{ lead.name }}</div>
+                <span [class]="'status-badge ' + lead.status">{{ lead.status }}</span>
+              </div>
+              <div class="lead-card-body">
+                <div class="lead-info">
+                  <div class="lead-info-item">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ lead.email }}</span>
+                  </div>
+                  <div class="lead-info-item">
+                    <span class="info-label">WhatsApp:</span>
+                    <span class="info-value">{{ lead.whatsapp_country_code }} {{ lead.whatsapp_number }}</span>
+                  </div>
+                  <div class="lead-info-item">
+                    <span class="info-label">Rabatt:</span>
+                    <span class="info-value discount">{{ lead.discount_percentage }}%</span>
+                  </div>
+                  <div class="lead-info-item">
+                    <span class="info-label">Erstellt:</span>
+                    <span class="info-value">{{ formatDate(lead.created_at) }}</span>
+                  </div>
+                </div>
+                <button (click)="viewLead(lead.id)" class="details-button">
+                  Details ansehen
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Desktop: Table View -->
+        <div class="leads-desktop">
+          <table class="leads-table">
+            <thead>
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Name</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Kontakt</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Rabatt</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Erstellt</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-zinc-400 uppercase tracking-wider">Aktionen</th>
+                <th>Name</th>
+                <th>Kontakt</th>
+                <th>Status</th>
+                <th>Rabatt</th>
+                <th>Erstellt</th>
+                <th>Aktionen</th>
               </tr>
             </thead>
-            <tbody class="divide-y divide-zinc-700">
+            <tbody>
               @for (lead of filteredLeads; track lead.id) {
-                <tr class="hover:bg-zinc-900/30 transition">
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <div class="text-sm font-medium text-white">{{ lead.name }}</div>
+                <tr>
+                  <td>
+                    <div class="table-name">{{ lead.name }}</div>
                   </td>
-                  <td class="px-6 py-4">
-                    <div class="text-sm text-zinc-300">{{ lead.email }}</div>
-                    <div class="text-xs text-zinc-500">{{ lead.whatsapp_country_code }} {{ lead.whatsapp_number }}</div>
+                  <td>
+                    <div class="table-contact">
+                      <div>{{ lead.email }}</div>
+                      <div class="contact-sub">{{ lead.whatsapp_country_code }} {{ lead.whatsapp_number }}</div>
+                    </div>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span [class]="'px-3 py-1 text-xs font-medium rounded-full border ' + getStatusBadgeClass(lead.status)">
-                      {{ lead.status }}
-                    </span>
+                  <td>
+                    <span [class]="'status-badge ' + lead.status">{{ lead.status }}</span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <span class="text-sm font-semibold text-red-400">{{ lead.discount_percentage }}%</span>
+                  <td>
+                    <span class="table-discount">{{ lead.discount_percentage }}%</span>
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-400">
+                  <td class="table-date">
                     {{ formatDate(lead.created_at) }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap">
-                    <button
-                      (click)="viewLead(lead.id)"
-                      class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition"
-                    >
+                  <td>
+                    <button (click)="viewLead(lead.id)" class="table-button">
                       Details
                     </button>
                   </td>
@@ -125,7 +153,7 @@
       }
     </div>
 
-    <div class="mt-4 text-sm text-zinc-500 text-center">
+    <div class="leads-count">
       Zeige {{ filteredLeads.length }} von {{ leads.length }} Leads
     </div>
   </main>

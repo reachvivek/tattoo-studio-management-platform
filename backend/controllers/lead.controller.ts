@@ -17,9 +17,33 @@ export class LeadController {
         data: lead
       });
     } catch (error: any) {
+      console.error('❌ Error creating lead:', error);
+
+      // Handle validation errors with 400 Bad Request
+      if (error.message && (
+        error.message.includes('Pflichtfelder') ||
+        error.message.includes('Ungültige') ||
+        error.message.includes('mindestens')
+      )) {
+        return res.status(400).json({
+          success: false,
+          error: error.message
+        });
+      }
+
+      // Handle database errors gracefully - don't expose technical details
+      if (error.code) {
+        console.error('Database error code:', error.code);
+        return res.status(500).json({
+          success: false,
+          error: 'Ein technischer Fehler ist aufgetreten. Bitte versuche es später erneut.'
+        });
+      }
+
+      // Generic error response
       res.status(500).json({
         success: false,
-        error: error.message || 'Fehler beim Erstellen des Leads'
+        error: 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.'
       });
     }
   }

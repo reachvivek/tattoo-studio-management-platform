@@ -32,7 +32,7 @@ export class FormStepOne implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       whatsappCountryCode: ['+49', Validators.required],
       whatsappNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      tattooDescription: [''], // Made optional - no validators
+      tattooDescription: ['', [Validators.required, Validators.minLength(10)]], // Required with minimum 10 characters
       optInChoice: ['yes'] // Default to "yes" option
     });
   }
@@ -49,27 +49,12 @@ export class FormStepOne implements OnInit {
     console.log('onSubmit called!');
     console.log('Form value:', this.leadForm.value);
 
-    // Store form data in shared service
-    this.leadCaptureState.setLeadData({
-      name: this.leadForm.value.name || 'Test User',
-      email: this.leadForm.value.email,
-      whatsappCountryCode: this.leadForm.value.whatsappCountryCode,
-      whatsappNumber: this.leadForm.value.whatsappNumber,
-      tattooDescription: this.leadForm.value.tattooDescription
-    });
-
-    // TEMPORARY: Skip validation and API calls for testing spin wheel
-    const testName = this.leadForm.value.name || 'Test User';
-    console.log('Emitting formSubmitted with name:', testName);
-    this.formSubmitted.emit(testName);
-    return;
-
-    // Original code (commented out for testing)
-    /*
+    // Validate form
     if (this.leadForm.invalid) {
       Object.keys(this.leadForm.controls).forEach(key => {
         this.leadForm.get(key)?.markAsTouched();
       });
+      this.error = 'Bitte fülle alle erforderlichen Felder korrekt aus';
       return;
     }
 
@@ -95,17 +80,76 @@ export class FormStepOne implements OnInit {
       const response = await this.leadService.createLead(leadData).toPromise();
 
       if (response?.success) {
-        // Emit event with user name to show spin wheel instead of navigating directly
+        // Store form data in shared service
+        this.leadCaptureState.setLeadData({
+          name: this.leadForm.value.name,
+          email: this.leadForm.value.email,
+          whatsappCountryCode: this.leadForm.value.whatsappCountryCode,
+          whatsappNumber: this.leadForm.value.whatsappNumber,
+          tattooDescription: this.leadForm.value.tattooDescription
+        });
+
+        // Emit event with user name to show spin wheel
         this.formSubmitted.emit(this.leadForm.value.name);
       } else {
-        this.error = response?.error || 'Ein Fehler ist aufgetreten';
+        this.error = this.getUserFriendlyError(response?.error);
       }
     } catch (err: any) {
-      this.error = err?.error?.error?.message || 'Netzwerkfehler. Bitte versuche es erneut.';
+      console.error('Form submission error:', err);
+      this.error = this.getUserFriendlyError(err?.error?.error || err?.error?.message);
     } finally {
       this.isLoading = false;
     }
-    */
+  }
+
+  private getUserFriendlyError(errorMessage?: string): string {
+    // Don't expose technical database errors
+    if (!errorMessage) {
+      return 'Ein Fehler ist aufgetreten. Bitte versuche es später erneut.';
+    }
+
+    // Return validation errors as-is (they're already user-friendly)
+    if (
+      errorMessage.includes('Pflichtfelder') ||
+      errorMessage.includes('Ungültige') ||
+      errorMessage.includes('mindestens')
+    ) {
+      return errorMessage;
+    }
+
+    // Map technical errors to user-friendly messages
+    if (errorMessage.includes('duplicate') || errorMessage.includes('unique constraint')) {
+      return 'Diese E-Mail wurde bereits verwendet. Bitte verwende eine andere E-Mail-Adresse.';
+    }
+
+    if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+      return 'Netzwerkfehler. Bitte überprüfe deine Internetverbindung und versuche es erneut.';
+    }
+
+    if (errorMessage.includes('timeout')) {
+      return 'Die Anfrage dauerte zu lange. Bitte versuche es erneut.';
+    }
+
+    // Generic error for everything else
+    return 'Ein technischer Fehler ist aufgetreten. Bitte versuche es später erneut.';
+  }
+
+  onNumberKeyPress(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Only allow numbers (0-9) and spaces
+    if ((charCode < 48 || charCode > 57) && charCode !== 32) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  onNumberPaste(event: ClipboardEvent): void {
+    const pastedText = event.clipboardData?.getData('text') || '';
+    // Only allow numbers and spaces
+    if (!/^[0-9\s]*$/.test(pastedText)) {
+      event.preventDefault();
+    }
   }
 
   getErrorMessage(field: string): string {
@@ -115,7 +159,12 @@ export class FormStepOne implements OnInit {
     if (control.errors['required']) return 'Dieses Feld ist erforderlich';
     if (control.errors['email']) return 'Ungültige E-Mail-Adresse';
     if (control.errors['minlength']) return `Mindestens ${control.errors['minlength'].requiredLength} Zeichen erforderlich`;
-    if (control.errors['pattern']) return 'Ungültiges Format';
+    if (control.errors['pattern']) {
+      if (field === 'whatsappNumber') {
+        return 'Bitte gib 10-15 Ziffern ein (nur Zahlen)';
+      }
+      return 'Ungültiges Format';
+    }
 
     return '';
   }

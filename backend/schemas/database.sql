@@ -15,7 +15,7 @@ DROP TABLE IF EXISTS leads CASCADE;
 CREATE TABLE leads (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) NOT NULL,  -- Removed UNIQUE to allow repeat submissions
     whatsapp_country_code VARCHAR(10) DEFAULT '+49',
     whatsapp_number VARCHAR(20) NOT NULL,
     tattoo_description TEXT NOT NULL,
@@ -24,6 +24,8 @@ CREATE TABLE leads (
     whatsapp_sent BOOLEAN DEFAULT false,
     email_sent BOOLEAN DEFAULT false,
     status VARCHAR(50) DEFAULT 'new',
+    submission_number INTEGER DEFAULT 1,  -- Track submission count per email
+    is_repeat_customer BOOLEAN DEFAULT false,  -- Flag for repeat customers
     lead_source VARCHAR(100),
     utm_source VARCHAR(100),
     utm_medium VARCHAR(100),
@@ -77,9 +79,11 @@ CREATE TABLE admin_users (
 
 -- Indexes
 CREATE INDEX idx_leads_email ON leads(email);
+CREATE INDEX idx_leads_email_created ON leads(email, created_at DESC);  -- For tracking repeat submissions
 CREATE INDEX idx_leads_status ON leads(status);
 CREATE INDEX idx_leads_created_at ON leads(created_at DESC);
 CREATE INDEX idx_leads_whatsapp ON leads(whatsapp_number);
+CREATE INDEX idx_leads_is_repeat ON leads(is_repeat_customer);  -- For filtering repeat customers
 CREATE INDEX idx_crm_notes_lead_id ON crm_notes(lead_id);
 CREATE INDEX idx_crm_activities_lead_id ON crm_activities(lead_id);
 
@@ -105,8 +109,33 @@ CREATE TRIGGER update_campaign_stats_updated_at
 BEFORE UPDATE ON campaign_stats
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
+-- Function to auto-set submission_number on insert
+CREATE OR REPLACE FUNCTION set_submission_number()
+RETURNS TRIGGER AS $$
+BEGIN
+  -- Count previous submissions from this email
+  SELECT COALESCE(MAX(submission_number), 0) + 1
+  INTO NEW.submission_number
+  FROM leads
+  WHERE email = NEW.email;
+
+  -- Mark as repeat customer if not first submission
+  NEW.is_repeat_customer := (NEW.submission_number > 1);
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to auto-set submission_number
+CREATE TRIGGER set_lead_submission_number
+  BEFORE INSERT ON leads
+  FOR EACH ROW
+  EXECUTE FUNCTION set_submission_number();
+
 -- Comments
 COMMENT ON TABLE leads IS 'Lead submissions from tattoo giveaway campaign';
 COMMENT ON TABLE crm_notes IS 'CRM notes for lead management';
 COMMENT ON TABLE crm_activities IS 'Activity log for lead interactions';
 COMMENT ON TABLE campaign_stats IS 'Campaign statistics';
+COMMENT ON COLUMN leads.submission_number IS 'Tracks which submission number this is for the email (1 = first, 2 = second, etc.)';
+COMMENT ON COLUMN leads.is_repeat_customer IS 'True if this is not the first submission from this email';

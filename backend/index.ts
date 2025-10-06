@@ -39,6 +39,7 @@ app.listen(PORT, async () => {
   console.log(`   PATCH ${process.env.API_PREFIX || '/api'}/leads/:id/status (protected)`);
   console.log(`   GET  ${process.env.API_PREFIX || '/api'}/analytics/stats`);
   console.log(`   POST ${process.env.API_PREFIX || '/api'}/upload`);
+  console.log(`   GET  ${process.env.API_PREFIX || '/api'}/images/:filename (blob endpoint)`);
   console.log('');
   console.log('🔐 CRM Dashboard: http://localhost:4200/admin/login');
   console.log('');

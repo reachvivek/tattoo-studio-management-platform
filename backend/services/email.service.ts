@@ -1,19 +1,163 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+import { simpleEmailQueueService } from './simple-email-queue.service';
 
 dotenv.config();
+
+interface Lead {
+  id: number;
+  name: string;
+  email: string;
+  whatsapp_country_code: string;
+  whatsapp_number: string;
+  tattoo_description: string;
+  reference_images: string | string[];
+  discount_percentage: number;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  created_at: Date;
+}
 
 export class EmailService {
   private transporter;
 
   constructor() {
+    console.log('\n📧 ========================================');
+    console.log('   Email Service Initialization');
+    console.log('========================================');
+    console.log('EMAIL_USER:', process.env.EMAIL_USER);
+    console.log('EMAIL_FROM:', process.env.EMAIL_FROM);
+    console.log('EMAIL_PASSWORD exists:', !!process.env.EMAIL_PASSWORD);
+    console.log('EMAIL_PASSWORD length:', process.env.EMAIL_PASSWORD?.length);
+    console.log('EMAIL_SERVICE:', process.env.EMAIL_SERVICE || 'gmail');
+
+    if (!process.env.EMAIL_USER) {
+      console.error('❌ EMAIL_USER is not set in .env file!');
+    }
+    if (!process.env.EMAIL_PASSWORD) {
+      console.error('❌ EMAIL_PASSWORD is not set in .env file!');
+    }
+
     this.transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: process.env.EMAIL_SERVICE || 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
+        pass: process.env.EMAIL_PASSWORD?.replace(/\s/g, ''), // Remove spaces
       },
+      debug: true, // Enable debug logging
+      logger: true  // Enable logging
     });
+
+    console.log('✅ Email transporter created');
+    console.log('========================================\n');
+  }
+
+  // Helper method to prepare image attachments
+  private prepareImageAttachments(images: string[]): any[] {
+    const attachments: any[] = [];
+    const uploadsDir = process.env.UPLOAD_DIR || path.join(process.cwd(), 'uploads');
+
+    console.log(`\n📎 Preparing ${images.length} image attachment(s)...`);
+
+    for (const imagePath of images) {
+      try {
+        // Handle Cloudinary URLs (https://res.cloudinary.com/...)
+        if (imagePath.startsWith('https://res.cloudinary.com/') || imagePath.startsWith('http://res.cloudinary.com/')) {
+          console.log(`✅ Adding Cloudinary URL as attachment: ${imagePath}`);
+          const filename = imagePath.split('/').pop() || 'image.jpg';
+          attachments.push({
+            filename: filename,
+            path: imagePath, // Nodemailer can handle URLs directly
+          });
+          continue;
+        }
+
+        // Handle other external URLs (just add as link, don't attach)
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+          console.log(`⚠️ Skipping external URL (not Cloudinary): ${imagePath}`);
+          continue;
+        }
+
+        // Extract filename from path (handle local paths)
+        let filename = imagePath;
+
+        if (imagePath.includes('/api/images/')) {
+          filename = imagePath.split('/api/images/').pop() || imagePath;
+        } else if (imagePath.includes('/uploads/')) {
+          filename = imagePath.split('/uploads/').pop() || imagePath;
+        }
+
+        const fullPath = path.join(uploadsDir, filename);
+
+        // Check if file exists locally
+        if (!fs.existsSync(fullPath)) {
+          console.log(`⚠️ Image file not found locally: ${fullPath}`);
+          continue;
+        }
+
+        // Get file stats to verify it's readable
+        const stats = fs.statSync(fullPath);
+        console.log(`✅ Found local image: ${filename} (${(stats.size / 1024).toFixed(2)} KB)`);
+
+        attachments.push({
+          filename: filename,
+          path: fullPath,
+        });
+      } catch (error: any) {
+        console.error(`❌ Error preparing attachment for ${imagePath}:`, error.message);
+      }
+    }
+
+    console.log(`📎 Successfully prepared ${attachments.length} attachment(s)\n`);
+    return attachments;
+  }
+
+  // Test email configuration
+  async verifyConnection(): Promise<boolean> {
+    try {
+      console.log('🔍 Verifying email connection...');
+      await this.transporter.verify();
+      console.log('✅ Email connection verified successfully!');
+      return true;
+    } catch (error: any) {
+      console.error('❌ Email connection verification failed:');
+      console.error('Error:', error.message);
+      console.error('Code:', error.code);
+      console.error('Command:', error.command);
+      return false;
+    }
+  }
+
+  // Send test email
+  async sendTestEmail(to: string): Promise<void> {
+    console.log(`\n📧 Sending test email to ${to}...`);
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to,
+      subject: 'Test Email from BookInk',
+      html: `
+        <h1>Test Email</h1>
+        <p>This is a test email from the BookInk system.</p>
+        <p>If you received this, your email configuration is working correctly!</p>
+        <p>Sent at: ${new Date().toISOString()}</p>
+      `
+    };
+
+    try {
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log('✅ Test email sent successfully!');
+      console.log('Message ID:', info.messageId);
+      console.log('Response:', info.response);
+    } catch (error: any) {
+      console.error('❌ Failed to send test email:');
+      console.error('Error:', error.message);
+      console.error('Code:', error.code);
+      console.error('Response:', error.response);
+      throw error;
+    }
   }
 
   async sendWelcomeEmail(to: string, name: string): Promise<void> {
@@ -36,6 +180,221 @@ export class EmailService {
 
     await this.transporter.sendMail(mailOptions);
     console.log(`✅ Email sent to ${to}`);
+  }
+
+  /**
+   * Queue admin notification email (public API)
+   */
+  async sendAdminNotification(lead: Lead): Promise<void> {
+    await simpleEmailQueueService.queueEmail('admin_notification', lead);
+  }
+
+  /**
+   * Actually send admin notification email (called by queue processor)
+   * Public method for queue service
+   */
+  async sendAdminNotificationEmail(lead: Lead): Promise<void> {
+    const images = Array.isArray(lead.reference_images)
+      ? lead.reference_images
+      : JSON.parse(lead.reference_images as any || '[]');
+
+    // Prepare attachments
+    const attachments = this.prepareImageAttachments(images);
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: 'bookinktermine@gmail.com',
+      subject: `Neue Anfrage: ${lead.name} - BookInk`,
+      attachments,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+          <h2 style="color: #000; border-bottom: 2px solid #000; padding-bottom: 10px;">Neue Tattoo-Anfrage</h2>
+
+          <p><strong>Kundeninformationen:</strong></p>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0; width: 150px;"><strong>Name:</strong></td>
+              <td style="padding: 8px 0;">${lead.name}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0;"><strong>E-Mail:</strong></td>
+              <td style="padding: 8px 0;"><a href="mailto:${lead.email}" style="color: #000; text-decoration: underline;">${lead.email}</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0;"><strong>WhatsApp:</strong></td>
+              <td style="padding: 8px 0;"><a href="https://wa.me/${lead.whatsapp_country_code.replace('+', '')}${lead.whatsapp_number}" style="color: #000; text-decoration: underline;">${lead.whatsapp_country_code} ${lead.whatsapp_number}</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0;"><strong>Rabatt:</strong></td>
+              <td style="padding: 8px 0;">${lead.discount_percentage}%</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0;"><strong>Bilder:</strong></td>
+              <td style="padding: 8px 0;">${images.length} hochgeladen</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #ddd;">
+              <td style="padding: 8px 0;"><strong>Eingereicht:</strong></td>
+              <td style="padding: 8px 0;">${new Date(lead.created_at).toLocaleString('de-DE', { dateStyle: 'long', timeStyle: 'short' })}</td>
+            </tr>
+          </table>
+
+          <p><strong>Tattoo-Beschreibung:</strong></p>
+          <div style="background: #f5f5f5; padding: 15px; border-left: 3px solid #000; margin: 10px 0;">
+            ${lead.tattoo_description}
+          </div>
+
+          ${images.length > 0 ? `
+            <p><strong>📎 Referenzbilder:</strong></p>
+            <p style="background: #f0f9ff; padding: 10px; border-left: 3px solid #000;">
+              ${images.length} ${images.length === 1 ? 'Bild wurde' : 'Bilder wurden'} als Anhang beigefügt. Bitte öffne ${images.length === 1 ? 'den Anhang' : 'die Anhänge'}, um ${images.length === 1 ? 'das Referenzbild' : 'die Referenzbilder'} anzusehen.
+            </p>
+          ` : ''}
+
+          ${lead.utm_source ? `
+            <p><strong>Kampagnen-Tracking:</strong></p>
+            <p style="font-size: 14px; color: #666;">Quelle: ${lead.utm_source}${lead.utm_medium ? ' | Medium: ' + lead.utm_medium : ''}${lead.utm_campaign ? ' | Kampagne: ' + lead.utm_campaign : ''}</p>
+          ` : ''}
+
+          <p><strong>Schnellaktionen:</strong></p>
+          <p>
+            <a href="mailto:${lead.email}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-right: 10px; margin-bottom: 10px;">Per E-Mail antworten</a>
+            <a href="https://wa.me/${lead.whatsapp_country_code.replace('+', '')}${lead.whatsapp_number}" style="display: inline-block; background: #000; color: #fff; padding: 10px 20px; text-decoration: none; margin-bottom: 10px;">WhatsApp</a>
+          </p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+
+          <div style="font-size: 11px; color: #999;">
+            <p><strong>English Translation:</strong></p>
+            <p>New tattoo request from ${lead.name}. Contact: ${lead.email} / ${lead.whatsapp_country_code} ${lead.whatsapp_number}. Discount offered: ${lead.discount_percentage}%. Description: ${lead.tattoo_description}</p>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0;">
+          <p style="font-size: 12px; color: #666;">BookInk Lead Management System - Automatische Benachrichtigung</p>
+        </div>
+      `
+    };
+
+    try {
+      console.log(`\n📧 Sending admin notification for Lead #${lead.id}...`);
+      console.log(`From: ${mailOptions.from}`);
+      console.log(`To: ${mailOptions.to}`);
+      console.log(`Subject: ${mailOptions.subject}`);
+      console.log(`Attachments: ${attachments.length} image(s)`);
+
+      const info = await this.transporter.sendMail(mailOptions);
+
+      console.log('✅ Admin notification email sent successfully!');
+      console.log('Message ID:', info.messageId);
+      console.log('Response:', info.response);
+      console.log('Accepted:', info.accepted);
+      console.log('Rejected:', info.rejected);
+    } catch (error: any) {
+      console.error('\n❌ Failed to send admin notification:');
+      console.error('Error message:', error.message);
+      console.error('Error code:', error.code);
+      console.error('Error response:', error.response);
+      console.error('Error command:', error.command);
+      console.error('Full error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Queue user confirmation email (public API)
+   */
+  async sendUserConfirmation(lead: Lead): Promise<void> {
+    await simpleEmailQueueService.queueEmail('user_confirmation', lead);
+  }
+
+  /**
+   * Actually send user confirmation email (called by queue processor)
+   * Public method for queue service
+   */
+  async sendUserConfirmationEmail(lead: Lead): Promise<void> {
+    const images = Array.isArray(lead.reference_images)
+      ? lead.reference_images
+      : JSON.parse(lead.reference_images as any || '[]');
+
+    // Prepare attachments
+    const attachments = this.prepareImageAttachments(images);
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+      to: lead.email,
+      subject: `Anfrage Bestätigung - BookInk`,
+      attachments,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333; line-height: 1.6;">
+          <p>Hallo ${lead.name},</p>
+
+          <p>Vielen Dank für deine Tattoo-Anfrage. Wir haben deine Anfrage erhalten und unser Team wird sie in Kürze prüfen.</p>
+
+          <p><strong>Deine Anfrage:</strong></p>
+          <p>${lead.tattoo_description}</p>
+
+          ${images.length > 0 ? `
+            <p><strong>📎 Deine Referenzbilder:</strong></p>
+            <p style="background: #f0f9ff; padding: 10px; border-left: 3px solid #000;">
+              ${images.length} ${images.length === 1 ? 'Bild wurde' : 'Bilder wurden'} erfolgreich hochgeladen und ${images.length === 1 ? 'ist' : 'sind'} dieser E-Mail als Anhang beigefügt.
+            </p>
+          ` : ''}
+
+          <p><strong>Nächste Schritte:</strong></p>
+          <ul>
+            <li>Unsere Künstler werden deine Beschreibung und Referenzbilder prüfen</li>
+            <li>Wir werden dich innerhalb von 24-48 Stunden per E-Mail oder WhatsApp kontaktieren</li>
+            <li>Wir besprechen dann dein Design, Preise und verfügbare Termine</li>
+          </ul>
+
+          <p><strong>Deine Kontaktinformationen:</strong><br>
+          E-Mail: ${lead.email}<br>
+          WhatsApp: ${lead.whatsapp_country_code} ${lead.whatsapp_number}</p>
+
+          <p>Bei Fragen kannst du dich gerne jederzeit bei uns melden:</p>
+          <p>E-Mail: bookinktermine@gmail.com<br>
+          WhatsApp: https://wa.me/491516439197</p>
+
+          <p>Beste Grüße,<br>
+          Dein BookInk Team</p>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+
+          <div style="font-size: 11px; color: #999; margin-top: 30px;">
+            <p><strong>English Translation:</strong></p>
+            <p>Hello ${lead.name},</p>
+            <p>Thank you for your tattoo request. We have received your inquiry and our team will review it shortly. We will contact you within 24-48 hours via email or WhatsApp to discuss your design, pricing, and available appointments.</p>
+            <p>Best regards, BookInk Team</p>
+          </div>
+
+          <hr style="border: none; border-top: 1px solid #ddd; margin: 10px 0;">
+          <p style="font-size: 12px; color: #666;">Dies ist eine automatische Bestätigung. Bitte bewahre diese E-Mail für deine Unterlagen auf.</p>
+        </div>
+      `
+    };
+
+    try {
+      console.log(`\n📧 Sending user confirmation to ${lead.email}...`);
+      console.log(`From: ${mailOptions.from}`);
+      console.log(`To: ${mailOptions.to}`);
+      console.log(`Subject: ${mailOptions.subject}`);
+      console.log(`Attachments: ${attachments.length} image(s)`);
+
+      const info = await this.transporter.sendMail(mailOptions);
+
+      console.log('✅ User confirmation email sent successfully!');
+      console.log('Message ID:', info.messageId);
+      console.log('Response:', info.response);
+      console.log('Accepted:', info.accepted);
+      console.log('Rejected:', info.rejected);
+    } catch (error: any) {
+      console.error('\n❌ Failed to send user confirmation:');
+      console.error('Error message:', error.message);
+      console.error('Error code:', error.code);
+      console.error('Error response:', error.response);
+      console.error('Error command:', error.command);
+      console.error('Full error:', error);
+      throw error;
+    }
   }
 }
 

@@ -5,6 +5,9 @@ import leadRoutes from './routes/lead.routes';
 import uploadRoutes from './routes/upload.routes';
 import analyticsRoutes from './routes/analytics.routes';
 import authRoutes from './routes/auth.routes';
+import imageRoutes from './routes/image.routes';
+import emailTestRoutes from './routes/email-test.routes';
+import queueMonitorRoutes from './routes/queue-monitor.routes';
 import { errorHandler } from './middleware/error-handler';
 import { logger } from './middleware/logger';
 
@@ -38,6 +41,9 @@ app.use(`${apiPrefix}/auth`, authRoutes);
 app.use(`${apiPrefix}/leads`, leadRoutes);
 app.use(`${apiPrefix}/upload`, uploadRoutes);
 app.use(`${apiPrefix}/analytics`, analyticsRoutes);
+app.use(`${apiPrefix}/images`, imageRoutes);  // Blob endpoint for images
+app.use(`${apiPrefix}/email-test`, emailTestRoutes);  // Email testing endpoints
+app.use(`${apiPrefix}/queue`, queueMonitorRoutes);  // Queue monitoring endpoints
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {
@@ -50,6 +56,9 @@ app.get('/', (req: Request, res: Response) => {
       leads: `${apiPrefix}/leads`,
       upload: `${apiPrefix}/upload`,
       analytics: `${apiPrefix}/analytics`,
+      images: `${apiPrefix}/images`,
+      emailTest: `${apiPrefix}/email-test`,
+      queue: `${apiPrefix}/queue`,
     },
   });
 });

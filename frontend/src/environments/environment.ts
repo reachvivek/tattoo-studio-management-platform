@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
+  backendUrl: 'http://localhost:3000',
   maxFileSize: 10485760, // 10MB
   allowedFileTypes: ['image/jpeg', 'image/png', 'image/webp'],
   maxFiles: 5,

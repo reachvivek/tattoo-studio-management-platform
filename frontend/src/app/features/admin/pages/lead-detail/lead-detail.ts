@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Lead, LeadData } from '../../services/lead';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'app-lead-detail',
@@ -106,5 +107,26 @@ export class LeadDetail implements OnInit {
     if (this.lead) {
       window.location.href = `mailto:${this.lead.email}`;
     }
+  }
+
+  getImageUrl(imagePath: string): string {
+    // If the path is already a full URL, return it as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // If the path starts with /api/images (new blob endpoint), construct full URL
+    if (imagePath.startsWith('/api/images')) {
+      return `${environment.backendUrl}${imagePath}`;
+    }
+
+    // If the path starts with /uploads (legacy), convert to blob endpoint
+    if (imagePath.startsWith('/uploads/')) {
+      const filename = imagePath.replace('/uploads/', '');
+      return `${environment.backendUrl}/api/images/${filename}`;
+    }
+
+    // Otherwise, assume it's just a filename and construct the blob endpoint URL
+    return `${environment.backendUrl}/api/images/${imagePath}`;
   }
 }

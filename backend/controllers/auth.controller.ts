@@ -39,7 +39,7 @@ export class AuthController {
         });
       }
 
-      // Generate JWT
+      // Generate JWT (48 hours expiration)
       const token = jwt.sign(
         {
           id: admin.id,
@@ -47,7 +47,7 @@ export class AuthController {
           role: admin.role
         },
         process.env.JWT_SECRET || 'your-secret-key-change-in-production',
-        { expiresIn: '24h' }
+        { expiresIn: '48h' }
       );
 
       res.json({

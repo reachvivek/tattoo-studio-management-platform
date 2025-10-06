@@ -1,6 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: '/api', // Use relative URL in production
+  backendUrl: '', // Use same origin in production
   maxFileSize: 10485760,
   allowedFileTypes: ['image/jpeg', 'image/png', 'image/webp'],
   maxFiles: 5,

@@ -41,15 +41,24 @@ interface LeadResponse {
 export class Lead {
   constructor(private http: HttpClient) {}
 
+  private getHeaders() {
+    const token = localStorage.getItem('adminToken');
+    return {
+      headers: {
+        'Authorization': token ? `Bearer ${token}` : ''
+      }
+    };
+  }
+
   getAll(): Observable<LeadsResponse> {
-    return this.http.get<LeadsResponse>(`${environment.apiUrl}/leads`);
+    return this.http.get<LeadsResponse>(`${environment.apiUrl}/leads`, this.getHeaders());
   }
 
   getById(id: number): Observable<LeadResponse> {
-    return this.http.get<LeadResponse>(`${environment.apiUrl}/leads/${id}`);
+    return this.http.get<LeadResponse>(`${environment.apiUrl}/leads/${id}`, this.getHeaders());
   }
 
   updateStatus(id: number, status: string): Observable<LeadResponse> {
-    return this.http.patch<LeadResponse>(`${environment.apiUrl}/leads/${id}/status`, { status });
+    return this.http.patch<LeadResponse>(`${environment.apiUrl}/leads/${id}/status`, { status }, this.getHeaders());
   }
 }
