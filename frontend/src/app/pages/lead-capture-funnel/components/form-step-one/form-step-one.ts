@@ -9,7 +9,7 @@ import { CreateLeadRequest } from '../../../../core/models/lead.model';
   selector: 'app-form-step-one',
   standalone: false,
   templateUrl: './form-step-one.html',
-  styleUrl: './form-step-one.scss'
+  styleUrl: './form-step-one.scss',
 })
 export class FormStepOne implements OnInit {
   @Output() formSubmitted = new EventEmitter<string>();
@@ -31,9 +31,12 @@ export class FormStepOne implements OnInit {
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       whatsappCountryCode: ['+49', Validators.required],
-      whatsappNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)]],
-      tattooDescription: ['', [Validators.required, Validators.minLength(10)]], // Required with minimum 10 characters
-      optInChoice: ['yes'] // Default to "yes" option
+      whatsappNumber: [
+        '',
+        [Validators.required, Validators.pattern(/^[0-9]{10,15}$/)],
+      ],
+      tattooDescription: [''], // Optional now
+      optInChoice: ['yes'],
     });
   }
 
@@ -51,7 +54,7 @@ export class FormStepOne implements OnInit {
 
     // Validate form
     if (this.leadForm.invalid) {
-      Object.keys(this.leadForm.controls).forEach(key => {
+      Object.keys(this.leadForm.controls).forEach((key) => {
         this.leadForm.get(key)?.markAsTouched();
       });
       this.error = 'Bitte fülle alle erforderlichen Felder korrekt aus';
@@ -65,7 +68,9 @@ export class FormStepOne implements OnInit {
       // Upload images first if any
       let imageUrls: string[] = [];
       if (this.selectedFiles.length > 0) {
-        const uploadResponse = await this.leadService.uploadImages(this.selectedFiles).toPromise();
+        const uploadResponse = await this.leadService
+          .uploadImages(this.selectedFiles)
+          .toPromise();
         if (uploadResponse.success) {
           imageUrls = uploadResponse.data.urls;
         }
@@ -74,7 +79,7 @@ export class FormStepOne implements OnInit {
       // Create lead
       const leadData: CreateLeadRequest = {
         ...this.leadForm.value,
-        referenceImages: imageUrls
+        referenceImages: imageUrls,
       };
 
       const response = await this.leadService.createLead(leadData).toPromise();
@@ -86,7 +91,7 @@ export class FormStepOne implements OnInit {
           email: this.leadForm.value.email,
           whatsappCountryCode: this.leadForm.value.whatsappCountryCode,
           whatsappNumber: this.leadForm.value.whatsappNumber,
-          tattooDescription: this.leadForm.value.tattooDescription
+          tattooDescription: this.leadForm.value.tattooDescription,
         });
 
         // Emit event with user name to show spin wheel
@@ -96,7 +101,9 @@ export class FormStepOne implements OnInit {
       }
     } catch (err: any) {
       console.error('Form submission error:', err);
-      this.error = this.getUserFriendlyError(err?.error?.error || err?.error?.message);
+      this.error = this.getUserFriendlyError(
+        err?.error?.error || err?.error?.message
+      );
     } finally {
       this.isLoading = false;
     }
@@ -118,7 +125,10 @@ export class FormStepOne implements OnInit {
     }
 
     // Map technical errors to user-friendly messages
-    if (errorMessage.includes('duplicate') || errorMessage.includes('unique constraint')) {
+    if (
+      errorMessage.includes('duplicate') ||
+      errorMessage.includes('unique constraint')
+    ) {
       return 'Diese E-Mail wurde bereits verwendet. Bitte verwende eine andere E-Mail-Adresse.';
     }
 
@@ -158,7 +168,8 @@ export class FormStepOne implements OnInit {
 
     if (control.errors['required']) return 'Dieses Feld ist erforderlich';
     if (control.errors['email']) return 'Ungültige E-Mail-Adresse';
-    if (control.errors['minlength']) return `Mindestens ${control.errors['minlength'].requiredLength} Zeichen erforderlich`;
+    if (control.errors['minlength'])
+      return `Mindestens ${control.errors['minlength'].requiredLength} Zeichen erforderlich`;
     if (control.errors['pattern']) {
       if (field === 'whatsappNumber') {
         return 'Bitte gib 10-15 Ziffern ein (nur Zahlen)';

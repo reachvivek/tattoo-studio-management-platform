@@ -5,8 +5,8 @@ dotenv.config();
 
 export const pool = new Pool({
   host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "5432"),
-  user: process.env.DB_USERNAME || "postgres",
+  port: parseInt(process.env.DB_PORT || "21139"),
+  user: process.env.DB_USERNAME || "avnadmin",
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE || "rico_tattoo_db",
   max: 20,
