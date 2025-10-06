@@ -1,3 +1,4 @@
+// BookInk Backend API v1.0.1 - Fixed auth table names
 import dotenv from 'dotenv';
 import app from './app';
 import { pool } from './config/database';
