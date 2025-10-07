@@ -90,8 +90,8 @@
   pointer-events: none;
   width: 400px;
   height: 400px;
-  -webkit-filter: drop-shadow(0 10px 40px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4));
-  filter: drop-shadow(0 10px 40px rgba(16, 185, 129, 0.5)) drop-shadow(0 0 30px rgba(16, 185, 129, 0.4));
+  -webkit-filter: drop-shadow(0 10px 40px rgba(5, 150, 105, 0.5)) drop-shadow(0 0 30px rgba(5, 150, 105, 0.4));
+  filter: drop-shadow(0 10px 40px rgba(5, 150, 105, 0.5)) drop-shadow(0 0 30px rgba(5, 150, 105, 0.4));
   animation: wheel-glow-pulse 2.5s ease-in-out infinite;
 
   @include mobile {
@@ -99,7 +99,7 @@
     height: min(85vw, 320px);
   }
 
-  // Safari fallback: add glow to canvas directly
+  // Safari fallback: add glow to canvas directly with correct color #059669
   &::before {
     content: '';
     position: absolute;
@@ -109,9 +109,9 @@
     bottom: 0;
     border-radius: 50%;
     box-shadow:
-      0 0 30px rgba(16, 185, 129, 0.4),
-      0 0 50px rgba(16, 185, 129, 0.3),
-      0 10px 40px rgba(16, 185, 129, 0.5);
+      0 0 30px rgba(5, 150, 105, 0.4),
+      0 0 50px rgba(5, 150, 105, 0.3),
+      0 10px 40px rgba(5, 150, 105, 0.5);
     pointer-events: none;
     z-index: -1;
     animation: wheel-glow-pulse-box-shadow 2.5s ease-in-out infinite;
