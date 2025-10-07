@@ -10,15 +10,38 @@
 }
 
 .form-field {
+  position: relative;
+
   @media (max-width: 640px) {
     margin-bottom: 1.5rem !important;
+  }
+
+  // Add subtle green glow to input fields
+  input, textarea, select {
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(16, 185, 129, 0.05);
+    transition: box-shadow 0.3s ease;
+
+    &:focus {
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3), 0 4px 12px rgba(16, 185, 129, 0.15);
+    }
+
+    @media (max-width: 640px) {
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.15), 0 2px 10px rgba(16, 185, 129, 0.08);
+
+      &:focus {
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.4), 0 4px 16px rgba(16, 185, 129, 0.2);
+      }
+    }
   }
 }
 
 .form-label {
+  text-shadow: 0 0 8px rgba(16, 185, 129, 0.15);
+
   @media (max-width: 640px) {
     margin-bottom: 0.5rem !important;
     font-size: 0.75rem !important;
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
   }
 }
 
@@ -36,24 +59,33 @@
 }
 
 .whatsapp-code {
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(16, 185, 129, 0.05);
+
   @media (max-width: 640px) {
     width: 5rem !important;
     padding: 0.875rem 0.75rem !important;
     font-size: 0.95rem !important;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.15), 0 2px 10px rgba(16, 185, 129, 0.08);
   }
 }
 
 .whatsapp-number {
+  box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1), 0 2px 8px rgba(16, 185, 129, 0.05);
+
   @media (max-width: 640px) {
     padding: 0.875rem 1rem !important;
     font-size: 0.95rem !important;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.15), 0 2px 10px rgba(16, 185, 129, 0.08);
   }
 }
 
 .opt-in-box {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.08), inset 0 0 15px rgba(16, 185, 129, 0.03);
+
   @media (max-width: 640px) {
     padding: 1.25rem !important;
     margin-bottom: 1.5rem !important;
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.12), inset 0 0 20px rgba(16, 185, 129, 0.05);
   }
 }
 
@@ -88,11 +120,13 @@
   border: 2px solid #333333;
   border-radius: 0.75rem;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.05);
 
   &:hover {
     border-color: #10B981;
     background: #2A2A2A;
     transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 
     .custom-radio-label {
       color: #10B981;
@@ -101,6 +135,11 @@
 
   @media (max-width: 640px) {
     padding: 0.875rem 1rem;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.08);
+
+    &:hover {
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.18);
+    }
   }
 }
 
@@ -112,6 +151,7 @@
   &:checked ~ .custom-radio-box {
     background: linear-gradient(135deg, #10B981 0%, #059669 100%);
     border-color: #10B981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5), inset 0 0 10px rgba(16, 185, 129, 0.3);
 
     .custom-radio-check {
       opacity: 1;

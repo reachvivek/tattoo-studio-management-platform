@@ -27,11 +27,13 @@
     padding-bottom: 3rem !important;
 
     &::before {
+      height: 120%;
       background: radial-gradient(
-        ellipse 85% 50% at 50% 0%,
-        rgba(16, 185, 129, 0.05) 0%,
-        rgba(16, 185, 129, 0.025) 40%,
-        transparent 70%
+        ellipse 95% 60% at 50% 0%,
+        rgba(16, 185, 129, 0.12) 0%,
+        rgba(16, 185, 129, 0.08) 30%,
+        rgba(16, 185, 129, 0.04) 60%,
+        transparent 80%
       );
     }
   }

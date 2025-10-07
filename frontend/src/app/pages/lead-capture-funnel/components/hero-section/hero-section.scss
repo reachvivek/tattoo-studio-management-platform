@@ -118,12 +118,14 @@
     max-height: 45vh !important;
 
     &::before {
-      height: 100vh;
+      height: 150vh;
       background: radial-gradient(
-        ellipse 90% 60% at 50% 0%,
-        rgba(16, 185, 129, 0.12) 0%,
-        rgba(16, 185, 129, 0.06) 40%,
-        transparent 70%
+        ellipse 100% 70% at 50% 0%,
+        rgba(16, 185, 129, 0.25) 0%,
+        rgba(16, 185, 129, 0.15) 25%,
+        rgba(16, 185, 129, 0.08) 50%,
+        rgba(16, 185, 129, 0.04) 70%,
+        transparent 85%
       );
     }
   }
