@@ -36,14 +36,15 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   spinButtonText = 'DREHEN';
 
   // Wheel segments - 8 segments alternating 30% and Kostenloses Tattoo (30% always wins at index 0)
+  // Using #10B981 (emerald-500) to match form button colors for better Safari compatibility
   sectors: WheelSector[] = [
-    { color: '#059669', text: '#FFFFFF', label: '30%' },
+    { color: '#10B981', text: '#FFFFFF', label: '30%' },
     { color: '#1A1A1A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#059669', text: '#FFFFFF', label: 'Nochmals drehen' },
+    { color: '#10B981', text: '#FFFFFF', label: 'Nochmals drehen' },
     { color: '#2A2A2A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#059669', text: '#FFFFFF', label: '30%' },
+    { color: '#10B981', text: '#FFFFFF', label: '30%' },
     { color: '#1A1A1A', text: '#FFFFFF', label: 'Kostenloses Tattoo' },
-    { color: '#059669', text: '#FFFFFF', label: '30%' },
+    { color: '#10B981', text: '#FFFFFF', label: '30%' },
     { color: '#2A2A2A', text: '#FFFFFF', label: 'Kostenloses Tattoo' }
   ];
 
