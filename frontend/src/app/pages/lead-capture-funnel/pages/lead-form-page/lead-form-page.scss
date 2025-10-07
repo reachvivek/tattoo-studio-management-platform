@@ -1,14 +1,57 @@
 // Mobile responsive styles for form page
 .form-section-wrapper {
+  position: relative;
+
+  // Add ambient green glow that extends from hero section
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 0%,
+      rgba(16, 185, 129, 0.06) 0%,
+      rgba(16, 185, 129, 0.03) 30%,
+      rgba(16, 185, 129, 0.015) 50%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 0;
+    animation: form-ambient-glow 8s ease-in-out infinite;
+  }
+
   @media (max-width: 640px) {
     padding-top: 0.5rem !important;
     padding-bottom: 3rem !important;
+
+    &::before {
+      background: radial-gradient(
+        ellipse 85% 50% at 50% 0%,
+        rgba(16, 185, 129, 0.05) 0%,
+        rgba(16, 185, 129, 0.025) 40%,
+        transparent 70%
+      );
+    }
   }
 }
 
 .form-section-container {
+  position: relative;
+  z-index: 1;
+
   @media (max-width: 640px) {
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
+  }
+}
+
+@keyframes form-ambient-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
   }
 }

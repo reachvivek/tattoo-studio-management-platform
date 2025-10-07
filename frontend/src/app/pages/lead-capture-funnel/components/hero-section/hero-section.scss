@@ -91,9 +91,41 @@
 
 // Make hero section take less space on mobile
 .hero-section-root {
+  position: relative;
+
+  // Add ambient green glow from top
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120vh;
+    background: radial-gradient(
+      ellipse 80% 50% at 50% 0%,
+      rgba(16, 185, 129, 0.15) 0%,
+      rgba(16, 185, 129, 0.08) 30%,
+      rgba(16, 185, 129, 0.04) 50%,
+      transparent 70%
+    );
+    pointer-events: none;
+    z-index: 1;
+    animation: ambient-glow 6s ease-in-out infinite;
+  }
+
   @media (max-width: 640px) {
     min-height: auto !important;
     max-height: 45vh !important;
+
+    &::before {
+      height: 100vh;
+      background: radial-gradient(
+        ellipse 90% 60% at 50% 0%,
+        rgba(16, 185, 129, 0.12) 0%,
+        rgba(16, 185, 129, 0.06) 40%,
+        transparent 70%
+      );
+    }
   }
 }
 
@@ -122,5 +154,14 @@
   }
   50% {
     box-shadow: 0 0 40px rgba(16, 185, 129, 0.35);
+  }
+}
+
+@keyframes ambient-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
   }
 }
