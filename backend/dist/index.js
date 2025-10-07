@@ -9,6 +9,7 @@ const app_1 = __importDefault(require("./app"));
 const database_1 = require("./config/database");
 const init_database_1 = require("./utils/init-database");
 const init_admin_1 = require("./utils/init-admin");
+const email_processor_service_1 = require("./services/email-processor.service");
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3000;
 // Start server
@@ -30,6 +31,9 @@ app_1.default.listen(PORT, async () => {
         await (0, init_database_1.initializeDatabase)();
         // Auto-create default admin user if not exists
         await (0, init_admin_1.initializeAdminUser)();
+        // Start email queue processor (check every 5 minutes)
+        email_processor_service_1.emailProcessorService.startScheduler(5);
+        console.log('📧 Email queue processor started');
     }
     catch (error) {
         console.error('❌ Database connection failed:', error);

@@ -4,6 +4,7 @@ import app from './app';
 import { pool } from './config/database';
 import { initializeDatabase } from './utils/init-database';
 import { initializeAdminUser } from './utils/init-admin';
+import { emailProcessorService } from './services/email-processor.service';
 
 dotenv.config();
 
@@ -31,6 +32,10 @@ app.listen(PORT, async () => {
 
     // Auto-create default admin user if not exists
     await initializeAdminUser();
+
+    // Start email queue processor (check every 5 minutes)
+    emailProcessorService.startScheduler(5);
+    console.log('📧 Email queue processor started');
   } catch (error) {
     console.error('❌ Database connection failed:', error);
     console.log('');

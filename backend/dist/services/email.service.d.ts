@@ -37,6 +37,10 @@ export declare class EmailService {
      * Public method for queue service
      */
     sendUserConfirmationEmail(lead: Lead): Promise<void>;
+    /**
+     * Send a follow-up email from queue
+     */
+    sendFollowUpEmail(recipientEmail: string, recipientName: string, subject: string, htmlContent: string): Promise<void>;
 }
 export declare const emailService: EmailService;
 export {};

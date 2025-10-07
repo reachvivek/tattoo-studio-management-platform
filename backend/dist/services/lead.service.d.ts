@@ -1,4 +1,4 @@
-import { CreateLeadDto, Lead, LeadStatus } from '../models/lead.model';
+import { CreateLeadDto, Lead, LeadStatus } from "../models/lead.model";
 export declare class LeadService {
     createLead(data: CreateLeadDto, ipAddress?: string, userAgent?: string): Promise<Lead>;
     getLeads(filters?: any): Promise<Lead[]>;

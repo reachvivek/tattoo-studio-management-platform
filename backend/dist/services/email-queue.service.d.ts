@@ -1,71 +1,55 @@
-import { Queue } from 'bull';
-interface EmailJob {
-    type: 'user_confirmation' | 'admin_notification';
-    lead: any;
-    priority?: number;
+import { Lead } from '../models/lead.model';
+export interface EmailQueueItem {
+    id: number;
+    lead_id: number;
+    email_type: string;
+    subject: string;
+    template_name: string;
+    recipient_email: string;
+    recipient_name: string;
+    scheduled_at: Date;
+    sent_at?: Date;
+    status: 'pending' | 'sent' | 'failed' | 'cancelled';
+    retry_count: number;
+    max_retries: number;
+    error_message?: string;
+    metadata?: any;
+    created_at: Date;
+    updated_at: Date;
 }
 export declare class EmailQueueService {
-    private emailQueue;
-    private redis;
-    private readonly RATE_LIMIT_HOURLY;
-    private readonly RATE_LIMIT_DAILY;
-    private readonly DELAY_BETWEEN_SENDS;
-    constructor();
-    private setupQueueProcessing;
-    private setupQueueEventHandlers;
     /**
-     * Add email to queue
+     * Schedule all 4 follow-up emails for a new lead
      */
-    queueEmail(type: 'user_confirmation' | 'admin_notification', lead: any, priority?: number): Promise<void>;
+    scheduleFollowUpEmails(lead: Lead): Promise<void>;
     /**
-     * Check if we're within rate limits
+     * Get pending emails that are due to be sent
      */
-    private checkRateLimits;
+    getPendingEmails(): Promise<EmailQueueItem[]>;
     /**
-     * Get current rate limit statistics
+     * Mark email as sent
      */
-    private getRateLimitStats;
+    markEmailSent(emailId: number): Promise<void>;
     /**
-     * Increment rate limit counters
+     * Mark email as failed and increment retry count
      */
-    private incrementRateLimitCounters;
+    markEmailFailed(emailId: number, errorMessage: string): Promise<void>;
     /**
-     * Calculate delay until tomorrow midnight
+     * Cancel all pending emails for a lead
      */
-    private getDelayUntilTomorrow;
+    cancelPendingEmailsForLead(leadId: number): Promise<void>;
     /**
-     * Helper to delay execution
+     * Get email template content
      */
-    private delay;
+    getEmailTemplate(templateName: string): string;
+    /**
+     * Render email template with data
+     */
+    renderTemplate(template: string, data: any): string;
     /**
      * Get queue statistics
      */
-    getQueueStats(): Promise<{
-        queue: {
-            waiting: any;
-            active: any;
-            completed: any;
-            failed: any;
-            delayed: any;
-        };
-        rateLimits: {
-            hourly: string;
-            daily: string;
-        };
-    }>;
-    /**
-     * Get the Bull queue instance (for processing by email service)
-     */
-    getQueue(): Queue<EmailJob>;
-    /**
-     * Clean up old jobs
-     */
-    cleanup(): Promise<void>;
-    /**
-     * Close connections
-     */
-    close(): Promise<void>;
+    getQueueStats(): Promise<any>;
 }
 export declare const emailQueueService: EmailQueueService;
-export {};
 //# sourceMappingURL=email-queue.service.d.ts.map

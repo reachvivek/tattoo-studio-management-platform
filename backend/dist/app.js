@@ -13,6 +13,7 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const image_routes_1 = __importDefault(require("./routes/image.routes"));
 const email_test_routes_1 = __importDefault(require("./routes/email-test.routes"));
 const queue_monitor_routes_1 = __importDefault(require("./routes/queue-monitor.routes"));
+const email_queue_routes_1 = __importDefault(require("./routes/email-queue.routes"));
 const error_handler_1 = require("./middleware/error-handler");
 const logger_1 = require("./middleware/logger");
 const app = (0, express_1.default)();
@@ -62,6 +63,7 @@ app.use(`${apiPrefix}/analytics`, analytics_routes_1.default);
 app.use(`${apiPrefix}/images`, image_routes_1.default); // Blob endpoint for images
 app.use(`${apiPrefix}/email-test`, email_test_routes_1.default); // Email testing endpoints
 app.use(`${apiPrefix}/queue`, queue_monitor_routes_1.default); // Queue monitoring endpoints
+app.use(`${apiPrefix}/email-queue`, email_queue_routes_1.default); // Email queue management endpoints
 // Root endpoint
 app.get('/', (req, res) => {
     res.json({

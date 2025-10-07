@@ -378,6 +378,32 @@ export class EmailService {
       throw error;
     }
   }
+
+  /**
+   * Send a follow-up email from queue
+   */
+  async sendFollowUpEmail(
+    recipientEmail: string,
+    recipientName: string,
+    subject: string,
+    htmlContent: string
+  ): Promise<void> {
+    const mailOptions = {
+      from: `"BookInk" <${process.env.EMAIL_USER}>`,
+      to: recipientEmail,
+      subject: subject,
+      html: htmlContent,
+    };
+
+    try {
+      console.log(`📧 [FOLLOWUP] Sending ${subject} to ${recipientEmail}`);
+      const info = await this.transporter.sendMail(mailOptions);
+      console.log(`✅ [FOLLOWUP] Sent successfully to ${recipientEmail} (ID: ${info.messageId})`);
+    } catch (error: any) {
+      console.error(`❌ [FOLLOWUP] Failed to send to ${recipientEmail}: ${error.message}`);
+      throw error;
+    }
+  }
 }
 
 export const emailService = new EmailService();

@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import imageRoutes from './routes/image.routes';
 import emailTestRoutes from './routes/email-test.routes';
 import queueMonitorRoutes from './routes/queue-monitor.routes';
+import emailQueueRoutes from './routes/email-queue.routes';
 import { errorHandler } from './middleware/error-handler';
 import { logger } from './middleware/logger';
 
@@ -63,6 +64,7 @@ app.use(`${apiPrefix}/analytics`, analyticsRoutes);
 app.use(`${apiPrefix}/images`, imageRoutes);  // Blob endpoint for images
 app.use(`${apiPrefix}/email-test`, emailTestRoutes);  // Email testing endpoints
 app.use(`${apiPrefix}/queue`, queueMonitorRoutes);  // Queue monitoring endpoints
+app.use(`${apiPrefix}/email-queue`, emailQueueRoutes);  // Email queue management endpoints
 
 // Root endpoint
 app.get('/', (req: Request, res: Response) => {

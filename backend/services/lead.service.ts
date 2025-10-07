@@ -6,6 +6,7 @@ import {
   ActivityType,
 } from "../models/lead.model";
 import { emailService } from "./email.service";
+import { emailQueueService } from "./email-queue.service";
 
 export class LeadService {
   async createLead(
@@ -24,18 +25,13 @@ export class LeadService {
       throw new Error("Ungültige E-Mail-Adresse");
     }
 
-    // Validate phone number format (10-15 digits)
-    const phoneRegex = /^[0-9]{10,15}$/;
+    // Validate phone number format (5-15 digits)
+    const phoneRegex = /^[0-9]{5,15}$/;
     if (!phoneRegex.test(data.whatsappNumber)) {
-      throw new Error("Ungültige WhatsApp-Nummer");
+      throw new Error("Ungültige WhatsApp-Nummer (5-15 Ziffern erforderlich)");
     }
 
-    // Validate tattoo description length only if provided
-    if (data.tattooDescription && data.tattooDescription.length < 10) {
-      throw new Error(
-        "Tattoo-Beschreibung muss mindestens 10 Zeichen lang sein"
-      );
-    }
+    // Description is optional - no validation needed
 
     const client = await pool.connect();
     try {
@@ -113,6 +109,13 @@ export class LeadService {
             console.error("Failed to send user confirmation:", err)
           ),
       ]);
+
+      // Schedule follow-up emails
+      emailQueueService
+        .scheduleFollowUpEmails(lead)
+        .catch((err) =>
+          console.error("Failed to schedule follow-up emails:", err)
+        );
 
       return lead;
     } catch (error) {

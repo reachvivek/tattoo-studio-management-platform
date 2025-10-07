@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tattoo Gutschein - Letzte Erinnerung</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #555;
+        }
+        .highlight {
+            background-color: #FEF3C7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: #ffffff;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <p>Hey {{name}},</p>
+
+            <p><strong>Ricky von Bookink hier.</strong></p>
+
+            <p>Nur eine kurze Erinnerung: Dein <span class="highlight">30% Rabatt-Gutschein</span> wartet noch auf dich!</p>
+
+            <p>Falls du deinen Termin noch nicht vereinbart hast, kannst du das hier ganz einfach nachholen:</p>
+
+            <center>
+                <a href="https://wa.me/message/KGMLPVR67JQRQ1" class="cta-button">
+                    ✨ Jetzt per WhatsApp einlösen
+                </a>
+            </center>
+
+            <p>Oder schreibe mir direkt: <strong>+49 1516 4398197</strong></p>
+
+            <p>Ich freue mich darauf, von dir zu hören! 🎨</p>
+        </div>
+
+        <div class="footer">
+            <p>Viele Grüße,<br>Ricky von Bookink</p>
+        </div>
+    </div>
+</body>
+</html>

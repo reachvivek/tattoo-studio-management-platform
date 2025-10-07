@@ -8,11 +8,11 @@ const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 exports.pool = new pg_1.Pool({
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT || "5432"),
-    user: process.env.DB_USERNAME || "postgres",
+    host: process.env.DB_HOST || "bookink-db-bookink.j.aivencloud.com",
+    port: parseInt(process.env.DB_PORT || "21139"),
+    user: process.env.DB_USERNAME || "avnadmin",
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE || "rico_tattoo_db",
+    database: process.env.DB_DATABASE || "defaultdb",
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 2000,
@@ -20,13 +20,16 @@ exports.pool = new pg_1.Pool({
         rejectUnauthorized: false, // allows connection without needing a certificate
     },
 });
+// Event listener for successful connection
 exports.pool.on("connect", () => {
     console.log("✅ Database connected successfully");
 });
+// Event listener for unexpected errors
 exports.pool.on("error", (err) => {
     console.error("❌ Unexpected database error:", err);
     process.exit(-1);
 });
+// Optional helper for queries with timing logs
 const query = async (text, params) => {
     const start = Date.now();
     const res = await exports.pool.query(text, params);
