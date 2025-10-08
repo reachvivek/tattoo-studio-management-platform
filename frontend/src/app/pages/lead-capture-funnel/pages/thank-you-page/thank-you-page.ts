@@ -22,12 +22,8 @@ export class ThankYouPage implements OnInit {
     this.name = leadData.name || 'Teilnehmer';
     this.discountPercentage = leadData.discountPercentage || 30;
 
-    // Generate WhatsApp link to business number (not user's number)
-    const message = encodeURIComponent(
-      `Hallo! Ich habe gerade einen ${this.discountPercentage}% Gutschein gewonnen und möchte diesen aktivieren.`
-    );
-
-    this.whatsappLink = `https://wa.me/${environment.whatsappNumber.replace(/\s+/g, '')}?text=${message}`;
+    // Use the predefined WhatsApp link with the correct message
+    this.whatsappLink = environment.whatsappLink;
 
     // Auto-open WhatsApp after 5 seconds delay (same tab for mobile compatibility)
     setTimeout(() => {

@@ -337,7 +337,7 @@ export class EmailService {
 
           <p>Bei Fragen kannst du dich gerne jederzeit bei uns melden:</p>
           <p>E-Mail: bookinktermine@gmail.com<br>
-          WhatsApp: https://wa.me/491516439197</p>
+          WhatsApp: <a href="https://wa.me/message/KGMLPVB67JQBO1" style="color: #000; text-decoration: underline;">https://wa.me/message/KGMLPVB67JQBO1</a></p>
 
           <p>Beste Grüße,<br>
           Dein BookInk Team</p>

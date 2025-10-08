@@ -11,7 +11,7 @@ export async function initializeDatabase(): Promise<void> {
       SELECT table_name
       FROM information_schema.tables
       WHERE table_schema = 'public'
-      AND table_name IN ('leads', 'crm_notes', 'crm_activities', 'campaign_stats', 'admin_users')
+      AND table_name IN ('leads', 'crm_notes', 'crm_activities', 'campaign_stats', 'admin_users', 'email_queue')
     `;
     const existingTables = await pool.query(checkTablesQuery);
     const tableNames = existingTables.rows.map((row: any) => row.table_name);
@@ -149,6 +149,41 @@ export async function initializeDatabase(): Promise<void> {
       console.log("✅ Admin Users table created");
     }
 
+    // Email Queue Table
+    if (!tableNames.includes("email_queue")) {
+      console.log("Creating email_queue table...");
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS email_queue (
+          id SERIAL PRIMARY KEY,
+          lead_id INTEGER NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+          email_type VARCHAR(50) NOT NULL,
+          subject VARCHAR(255) NOT NULL,
+          template_name VARCHAR(100) NOT NULL,
+          recipient_email VARCHAR(255) NOT NULL,
+          recipient_name VARCHAR(255) NOT NULL,
+          scheduled_at TIMESTAMP NOT NULL,
+          sent_at TIMESTAMP,
+          status VARCHAR(50) DEFAULT 'pending',
+          retry_count INTEGER DEFAULT 0,
+          max_retries INTEGER DEFAULT 3,
+          error_message TEXT,
+          metadata JSON,
+          created_at TIMESTAMP DEFAULT NOW(),
+          updated_at TIMESTAMP DEFAULT NOW()
+        )
+      `);
+      console.log("✅ Email Queue table created");
+
+      await pool.query(`
+        CREATE INDEX IF NOT EXISTS idx_email_queue_lead_id ON email_queue(lead_id);
+        CREATE INDEX IF NOT EXISTS idx_email_queue_status ON email_queue(status);
+        CREATE INDEX IF NOT EXISTS idx_email_queue_scheduled_at ON email_queue(scheduled_at);
+        CREATE INDEX IF NOT EXISTS idx_email_queue_email_type ON email_queue(email_type);
+        CREATE INDEX IF NOT EXISTS idx_email_queue_status_scheduled ON email_queue(status, scheduled_at) WHERE status = 'pending';
+      `);
+      console.log("✅ Email Queue indexes created");
+    }
+
     // Trigger: updated_at auto-update
     await pool.query(`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -167,6 +202,11 @@ export async function initializeDatabase(): Promise<void> {
       DROP TRIGGER IF EXISTS update_campaign_stats_updated_at ON campaign_stats;
       CREATE TRIGGER update_campaign_stats_updated_at
       BEFORE UPDATE ON campaign_stats
+      FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
+      DROP TRIGGER IF EXISTS update_email_queue_updated_at ON email_queue;
+      CREATE TRIGGER update_email_queue_updated_at
+      BEFORE UPDATE ON email_queue
       FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
     `);
     console.log("✅ updated_at triggers created");
