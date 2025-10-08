@@ -37,8 +37,8 @@ export class EmailQueueService {
       },
       {
         email_type: 'followup_1',
-        subject: 'Tattoo Gutschein - Erinnerung',
-        template_name: 'followup-2-8hours',
+        subject: 'Tattoo Gutschein - Schnell aktivieren!',
+        template_name: 'followup-1-1hour',
         scheduled_at: new Date(now.getTime() + 1 * 60 * 60 * 1000), // 1 hour - FIRST follow-up
       },
       {
