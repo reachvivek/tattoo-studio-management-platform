@@ -122,6 +122,35 @@ export class LeadController {
       });
     }
   }
+
+  async bulkDelete(req: Request, res: Response) {
+    try {
+      const { ids } = req.body;
+
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Keine IDs zum Löschen angegeben'
+        });
+      }
+
+      const result = await leadService.bulkDeleteLeads(ids);
+
+      res.json({
+        success: true,
+        message: `${result.deletedCount} Lead(s) erfolgreich gelöscht`,
+        data: {
+          deletedCount: result.deletedCount,
+          failedIds: result.failedIds
+        }
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        success: false,
+        error: error.message
+      });
+    }
+  }
 }
 
 export const leadController = new LeadController();

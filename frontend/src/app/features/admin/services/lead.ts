@@ -65,4 +65,8 @@ export class Lead {
   delete(id: number): Observable<{success: boolean; message: string}> {
     return this.http.delete<{success: boolean; message: string}>(`${environment.apiUrl}/leads/${id}`, this.getHeaders());
   }
+
+  bulkDelete(ids: number[]): Observable<{success: boolean; message: string; data?: {deletedCount: number; failedIds: number[]}}> {
+    return this.http.post<{success: boolean; message: string; data?: {deletedCount: number; failedIds: number[]}}>(`${environment.apiUrl}/leads/bulk-delete`, { ids }, this.getHeaders());
+  }
 }

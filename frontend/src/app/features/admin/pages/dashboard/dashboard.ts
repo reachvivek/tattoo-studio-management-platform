@@ -22,6 +22,11 @@ export class Dashboard implements OnInit {
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
 
+  // Bulk selection
+  selectedLeads = new Set<number>();
+  showBulkDeleteModal = false;
+  isBulkDeleting = false;
+
   statusOptions = [
     { value: 'all', label: 'Alle' },
     { value: 'new', label: 'Neu' },
@@ -159,5 +164,72 @@ export class Dashboard implements OnInit {
     setTimeout(() => {
       this.showToast = false;
     }, 3000);
+  }
+
+  // Bulk selection methods
+  toggleLeadSelection(leadId: number): void {
+    if (this.selectedLeads.has(leadId)) {
+      this.selectedLeads.delete(leadId);
+    } else {
+      this.selectedLeads.add(leadId);
+    }
+  }
+
+  toggleSelectAll(): void {
+    if (this.isAllSelected()) {
+      this.selectedLeads.clear();
+    } else {
+      this.filteredLeads.forEach(lead => this.selectedLeads.add(lead.id));
+    }
+  }
+
+  isAllSelected(): boolean {
+    return this.filteredLeads.length > 0 &&
+           this.filteredLeads.every(lead => this.selectedLeads.has(lead.id));
+  }
+
+  isSelected(leadId: number): boolean {
+    return this.selectedLeads.has(leadId);
+  }
+
+  openBulkDeleteModal(): void {
+    if (this.selectedLeads.size === 0) return;
+    this.showBulkDeleteModal = true;
+  }
+
+  cancelBulkDelete(): void {
+    this.showBulkDeleteModal = false;
+    this.isBulkDeleting = false;
+  }
+
+  confirmBulkDelete(): void {
+    if (this.selectedLeads.size === 0) return;
+
+    this.isBulkDeleting = true;
+    const idsToDelete = Array.from(this.selectedLeads);
+
+    this.leadService.bulkDelete(idsToDelete).subscribe({
+      next: (response) => {
+        if (response.success) {
+          // Remove deleted leads from local arrays
+          this.leads = this.leads.filter(lead => !this.selectedLeads.has(lead.id));
+          this.applyFilters();
+
+          // Clear selection and close modal
+          this.selectedLeads.clear();
+          this.showBulkDeleteModal = false;
+          this.isBulkDeleting = false;
+
+          const count = response.data?.deletedCount || idsToDelete.length;
+          this.showToastMessage(`${count} Lead(s) wurden erfolgreich gelöscht.`, 'success');
+        }
+      },
+      error: (error) => {
+        console.error('Failed to bulk delete leads:', error);
+        this.isBulkDeleting = false;
+        this.showBulkDeleteModal = false;
+        this.showToastMessage('Fehler beim Löschen der Leads. Bitte versuchen Sie es erneut.', 'error');
+      }
+    });
   }
 }
