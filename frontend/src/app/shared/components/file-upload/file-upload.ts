@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
+import imageCompression from 'browser-image-compression';
 
 @Component({
   selector: 'app-file-upload',
@@ -9,7 +10,7 @@ import { Component, Output, EventEmitter, Input } from '@angular/core';
 export class FileUploadComponent {
   @Input() accept = 'image/*'; // Accept all image types
   @Input() maxFiles = 5;
-  @Input() maxSize = 10485760; // 10MB
+  @Input() maxSize = 10485760; // 10MB - Frontend max before compression
   @Output() filesSelected = new EventEmitter<File[]>();
   @Output() error = new EventEmitter<string>();
 
@@ -17,8 +18,10 @@ export class FileUploadComponent {
   previews: string[] = [];
   showErrorModal = false;
   errorMessage = '';
+  isCompressing = false;
+  compressionProgress = 0;
 
-  onFileSelect(event: any): void {
+  async onFileSelect(event: any): Promise<void> {
     const files: FileList = event.target.files;
 
     console.log('Files selected:', files.length);
@@ -33,74 +36,129 @@ export class FileUploadComponent {
 
     if (files.length > this.maxFiles) {
       this.showError(`Maximal ${this.maxFiles} Bilder erlaubt. Du hast ${files.length} ausgewählt.`);
-      event.target.value = ''; // Reset input
+      event.target.value = '';
       return;
     }
 
+    this.isCompressing = true;
     const newFiles: File[] = [];
     const newPreviews: string[] = [];
-    let loadedPreviews = 0;
+    let processedFiles = 0;
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', file.size);
-
-      // Check file size (10MB limit)
-      if (file.size > this.maxSize) {
-        const sizeMB = (file.size / 1024 / 1024).toFixed(2);
-        this.showError(`Bild "${file.name}" ist zu groß (${sizeMB} MB).\n\nMaximale Größe: 10 MB\n\nBitte komprimiere das Bild oder wähle ein kleineres aus.`);
-        event.target.value = ''; // Reset input
-        return;
-      }
+      console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
 
       // Safari/iOS fix: Check file extension if MIME type is missing
       const isImageByExtension = /\.(jpg|jpeg|png|gif|webp|heic|heif|bmp|avif)$/i.test(file.name);
       const isImageByType = file.type && file.type.startsWith('image/');
 
       if (!isImageByType && !isImageByExtension) {
+        this.isCompressing = false;
         this.showError(`"${file.name}" ist kein gültiges Bild.\n\nBitte wähle Bilddateien aus (JPEG, PNG, HEIC, etc.).`);
-        event.target.value = ''; // Reset input
+        event.target.value = '';
         return;
       }
 
-      newFiles.push(file);
+      try {
+        // Compress and convert image
+        const compressedFile = await this.compressImage(file);
+        console.log('Compressed:', compressedFile.name, 'New size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
 
-      // Create preview - handle HEIC gracefully
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        newPreviews.push(e.target.result);
-        loadedPreviews++;
-        console.log(`Preview loaded ${loadedPreviews}/${files.length}`);
-
-        if (loadedPreviews === files.length) {
-          this.previews = [...this.previews, ...newPreviews];
-          console.log('All previews loaded, total:', this.previews.length);
+        // Check if compressed file still too large (very rare)
+        if (compressedFile.size > this.maxSize) {
+          const sizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
+          this.isCompressing = false;
+          this.showError(`Bild "${file.name}" ist nach Kompression immer noch zu groß (${sizeMB} MB).\n\nMaximale Größe: 10 MB\n\nBitte wähle ein kleineres Bild.`);
+          event.target.value = '';
+          return;
         }
-      };
-      reader.onerror = (error) => {
-        console.error('FileReader error:', error);
-        // Create placeholder for failed preview (e.g., HEIC on some browsers)
-        newPreviews.push('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5CaWxkPC90ZXh0Pjwvc3ZnPg==');
-        loadedPreviews++;
 
-        if (loadedPreviews === files.length) {
-          this.previews = [...this.previews, ...newPreviews];
-          console.log('All previews loaded (with placeholders), total:', this.previews.length);
-        }
-      };
-      reader.readAsDataURL(file);
+        newFiles.push(compressedFile);
+
+        // Create preview from compressed file
+        const preview = await this.createPreview(compressedFile);
+        newPreviews.push(preview);
+
+        processedFiles++;
+        this.compressionProgress = Math.round((processedFiles / files.length) * 100);
+        console.log(`Processed ${processedFiles}/${files.length} (${this.compressionProgress}%)`);
+
+      } catch (error) {
+        console.error('Error processing file:', error);
+        this.isCompressing = false;
+        this.showError(`Fehler beim Verarbeiten von "${file.name}".\n\nBitte versuche es erneut oder wähle ein anderes Bild.`);
+        event.target.value = '';
+        return;
+      }
     }
 
     this.selectedFiles = [...this.selectedFiles, ...newFiles];
-    console.log('Selected files updated, total:', this.selectedFiles.length);
+    this.previews = [...this.previews, ...newPreviews];
+    this.isCompressing = false;
+    this.compressionProgress = 0;
+
+    console.log('All files processed, total:', this.selectedFiles.length);
     this.filesSelected.emit(this.selectedFiles);
 
-    // Don't reset input immediately - causes issues on Safari
+    // Reset input
     setTimeout(() => {
       if (event.target) {
         event.target.value = '';
       }
     }, 100);
+  }
+
+  /**
+   * Compress image using browser-image-compression
+   * Converts HEIC to JPEG and reduces file size while maintaining quality
+   */
+  private async compressImage(file: File): Promise<File> {
+    const options = {
+      maxSizeMB: 2, // Target max size 2MB (well under 10MB limit)
+      maxWidthOrHeight: 1920, // Max dimension for high quality
+      useWebWorker: true, // Use web worker for better performance
+      fileType: 'image/jpeg', // Convert everything to JPEG (universal support)
+      initialQuality: 0.85, // High quality (0.85 = very good, lossless-like)
+      alwaysKeepResolution: false, // Allow resize if needed
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+
+      // Rename file to have .jpg extension
+      const newName = file.name.replace(/\.(heic|heif|png|gif|bmp|webp|avif)$/i, '.jpg');
+
+      return new File([compressedFile], newName, {
+        type: 'image/jpeg',
+        lastModified: Date.now()
+      });
+    } catch (error) {
+      console.error('Compression error:', error);
+      // If compression fails, return original file
+      return file;
+    }
+  }
+
+  /**
+   * Create preview from file
+   */
+  private createPreview(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        resolve(e.target.result);
+      };
+
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error);
+        // Return placeholder SVG
+        resolve('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iIzMzMyIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiNmZmYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5CaWxkPC90ZXh0Pjwvc3ZnPg==');
+      };
+
+      reader.readAsDataURL(file);
+    });
   }
 
   removeFile(index: number): void {
