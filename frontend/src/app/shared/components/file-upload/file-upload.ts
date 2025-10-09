@@ -10,7 +10,7 @@ import heic2any from 'heic2any';
 })
 export class FileUploadComponent {
   @Input() accept = 'image/*'; // Accept all image types
-  @Input() maxFiles = 5;
+  @Input() maxFiles = 2; // Limited to 2 for mobile stability (HEIC conversion is memory-intensive)
   @Input() maxOriginalSize = 50 * 1024 * 1024; // 50MB - Max original file size (will compress to ~1MB)
   @Input() maxCompressedSize = 3 * 1024 * 1024; // 3MB - Max after compression (safety buffer)
   @Output() filesSelected = new EventEmitter<File[]>();
@@ -105,6 +105,13 @@ export class FileUploadComponent {
         this.compressionProgress = Math.round((processedFiles / files.length) * 100);
         console.log(`✅ Processed ${processedFiles}/${files.length} (${this.compressionProgress}%)`);
 
+        // Mobile memory optimization: Add small delay between files
+        // heic2any has known 70MB memory leak per conversion
+        if (processedFiles < files.length && this.isHeicFile(file)) {
+          console.log('⏱️ Waiting 300ms for memory cleanup...');
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+
       } catch (error: any) {
         console.error('❌ Error processing file:', error);
         this.isCompressing = false;
@@ -151,10 +158,11 @@ export class FileUploadComponent {
       console.log('🔄 Starting HEIC conversion with heic2any...');
 
       // Convert HEIC to JPEG blob
+      // Lower quality (0.8) to reduce memory usage on mobile
       const convertedBlob = await heic2any({
         blob: file,
         toType: 'image/jpeg',
-        quality: 0.95 // High quality for conversion (will compress later)
+        quality: 0.8 // Balanced quality for mobile memory (will compress to 1MB later anyway)
       });
 
       // heic2any can return Blob or Blob[] - handle both cases
