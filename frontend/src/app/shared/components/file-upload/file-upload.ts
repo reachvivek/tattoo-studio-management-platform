@@ -1,5 +1,6 @@
 import { Component, Output, EventEmitter, Input } from '@angular/core';
 import imageCompression from 'browser-image-compression';
+import heic2any from 'heic2any';
 
 @Component({
   selector: 'app-file-upload',
@@ -25,10 +26,10 @@ export class FileUploadComponent {
   async onFileSelect(event: any): Promise<void> {
     const files: FileList = event.target.files;
 
-    console.log('Files selected:', files.length);
+    console.log('📁 Files selected:', files.length);
 
     if (!files || files.length === 0) {
-      console.log('No files selected');
+      console.log('⚠️ No files selected');
       return;
     }
 
@@ -72,12 +73,20 @@ export class FileUploadComponent {
       }
 
       try {
-        // Compress and convert image to JPEG
-        const compressedFile = await this.compressImage(file);
+        // Step 1: Convert HEIC to JPEG if needed (browser-image-compression CANNOT read HEIC)
+        let processableFile = file;
+        if (this.isHeicFile(file)) {
+          console.log('🔄 Converting HEIC to JPEG:', file.name);
+          processableFile = await this.convertHeicToJpeg(file);
+          console.log('✅ HEIC converted to JPEG:', processableFile.name, 'Size:', (processableFile.size / 1024 / 1024).toFixed(2), 'MB');
+        }
+
+        // Step 2: Compress image to target size (1MB)
+        const compressedFile = await this.compressImage(processableFile);
         const compressedSizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
         console.log('✅ Compressed:', compressedFile.name, 'Original:', fileSizeMB, 'MB → Compressed:', compressedSizeMB, 'MB');
 
-        // Verify compressed file is within limits (safety check)
+        // Step 3: Verify compressed file is within limits (safety check)
         if (compressedFile.size > this.maxCompressedSize) {
           const maxCompressedMB = (this.maxCompressedSize / 1024 / 1024).toFixed(0);
           this.isCompressing = false;
@@ -96,10 +105,11 @@ export class FileUploadComponent {
         this.compressionProgress = Math.round((processedFiles / files.length) * 100);
         console.log(`✅ Processed ${processedFiles}/${files.length} (${this.compressionProgress}%)`);
 
-      } catch (error) {
+      } catch (error: any) {
         console.error('❌ Error processing file:', error);
         this.isCompressing = false;
-        this.showError(`❌ Fehler beim Verarbeiten!\n\n"${file.name}" konnte nicht komprimiert werden.\n\nBitte versuche es erneut oder wähle ein anderes Bild.`);
+        const errorMsg = error?.message || 'Unbekannter Fehler';
+        this.showError(`❌ Fehler beim Verarbeiten!\n\n"${file.name}" konnte nicht verarbeitet werden.\n\nFehler: ${errorMsg}\n\nBitte versuche es erneut oder wähle ein anderes Bild.`);
         event.target.value = '';
         return;
       }
@@ -110,7 +120,7 @@ export class FileUploadComponent {
     this.isCompressing = false;
     this.compressionProgress = 0;
 
-    console.log('All files processed, total:', this.selectedFiles.length);
+    console.log('✅ All files processed successfully, total:', this.selectedFiles.length);
     this.filesSelected.emit(this.selectedFiles);
 
     // Reset input
@@ -122,9 +132,57 @@ export class FileUploadComponent {
   }
 
   /**
+   * Check if file is HEIC/HEIF format
+   * Safari/iOS don't always provide MIME type, so check both type and extension
+   */
+  private isHeicFile(file: File): boolean {
+    const isHeicByType = file.type === 'image/heic' || file.type === 'image/heif';
+    const isHeicByExtension = /\.(heic|heif)$/i.test(file.name);
+    return isHeicByType || isHeicByExtension;
+  }
+
+  /**
+   * Convert HEIC to JPEG using heic2any library
+   * CRITICAL: browser-image-compression CANNOT read HEIC files!
+   * This conversion MUST happen BEFORE compression
+   */
+  private async convertHeicToJpeg(file: File): Promise<File> {
+    try {
+      console.log('🔄 Starting HEIC conversion with heic2any...');
+
+      // Convert HEIC to JPEG blob
+      const convertedBlob = await heic2any({
+        blob: file,
+        toType: 'image/jpeg',
+        quality: 0.95 // High quality for conversion (will compress later)
+      });
+
+      // heic2any can return Blob or Blob[] - handle both cases
+      const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
+
+      // Create new File from blob
+      const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
+      const convertedFile = new File([blob], newName, {
+        type: 'image/jpeg',
+        lastModified: Date.now()
+      });
+
+      console.log('✅ HEIC conversion successful:', newName);
+      return convertedFile;
+
+    } catch (error: any) {
+      console.error('❌ HEIC conversion failed:', error);
+      throw new Error(`HEIC Konvertierung fehlgeschlagen: ${error.message || 'Unbekannter Fehler'}`);
+    }
+  }
+
+  /**
    * Compress image using browser-image-compression
-   * Converts HEIC/PNG to JPEG and reduces file size while maintaining quality
+   * Reduces file size while maintaining quality
    * Target: 1MB max, 1920px dimension, 0.9 quality (near-lossless)
+   *
+   * NOTE: This library CANNOT read HEIC files!
+   * HEIC must be converted to JPEG first using convertHeicToJpeg()
    */
   private async compressImage(file: File): Promise<File> {
     const options = {
@@ -137,19 +195,23 @@ export class FileUploadComponent {
     };
 
     try {
+      console.log('🗜️ Compressing image with browser-image-compression...');
       const compressedFile = await imageCompression(file, options);
 
       // Rename file to have .jpg extension
-      const newName = file.name.replace(/\.(heic|heif|png|gif|bmp|webp|avif)$/i, '.jpg');
+      const newName = file.name.replace(/\.(png|gif|bmp|webp|avif|jpeg)$/i, '.jpg');
 
-      return new File([compressedFile], newName, {
+      const finalFile = new File([compressedFile], newName.endsWith('.jpg') ? newName : `${newName}.jpg`, {
         type: 'image/jpeg',
         lastModified: Date.now()
       });
-    } catch (error) {
-      console.error('Compression error:', error);
-      // If compression fails, return original file
-      return file;
+
+      console.log('✅ Compression successful');
+      return finalFile;
+
+    } catch (error: any) {
+      console.error('❌ Compression failed:', error);
+      throw new Error(`Komprimierung fehlgeschlagen: ${error.message || 'Unbekannter Fehler'}`);
     }
   }
 
