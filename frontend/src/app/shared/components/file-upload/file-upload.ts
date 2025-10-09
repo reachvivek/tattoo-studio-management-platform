@@ -10,7 +10,8 @@ import imageCompression from 'browser-image-compression';
 export class FileUploadComponent {
   @Input() accept = 'image/*'; // Accept all image types
   @Input() maxFiles = 5;
-  @Input() maxSize = 10485760; // 10MB - Frontend max before compression
+  @Input() maxOriginalSize = 50 * 1024 * 1024; // 50MB - Max original file size (will compress to ~1MB)
+  @Input() maxCompressedSize = 3 * 1024 * 1024; // 3MB - Max after compression (safety buffer)
   @Output() filesSelected = new EventEmitter<File[]>();
   @Output() error = new EventEmitter<string>();
 
@@ -47,7 +48,8 @@ export class FileUploadComponent {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      console.log('Processing file:', file.name, 'Type:', file.type, 'Size:', (file.size / 1024 / 1024).toFixed(2), 'MB');
+      const fileSizeMB = (file.size / 1024 / 1024).toFixed(2);
+      console.log('📁 Processing file:', file.name, 'Type:', file.type, 'Size:', fileSizeMB, 'MB');
 
       // Safari/iOS fix: Check file extension if MIME type is missing
       const isImageByExtension = /\.(jpg|jpeg|png|gif|webp|heic|heif|bmp|avif)$/i.test(file.name);
@@ -55,21 +57,31 @@ export class FileUploadComponent {
 
       if (!isImageByType && !isImageByExtension) {
         this.isCompressing = false;
-        this.showError(`"${file.name}" ist kein gültiges Bild.\n\nBitte wähle Bilddateien aus (JPEG, PNG, HEIC, etc.).`);
+        this.showError(`❌ "${file.name}" ist kein gültiges Bild.\n\nBitte wähle Bilddateien aus (JPEG, PNG, HEIC, etc.).`);
+        event.target.value = '';
+        return;
+      }
+
+      // Check original file size BEFORE compression
+      if (file.size > this.maxOriginalSize) {
+        const maxSizeMB = (this.maxOriginalSize / 1024 / 1024).toFixed(0);
+        this.isCompressing = false;
+        this.showError(`❌ Datei zu groß!\n\n"${file.name}" (${fileSizeMB} MB) überschreitet die maximale Größe von ${maxSizeMB} MB.\n\nBitte wähle ein kleineres Bild.`);
         event.target.value = '';
         return;
       }
 
       try {
-        // Compress and convert image
+        // Compress and convert image to JPEG
         const compressedFile = await this.compressImage(file);
-        console.log('Compressed:', compressedFile.name, 'New size:', (compressedFile.size / 1024 / 1024).toFixed(2), 'MB');
+        const compressedSizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
+        console.log('✅ Compressed:', compressedFile.name, 'Original:', fileSizeMB, 'MB → Compressed:', compressedSizeMB, 'MB');
 
-        // Check if compressed file still too large (very rare)
-        if (compressedFile.size > this.maxSize) {
-          const sizeMB = (compressedFile.size / 1024 / 1024).toFixed(2);
+        // Verify compressed file is within limits (safety check)
+        if (compressedFile.size > this.maxCompressedSize) {
+          const maxCompressedMB = (this.maxCompressedSize / 1024 / 1024).toFixed(0);
           this.isCompressing = false;
-          this.showError(`Bild "${file.name}" ist nach Kompression immer noch zu groß (${sizeMB} MB).\n\nMaximale Größe: 10 MB\n\nBitte wähle ein kleineres Bild.`);
+          this.showError(`❌ Komprimierung fehlgeschlagen!\n\n"${file.name}" ist nach Kompression immer noch zu groß (${compressedSizeMB} MB).\n\nMaximale Größe nach Kompression: ${maxCompressedMB} MB\n\nBitte wähle ein kleineres oder einfacheres Bild.`);
           event.target.value = '';
           return;
         }
@@ -82,12 +94,12 @@ export class FileUploadComponent {
 
         processedFiles++;
         this.compressionProgress = Math.round((processedFiles / files.length) * 100);
-        console.log(`Processed ${processedFiles}/${files.length} (${this.compressionProgress}%)`);
+        console.log(`✅ Processed ${processedFiles}/${files.length} (${this.compressionProgress}%)`);
 
       } catch (error) {
-        console.error('Error processing file:', error);
+        console.error('❌ Error processing file:', error);
         this.isCompressing = false;
-        this.showError(`Fehler beim Verarbeiten von "${file.name}".\n\nBitte versuche es erneut oder wähle ein anderes Bild.`);
+        this.showError(`❌ Fehler beim Verarbeiten!\n\n"${file.name}" konnte nicht komprimiert werden.\n\nBitte versuche es erneut oder wähle ein anderes Bild.`);
         event.target.value = '';
         return;
       }
@@ -111,16 +123,17 @@ export class FileUploadComponent {
 
   /**
    * Compress image using browser-image-compression
-   * Converts HEIC to JPEG and reduces file size while maintaining quality
+   * Converts HEIC/PNG to JPEG and reduces file size while maintaining quality
+   * Target: 1MB max, 1920px dimension, 0.9 quality (near-lossless)
    */
   private async compressImage(file: File): Promise<File> {
     const options = {
-      maxSizeMB: 2, // Target max size 2MB (well under 10MB limit)
+      maxSizeMB: 1, // Target max 1MB (safe for all backends)
       maxWidthOrHeight: 1920, // Max dimension for high quality
       useWebWorker: true, // Use web worker for better performance
       fileType: 'image/jpeg', // Convert everything to JPEG (universal support)
-      initialQuality: 0.85, // High quality (0.85 = very good, lossless-like)
-      alwaysKeepResolution: false, // Allow resize if needed
+      initialQuality: 0.9, // Very high quality (0.9 = near-lossless)
+      alwaysKeepResolution: false, // Allow resize if needed to meet size target
     };
 
     try {
