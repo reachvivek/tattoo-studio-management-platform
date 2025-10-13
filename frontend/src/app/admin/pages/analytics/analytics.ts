@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Chart, ChartConfiguration, ChartData, registerables } from 'chart.js';
-import { AnalyticsData, FunnelStats, DailyAnalytics, TrafficSource, DeviceStats, DropOffAnalysis } from '../../../../core/services/analytics-data';
-import { LanguageService, Language } from '../../../../core/services/language.service';
+import { AnalyticsData, FunnelStats, DailyAnalytics, TrafficSource, DeviceStats, DropOffAnalysis } from '../../../core/services/analytics-data';
+import { LanguageService, Language } from '../../../core/services/language.service';
 
 // Register Chart.js components
 Chart.register(...registerables);

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { AdminRoutingModule } from './admin-routing-module';
-import { SharedModule } from '../../shared/shared-module';
+import { SharedModule } from '../shared/shared-module';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { LeadDetail } from './pages/lead-detail/lead-detail';
