@@ -1,0 +1,132 @@
+<div class="admin-layout">
+  <!-- Mobile Header with Hamburger -->
+  @if (isMobile) {
+    <header class="mobile-header">
+      <button class="hamburger-button" (click)="toggleSidebar()" type="button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          @if (!sidebarOpen) {
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          } @else {
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          }
+        </svg>
+      </button>
+      <div class="logo">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2L4 8V14C4 21.18 9.84 27.86 16 30C22.16 27.86 28 21.18 28 14V8L16 2Z" fill="url(#logo-gradient-mobile)"/>
+          <defs>
+            <linearGradient id="logo-gradient-mobile" x1="4" y1="2" x2="28" y2="30">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">BookInk</span>
+      </div>
+      <div style="width: 40px;"></div>
+    </header>
+  }
+
+  <!-- Overlay for mobile -->
+  @if (isMobile && sidebarOpen) {
+    <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+  }
+
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen" [class.collapsed]="sidebarCollapsed">
+    <!-- Mobile close button -->
+    @if (isMobile && sidebarOpen) {
+      <button class="close-button-floating" (click)="closeSidebar()" type="button">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    }
+
+    <div class="sidebar-header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <path d="M16 2L4 8V14C4 21.18 9.84 27.86 16 30C22.16 27.86 28 21.18 28 14V8L16 2Z" fill="url(#logo-gradient)"/>
+          <defs>
+            <linearGradient id="logo-gradient" x1="4" y1="2" x2="28" y2="30">
+              <stop offset="0%" stop-color="#8b5cf6"/>
+              <stop offset="100%" stop-color="#3b82f6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">BookInk</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-top">
+        <a routerLink="/admin/dashboard"
+           class="nav-item"
+           [class.active]="isActive('dashboard')"
+           (click)="closeSidebar()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/>
+            <rect x="3" y="12" width="7" height="7"/>
+            <rect x="12" y="3" width="7" height="7"/>
+            <rect x="12" y="12" width="7" height="7"/>
+          </svg>
+          <span>Leads</span>
+        </a>
+
+        <a routerLink="/admin/analytics"
+           class="nav-item"
+           [class.active]="isActive('analytics')"
+           (click)="closeSidebar()">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 20V10"/>
+            <path d="M12 20V4"/>
+            <path d="M6 20v-6"/>
+          </svg>
+          <span>Analytics</span>
+        </a>
+      </div>
+
+      <div class="nav-bottom">
+        <button class="nav-item language" (click)="toggleLanguage()" type="button">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span>{{ currentLanguage === 'en' ? 'Deutsch' : 'English' }}</span>
+        </button>
+
+        <button class="nav-item logout" (click)="logout()" type="button">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Logout</span>
+        </button>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Desktop collapse/expand button (outside sidebar for full visibility) -->
+  @if (!isMobile) {
+    <button class="collapse-button" [class.collapsed]="sidebarCollapsed" (click)="toggleCollapse()" type="button" [title]="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        @if (sidebarCollapsed) {
+          <polyline points="9 18 15 12 9 6"></polyline>
+        } @else {
+          <polyline points="15 18 9 12 15 6"></polyline>
+        }
+      </svg>
+    </button>
+  }
+
+  <!-- Main Content -->
+  <div class="main-content" [class.mobile]="isMobile" [class.sidebar-collapsed]="sidebarCollapsed && !isMobile">
+    <router-outlet></router-outlet>
+  </div>
+</div>

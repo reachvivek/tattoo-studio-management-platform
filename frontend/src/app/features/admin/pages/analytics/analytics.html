@@ -1,0 +1,341 @@
+<div class="analytics-container">
+  <!-- Toolbar with Refresh -->
+  <div class="analytics-toolbar">
+    <button (click)="refreshData()" class="refresh-button" [disabled]="isRefreshing">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" [class.spinning]="isRefreshing">
+        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+      </svg>
+      {{ t('refresh') }}
+    </button>
+  </div>
+
+  <!-- Date Range Selector -->
+  <div class="date-range-section">
+    <div class="date-range-tabs">
+      <button
+        (click)="dateRange = 'today'; onDateRangeChange()"
+        [class.active]="dateRange === 'today'"
+        class="date-tab"
+      >
+        Heute
+      </button>
+      <button
+        (click)="dateRange = 'week'; onDateRangeChange()"
+        [class.active]="dateRange === 'week'"
+        class="date-tab"
+      >
+        Diese Woche
+      </button>
+      <button
+        (click)="dateRange = 'month'; onDateRangeChange()"
+        [class.active]="dateRange === 'month'"
+        class="date-tab"
+      >
+        Dieser Monat
+      </button>
+      <button
+        (click)="dateRange = 'year'; onDateRangeChange()"
+        [class.active]="dateRange === 'year'"
+        class="date-tab"
+      >
+        Dieses Jahr
+      </button>
+      <button
+        (click)="dateRange = 'custom'"
+        [class.active]="dateRange === 'custom'"
+        class="date-tab"
+      >
+        Benutzerdefiniert
+      </button>
+    </div>
+
+    @if (dateRange === 'custom') {
+      <div class="custom-date-range">
+        <div class="date-input-group">
+          <label>Von:</label>
+          <input
+            type="date"
+            [(ngModel)]="customStartDate"
+            class="date-input"
+          />
+        </div>
+        <div class="date-input-group">
+          <label>Bis:</label>
+          <input
+            type="date"
+            [(ngModel)]="customEndDate"
+            class="date-input"
+          />
+        </div>
+        <button
+          (click)="applyCustomDateRange()"
+          class="apply-button"
+          [disabled]="!customStartDate || !customEndDate"
+        >
+          Anwenden
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Main Content -->
+  <main class="analytics-main">
+    @if (isLoading) {
+      <div class="loading-state">
+        <div class="spinner-large"></div>
+        <p>Lade Analytics...</p>
+      </div>
+    } @else {
+      <!-- Key Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon purple">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">
+              {{ t('totalSessions') }}
+              <span class="info-icon" [title]="t('tooltips.totalSessions')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+            </div>
+            <div class="metric-value">{{ funnelStats?.funnel_steps?.total_sessions | number }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">
+              {{ t('formSubmits') }}
+              <span class="info-icon" [title]="t('tooltips.formSubmits')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+            </div>
+            <div class="metric-value">{{ funnelStats?.funnel_steps?.submitted_form | number }}</div>
+            <div class="metric-change">{{ funnelStats?.conversion_rates?.landing_to_form }}% {{ t('conversion') }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon orange">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">
+              {{ t('wheelSpins') }}
+              <span class="info-icon" [title]="t('tooltips.wheelSpins')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+            </div>
+            <div class="metric-value">{{ funnelStats?.funnel_steps?.spun_wheel | number }}</div>
+            <div class="metric-change">{{ funnelStats?.conversion_rates?.wheel_to_spin }}% {{ t('engagement') }}</div>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon green">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="metric-content">
+            <div class="metric-label">
+              {{ t('whatsappRedirects') }}
+              <span class="info-icon" [title]="t('tooltips.whatsappRedirects')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+              </span>
+            </div>
+            <div class="metric-value">{{ funnelStats?.funnel_steps?.whatsapp_redirect | number }}</div>
+            <div class="metric-change success">{{ funnelStats?.conversion_rates?.overall_conversion }}% {{ t('overall') }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Funnel Chart -->
+        <div class="chart-card large">
+          <canvas id="funnelChart"></canvas>
+        </div>
+
+        <!-- Daily Trends Chart -->
+        <div class="chart-card large">
+          <canvas id="dailyChart"></canvas>
+        </div>
+
+        <!-- Conversion Rates Chart -->
+        <div class="chart-card large">
+          <canvas id="conversionChart"></canvas>
+        </div>
+
+        <!-- Traffic Sources -->
+        <div class="chart-card medium">
+          <canvas id="trafficChart"></canvas>
+        </div>
+
+        <!-- Device Stats -->
+        <div class="chart-card medium">
+          <canvas id="deviceChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Traffic Sources Table -->
+      <div class="data-section">
+        <h2 class="section-title">Traffic Sources</h2>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Medium</th>
+                <th>Campaign</th>
+                <th>Sessions</th>
+                <th>Conversions</th>
+                <th>Conv. Rate</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (source of trafficSources; track source.source + source.medium) {
+                <tr>
+                  <td class="source-cell">
+                    <span class="source-badge">{{ source.source }}</span>
+                  </td>
+                  <td>{{ source.medium }}</td>
+                  <td>{{ source.campaign }}</td>
+                  <td>{{ source.sessions | number }}</td>
+                  <td>{{ source.conversions | number }}</td>
+                  <td>
+                    <span class="conversion-badge" [class.high]="source.conversion_rate > 30">
+                      {{ source.conversion_rate }}%
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Device Performance Table -->
+      <div class="data-section">
+        <h2 class="section-title">Device Performance</h2>
+        <div class="stats-row">
+          @for (device of deviceStats?.devices; track device.device_type) {
+            <div class="stat-box">
+              <div class="stat-header">
+                <span class="device-icon">
+                  @if (device.device_type === 'mobile') {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                      <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                  } @else if (device.device_type === 'tablet') {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                      <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                    </svg>
+                  } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                      <line x1="8" y1="21" x2="16" y2="21"></line>
+                      <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                  }
+                </span>
+                <span class="device-name">{{ device.device_type | titlecase }}</span>
+              </div>
+              <div class="stat-body">
+                <div class="stat-row">
+                  <span class="stat-label">Sessions:</span>
+                  <span class="stat-value">{{ device.sessions | number }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Conversions:</span>
+                  <span class="stat-value">{{ device.conversions | number }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Avg. Time:</span>
+                  <span class="stat-value">{{ device.avg_conversion_time }}s</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Drop-off Analysis -->
+      @if (dropOffAnalysis) {
+        <div class="data-section">
+          <h2 class="section-title">Drop-off Analysis</h2>
+          <div class="dropoff-grid">
+            <div class="dropoff-card">
+              <div class="dropoff-label">Landing Page</div>
+              <div class="dropoff-value">{{ dropOffAnalysis.dropped_at_landing | number }}</div>
+              <div class="dropoff-percentage">
+                {{ (dropOffAnalysis.dropped_at_landing / dropOffAnalysis.total_sessions * 100).toFixed(1) }}% dropped
+              </div>
+            </div>
+            <div class="dropoff-card">
+              <div class="dropoff-label">Form Start</div>
+              <div class="dropoff-value">{{ dropOffAnalysis.dropped_at_form | number }}</div>
+              <div class="dropoff-percentage">
+                {{ (dropOffAnalysis.dropped_at_form / dropOffAnalysis.total_sessions * 100).toFixed(1) }}% dropped
+              </div>
+            </div>
+            <div class="dropoff-card">
+              <div class="dropoff-label">Wheel View</div>
+              <div class="dropoff-value">{{ dropOffAnalysis.dropped_at_wheel | number }}</div>
+              <div class="dropoff-percentage">
+                {{ (dropOffAnalysis.dropped_at_wheel / dropOffAnalysis.total_sessions * 100).toFixed(1) }}% dropped
+              </div>
+            </div>
+            <div class="dropoff-card">
+              <div class="dropoff-label">Wheel Spin</div>
+              <div class="dropoff-value">{{ dropOffAnalysis.dropped_at_spin | number }}</div>
+              <div class="dropoff-percentage">
+                {{ (dropOffAnalysis.dropped_at_spin / dropOffAnalysis.total_sessions * 100).toFixed(1) }}% dropped
+              </div>
+            </div>
+            <div class="dropoff-card">
+              <div class="dropoff-label">Before WhatsApp Redirect</div>
+              <div class="dropoff-value">{{ dropOffAnalysis.dropped_at_claim | number }}</div>
+              <div class="dropoff-percentage">
+                {{ Math.abs(dropOffAnalysis.dropped_at_claim / dropOffAnalysis.total_sessions * 100).toFixed(1) }}% dropped
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    }
+  </main>
+</div>

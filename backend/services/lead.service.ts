@@ -126,11 +126,50 @@ export class LeadService {
     }
   }
 
-  async getLeads(filters?: any): Promise<Lead[]> {
+  async getLeads(page: number = 1, limit: number = 20, filters?: any): Promise<{ leads: Lead[]; total: number; page: number; totalPages: number; statusCounts: { new: number; contacted: number; qualified: number; converted: number; rejected: number } }> {
+    const offset = (page - 1) * limit;
+
+    // Get total count for pagination
+    const countResult = await pool.query("SELECT COUNT(*) FROM leads");
+    const total = parseInt(countResult.rows[0].count);
+    const totalPages = Math.ceil(total / limit);
+
+    // Get status counts
+    const statusCountsResult = await pool.query(`
+      SELECT
+        status,
+        COUNT(*) as count
+      FROM leads
+      GROUP BY status
+    `);
+
+    const statusCounts = {
+      new: 0,
+      contacted: 0,
+      qualified: 0,
+      converted: 0,
+      rejected: 0
+    };
+
+    statusCountsResult.rows.forEach(row => {
+      if (row.status in statusCounts) {
+        statusCounts[row.status as keyof typeof statusCounts] = parseInt(row.count);
+      }
+    });
+
+    // Get paginated leads
     const result = await pool.query(
-      "SELECT * FROM leads ORDER BY created_at DESC"
+      "SELECT * FROM leads ORDER BY created_at DESC LIMIT $1 OFFSET $2",
+      [limit, offset]
     );
-    return result.rows;
+
+    return {
+      leads: result.rows,
+      total,
+      page,
+      totalPages,
+      statusCounts
+    };
   }
 
   async getLeadById(id: number): Promise<Lead | null> {

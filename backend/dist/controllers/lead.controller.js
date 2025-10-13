@@ -43,10 +43,19 @@ class LeadController {
     }
     async getAll(req, res) {
         try {
-            const leads = await lead_service_1.leadService.getLeads();
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 20;
+            const result = await lead_service_1.leadService.getLeads(page, limit);
             res.json({
                 success: true,
-                data: leads
+                data: result.leads,
+                pagination: {
+                    page: result.page,
+                    limit: limit,
+                    total: result.total,
+                    totalPages: result.totalPages
+                },
+                statusCounts: result.statusCounts
             });
         }
         catch (error) {
@@ -110,6 +119,32 @@ class LeadController {
                     error: error.message
                 });
             }
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    }
+    async bulkDelete(req, res) {
+        try {
+            const { ids } = req.body;
+            if (!Array.isArray(ids) || ids.length === 0) {
+                return res.status(400).json({
+                    success: false,
+                    error: 'Keine IDs zum Löschen angegeben'
+                });
+            }
+            const result = await lead_service_1.leadService.bulkDeleteLeads(ids);
+            res.json({
+                success: true,
+                message: `${result.deletedCount} Lead(s) erfolgreich gelöscht`,
+                data: {
+                    deletedCount: result.deletedCount,
+                    failedIds: result.failedIds
+                }
+            });
+        }
+        catch (error) {
             res.status(500).json({
                 success: false,
                 error: error.message

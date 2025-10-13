@@ -21,7 +21,8 @@ const storage = multer_1.default.diskStorage({
     },
 });
 const fileFilter = (req, file, cb) => {
-    const allowedMimeTypes = (process.env.ALLOWED_MIME_TYPES || 'image/jpeg,image/png,image/webp').split(',');
+    // Support all common mobile image formats including iPhone HEIC
+    const allowedMimeTypes = (process.env.ALLOWED_MIME_TYPES || 'image/jpeg,image/jpg,image/png,image/webp,image/heic,image/heif,image/gif,image/bmp,image/avif').split(',');
     if (allowedMimeTypes.includes(file.mimetype)) {
         cb(null, true);
     }

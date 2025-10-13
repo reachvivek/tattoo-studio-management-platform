@@ -1,46 +1,55 @@
 <div class="login-container">
+  <button class="language-toggle" (click)="toggleLanguage()" type="button">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="2" y1="12" x2="22" y2="12"></line>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+    </svg>
+    {{ currentLanguage === 'en' ? 'DE' : 'EN' }}
+  </button>
+
   <div class="login-card">
     <div class="login-header">
       <h1>BookInk</h1>
-      <p>Admin Login</p>
+      <p>{{ t('subtitle') }}</p>
     </div>
 
     <form (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="username">Benutzername</label>
+        <label for="username">{{ t('username') }}</label>
         <input
           type="text"
           id="username"
           [(ngModel)]="username"
           name="username"
           required
-          placeholder="Benutzername eingeben"
+          [placeholder]="t('usernamePlaceholder')"
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Passwort</label>
+        <label for="password">{{ t('password') }}</label>
         <input
           type="password"
           id="password"
           [(ngModel)]="password"
           name="password"
           required
-          placeholder="Passwort eingeben"
+          [placeholder]="t('passwordPlaceholder')"
         />
       </div>
 
       @if (errorMessage) {
         <div class="error-message">
-          {{ errorMessage }}
+          {{ t('loginError') }}
         </div>
       }
 
       <button type="submit" [disabled]="isLoading" class="login-button">
         @if (isLoading) {
-          <span>Wird geladen...</span>
+          <span>{{ t('loading') }}</span>
         } @else {
-          <span>Anmelden</span>
+          <span>{{ t('loginButton') }}</span>
         }
       </button>
     </form>

@@ -81,9 +81,41 @@ class LeadService {
             client.release();
         }
     }
-    async getLeads(filters) {
-        const result = await database_1.pool.query("SELECT * FROM leads ORDER BY created_at DESC");
-        return result.rows;
+    async getLeads(page = 1, limit = 20, filters) {
+        const offset = (page - 1) * limit;
+        // Get total count for pagination
+        const countResult = await database_1.pool.query("SELECT COUNT(*) FROM leads");
+        const total = parseInt(countResult.rows[0].count);
+        const totalPages = Math.ceil(total / limit);
+        // Get status counts
+        const statusCountsResult = await database_1.pool.query(`
+      SELECT
+        status,
+        COUNT(*) as count
+      FROM leads
+      GROUP BY status
+    `);
+        const statusCounts = {
+            new: 0,
+            contacted: 0,
+            qualified: 0,
+            converted: 0,
+            rejected: 0
+        };
+        statusCountsResult.rows.forEach(row => {
+            if (row.status in statusCounts) {
+                statusCounts[row.status] = parseInt(row.count);
+            }
+        });
+        // Get paginated leads
+        const result = await database_1.pool.query("SELECT * FROM leads ORDER BY created_at DESC LIMIT $1 OFFSET $2", [limit, offset]);
+        return {
+            leads: result.rows,
+            total,
+            page,
+            totalPages,
+            statusCounts
+        };
     }
     async getLeadById(id) {
         const result = await database_1.pool.query("SELECT * FROM leads WHERE id = $1", [id]);
@@ -114,6 +146,47 @@ class LeadService {
             await client.query("UPDATE campaign_stats SET total_leads = GREATEST(total_leads - 1, 0)");
             await client.query("COMMIT");
             return true;
+        }
+        catch (error) {
+            await client.query("ROLLBACK");
+            throw error;
+        }
+        finally {
+            client.release();
+        }
+    }
+    async bulkDeleteLeads(ids) {
+        const client = await database_1.pool.connect();
+        const failedIds = [];
+        let deletedCount = 0;
+        try {
+            await client.query("BEGIN");
+            for (const id of ids) {
+                try {
+                    // Check if lead exists
+                    const leadCheck = await client.query("SELECT id FROM leads WHERE id = $1", [id]);
+                    if (leadCheck.rows.length === 0) {
+                        failedIds.push(id);
+                        continue;
+                    }
+                    // Delete related activities first (cascade will handle email_queue due to FK)
+                    await client.query("DELETE FROM crm_activities WHERE lead_id = $1", [id]);
+                    // Delete the lead
+                    await client.query("DELETE FROM leads WHERE id = $1", [id]);
+                    deletedCount++;
+                }
+                catch (error) {
+                    console.error(`Failed to delete lead ${id}:`, error);
+                    failedIds.push(id);
+                }
+            }
+            // Update campaign stats
+            if (deletedCount > 0) {
+                await client.query("UPDATE campaign_stats SET total_leads = GREATEST(total_leads - $1, 0)", [deletedCount]);
+            }
+            await client.query("COMMIT");
+            console.log(`✅ Bulk delete: ${deletedCount} leads deleted, ${failedIds.length} failed`);
+            return { deletedCount, failedIds };
         }
         catch (error) {
             await client.query("ROLLBACK");

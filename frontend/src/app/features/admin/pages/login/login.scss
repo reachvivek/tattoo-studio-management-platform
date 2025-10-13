@@ -7,6 +7,37 @@
   align-items: center;
   justify-content: center;
   padding: 1rem;
+  position: relative;
+}
+
+.language-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  z-index: 10;
+
+  &:hover {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.5);
+    transform: scale(1.05);
+  }
+
+  @media (min-width: 768px) {
+    top: 2rem;
+    right: 2rem;
+  }
 }
 
 .login-card {

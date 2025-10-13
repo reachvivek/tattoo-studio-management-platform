@@ -4,6 +4,7 @@ import path from 'path';
 import leadRoutes from './routes/lead.routes';
 import uploadRoutes from './routes/upload.routes';
 import analyticsRoutes from './routes/analytics.routes';
+import analyticsDetailedRoutes from './routes/analytics-detailed.routes';
 import authRoutes from './routes/auth.routes';
 import imageRoutes from './routes/image.routes';
 import emailTestRoutes from './routes/email-test.routes';
@@ -36,7 +37,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma'],
 }));
 
 // Body parser with increased limits for image uploads (after compression: max 2MB per file, 5 files = 10MB)
@@ -62,6 +63,7 @@ app.use(`${apiPrefix}/auth`, authRoutes);
 app.use(`${apiPrefix}/leads`, leadRoutes);
 app.use(`${apiPrefix}/upload`, uploadRoutes);
 app.use(`${apiPrefix}/analytics`, analyticsRoutes);
+app.use(`${apiPrefix}/analytics-detailed`, analyticsDetailedRoutes);
 app.use(`${apiPrefix}/images`, imageRoutes);  // Blob endpoint for images
 app.use(`${apiPrefix}/email-test`, emailTestRoutes);  // Email testing endpoints
 app.use(`${apiPrefix}/queue`, queueMonitorRoutes);  // Queue monitoring endpoints

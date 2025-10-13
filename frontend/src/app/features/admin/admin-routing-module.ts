@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { LeadDetail } from './pages/lead-detail/lead-detail';
+import { Analytics } from './pages/analytics/analytics';
+import { AdminLayout } from './layout/admin-layout';
 import { authGuard } from './guards/auth-guard';
 
 const routes: Routes = [
@@ -11,19 +13,28 @@ const routes: Routes = [
     component: Login
   },
   {
-    path: 'dashboard',
-    component: Dashboard,
-    canActivate: [authGuard]
-  },
-  {
-    path: 'leads/:id',
-    component: LeadDetail,
-    canActivate: [authGuard]
-  },
-  {
     path: '',
-    redirectTo: 'dashboard',
-    pathMatch: 'full'
+    component: AdminLayout,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: 'dashboard',
+        component: Dashboard
+      },
+      {
+        path: 'analytics',
+        component: Analytics
+      },
+      {
+        path: 'leads/:id',
+        component: LeadDetail
+      },
+      {
+        path: '',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      }
+    ]
   }
 ];
 

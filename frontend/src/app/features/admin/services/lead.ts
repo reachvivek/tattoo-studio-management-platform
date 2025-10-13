@@ -28,6 +28,19 @@ export interface LeadData {
 interface LeadsResponse {
   success: boolean;
   data: LeadData[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+  statusCounts?: {
+    new: number;
+    contacted: number;
+    qualified: number;
+    converted: number;
+    rejected: number;
+  };
 }
 
 interface LeadResponse {
@@ -50,8 +63,8 @@ export class Lead {
     };
   }
 
-  getAll(): Observable<LeadsResponse> {
-    return this.http.get<LeadsResponse>(`${environment.apiUrl}/leads`, this.getHeaders());
+  getAll(page: number = 1, limit: number = 20): Observable<LeadsResponse> {
+    return this.http.get<LeadsResponse>(`${environment.apiUrl}/leads?page=${page}&limit=${limit}`, this.getHeaders());
   }
 
   getById(id: number): Observable<LeadResponse> {

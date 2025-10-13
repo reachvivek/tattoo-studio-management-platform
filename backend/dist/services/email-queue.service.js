@@ -45,28 +45,34 @@ class EmailQueueService {
         const now = new Date();
         const emails = [
             {
-                email_type: 'followup_1',
+                email_type: 'followup_immediate',
                 subject: 'Tattoo Gutschein',
                 template_name: 'followup-1-immediate',
-                scheduled_at: new Date(now.getTime() + 1 * 60 * 1000), // 1 minute after lead creation
+                scheduled_at: new Date(now.getTime() + 1 * 60 * 1000), // 1 minute - Confirmation email
+            },
+            {
+                email_type: 'followup_1',
+                subject: 'Tattoo Gutschein - Schnell aktivieren!',
+                template_name: 'followup-1-1hour',
+                scheduled_at: new Date(now.getTime() + 1 * 60 * 60 * 1000), // 1 hour - FIRST follow-up
             },
             {
                 email_type: 'followup_2',
                 subject: 'Tattoo Gutschein',
                 template_name: 'followup-2-8hours',
-                scheduled_at: new Date(now.getTime() + 8 * 60 * 60 * 1000), // 8 hours
+                scheduled_at: new Date(now.getTime() + 8 * 60 * 60 * 1000), // 8 hours - SECOND follow-up
             },
             {
                 email_type: 'followup_3',
                 subject: 'Tattoo Gutschein',
                 template_name: 'followup-3-24hours',
-                scheduled_at: new Date(now.getTime() + 24 * 60 * 60 * 1000), // 24 hours
+                scheduled_at: new Date(now.getTime() + 24 * 60 * 60 * 1000), // 24 hours - THIRD follow-up
             },
             {
                 email_type: 'followup_4',
                 subject: 'Tattoo Überraschung',
                 template_name: 'followup-4-3days',
-                scheduled_at: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days
+                scheduled_at: new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000), // 3 days - FOURTH follow-up
             },
         ];
         const client = await database_1.pool.connect();
@@ -90,7 +96,7 @@ class EmailQueueService {
                 ]);
             }
             await client.query('COMMIT');
-            console.log(`✅ Scheduled 4 follow-up emails for lead #${lead.id} (${lead.email})`);
+            console.log(`✅ Scheduled 5 emails (1 confirmation + 4 follow-ups) for lead #${lead.id} (${lead.email})`);
         }
         catch (error) {
             await client.query('ROLLBACK');

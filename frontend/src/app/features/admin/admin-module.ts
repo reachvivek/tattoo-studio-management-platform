@@ -8,6 +8,8 @@ import { SharedModule } from '../../shared/shared-module';
 import { Login } from './pages/login/login';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { LeadDetail } from './pages/lead-detail/lead-detail';
+import { Analytics } from './pages/analytics/analytics';
+import { AdminLayout } from './layout/admin-layout';
 import { authInterceptor } from './interceptors/auth-interceptor';
 
 
@@ -15,7 +17,9 @@ import { authInterceptor } from './interceptors/auth-interceptor';
   declarations: [
     Login,
     Dashboard,
-    LeadDetail
+    LeadDetail,
+    Analytics,
+    AdminLayout
   ],
   imports: [
     CommonModule,

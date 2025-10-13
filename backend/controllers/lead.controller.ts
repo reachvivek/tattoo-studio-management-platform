@@ -50,10 +50,20 @@ export class LeadController {
 
   async getAll(req: Request, res: Response) {
     try {
-      const leads = await leadService.getLeads();
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 20;
+
+      const result = await leadService.getLeads(page, limit);
       res.json({
         success: true,
-        data: leads
+        data: result.leads,
+        pagination: {
+          page: result.page,
+          limit: limit,
+          total: result.total,
+          totalPages: result.totalPages
+        },
+        statusCounts: result.statusCounts
       });
     } catch (error: any) {
       res.status(500).json({

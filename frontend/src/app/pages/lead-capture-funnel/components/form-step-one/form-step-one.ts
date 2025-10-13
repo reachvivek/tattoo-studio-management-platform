@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { LeadService } from '../../../../core/services/lead';
 import { LeadCaptureStateService } from '../../services/lead-capture-state.service';
 import { CreateLeadRequest } from '../../../../core/models/lead.model';
+import { AnalyticsTracking } from '../../../../core/services/analytics-tracking';
+import { MetaPixel } from '../../../../core/services/meta-pixel';
 
 @Component({
   selector: 'app-form-step-one',
@@ -18,15 +20,22 @@ export class FormStepOne implements OnInit {
   selectedFiles: File[] = [];
   isLoading = false;
   error = '';
+  private formStartTracked = false;
 
   constructor(
     private fb: FormBuilder,
     private leadService: LeadService,
     private leadCaptureState: LeadCaptureStateService,
-    private router: Router
+    private router: Router,
+    private analyticsTracking: AnalyticsTracking,
+    private metaPixel: MetaPixel
   ) {}
 
   ngOnInit(): void {
+    // Track page view
+    this.analyticsTracking.trackPageView('Lead Form Page');
+    this.metaPixel.trackLandingPage();
+
     this.leadForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -37,6 +46,15 @@ export class FormStepOne implements OnInit {
       ],
       tattooDescription: [''], // Optional now
       optInChoice: ['yes'],
+    });
+
+    // Track form start when user interacts with any field
+    this.leadForm.valueChanges.subscribe(() => {
+      if (!this.formStartTracked) {
+        this.formStartTracked = true;
+        this.analyticsTracking.trackFormStart('Lead Form');
+        this.metaPixel.trackFormStart();
+      }
     });
   }
 
@@ -85,6 +103,15 @@ export class FormStepOne implements OnInit {
       const response = await this.leadService.createLead(leadData).toPromise();
 
       if (response?.success) {
+        // Track form submission
+        const sessionId = this.analyticsTracking.getSessionId();
+        this.analyticsTracking.trackFormSubmit('Lead Form', {
+          email: this.leadForm.value.email,
+          sessionId: sessionId
+        });
+        this.metaPixel.trackFormComplete(this.leadForm.value.email);
+        this.metaPixel.trackLeadWithValue(this.leadForm.value.email, 'organic', 50);
+
         // Store form data in shared service
         this.leadCaptureState.setLeadData({
           name: this.leadForm.value.name,

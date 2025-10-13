@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import { LeadCaptureStateService } from '../../services/lead-capture-state.service';
+import { AnalyticsTracking } from '../../../../core/services/analytics-tracking';
+import { MetaPixel } from '../../../../core/services/meta-pixel';
 
 interface WheelSector {
   color: string;
@@ -13,10 +15,14 @@ interface WheelSector {
   templateUrl: './spin-wheel.html',
   styleUrl: './spin-wheel.scss'
 })
-export class SpinWheelComponent implements AfterViewInit, OnDestroy {
+export class SpinWheelComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() spinComplete = new EventEmitter<string>();
 
-  constructor(private leadCaptureState: LeadCaptureStateService) {}
+  constructor(
+    private leadCaptureState: LeadCaptureStateService,
+    private analyticsTracking: AnalyticsTracking,
+    private metaPixel: MetaPixel
+  ) {}
   @ViewChild('wheelCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private ctx!: CanvasRenderingContext2D;
@@ -49,6 +55,12 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
   ];
 
   private arc = this.TAU / this.sectors.length;
+
+  ngOnInit(): void {
+    // Track wheel page view
+    this.analyticsTracking.trackWheelView();
+    this.metaPixel.trackWheelPageView();
+  }
 
   ngAfterViewInit(): void {
     const canvas = this.canvasRef.nativeElement;
@@ -109,6 +121,10 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
 
     this.isSpinning = true;
     this.angVel = 1; // Indicate spinning
+
+    // Track wheel spin
+    this.analyticsTracking.trackWheelSpin({ prize: '30%' });
+    this.metaPixel.trackWheelSpin('30% discount');
 
     // Start text shuffling independently
     this.startTextShuffle();
@@ -203,6 +219,10 @@ export class SpinWheelComponent implements AfterViewInit, OnDestroy {
     this.hasSpun = true;
     this.prizeText = sector.label === '30%' ? '30% RABATT!' : `${sector.label} RABATT!`;
     this.showConfetti = true;
+
+    // Track prize claim
+    this.analyticsTracking.trackPrizeClaim({ prize: '30%', discount: 30 });
+    this.metaPixel.trackPrizeClaim('30% discount', 30);
 
     // Store discount in shared service
     this.leadCaptureState.setDiscount(30);

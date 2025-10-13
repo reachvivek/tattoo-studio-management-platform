@@ -1,36 +1,23 @@
 <div class="dashboard-container">
-  <!-- Header -->
-  <header class="dashboard-header">
-    <div class="header-content">
-      <div class="header-title">
-        <h1>BookInk</h1>
-        <p>Lead Management</p>
-      </div>
-      <button (click)="logout()" class="logout-button">
-        Abmelden
-      </button>
-    </div>
-  </header>
-
   <!-- Main Content -->
   <main class="dashboard-main">
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-label">Gesamt Leads</div>
-        <div class="stat-value">{{ leads.length }}</div>
+        <div class="stat-value">{{ totalLeads }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Neue</div>
-        <div class="stat-value stat-blue">{{ (leads | filter:'status':'new').length }}</div>
+        <div class="stat-value stat-blue">{{ statusCounts.new }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Qualifiziert</div>
-        <div class="stat-value stat-purple">{{ (leads | filter:'status':'qualified').length }}</div>
+        <div class="stat-value stat-purple">{{ statusCounts.qualified }}</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Konvertiert</div>
-        <div class="stat-value stat-green">{{ (leads | filter:'status':'converted').length }}</div>
+        <div class="stat-value stat-green">{{ statusCounts.converted }}</div>
       </div>
     </div>
 
@@ -219,8 +206,61 @@
     </div>
 
     <div class="leads-count">
-      Zeige {{ filteredLeads.length }} von {{ leads.length }} Leads
+      Zeige {{ ((currentPage - 1) * pageSize) + 1 }} - {{ Math.min(currentPage * pageSize, totalLeads) }} von {{ totalLeads }} Leads
     </div>
+
+    <!-- Pagination Controls -->
+    @if (totalPages > 1) {
+      <div class="pagination-controls">
+        <button
+          (click)="previousPage()"
+          [disabled]="currentPage === 1"
+          class="pagination-button"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Vorherige
+        </button>
+
+        <div class="pagination-numbers">
+          @if (pages[0] > 1) {
+            <button (click)="goToPage(1)" class="page-number">1</button>
+            @if (pages[0] > 2) {
+              <span class="pagination-ellipsis">...</span>
+            }
+          }
+
+          @for (page of pages; track page) {
+            <button
+              (click)="goToPage(page)"
+              [class.active]="page === currentPage"
+              class="page-number"
+            >
+              {{ page }}
+            </button>
+          }
+
+          @if (pages[pages.length - 1] < totalPages) {
+            @if (pages[pages.length - 1] < totalPages - 1) {
+              <span class="pagination-ellipsis">...</span>
+            }
+            <button (click)="goToPage(totalPages)" class="page-number">{{ totalPages }}</button>
+          }
+        </div>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="pagination-button"
+        >
+          Nächste
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    }
   </main>
 
   <!-- Delete Confirmation Modal -->

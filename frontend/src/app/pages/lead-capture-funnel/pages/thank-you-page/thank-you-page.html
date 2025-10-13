@@ -76,6 +76,83 @@
           Sende uns also jetzt eine kurze Nachricht!
         </p>
       </div>
+
+      <!-- Terms Acceptance (Read-only, already accepted) -->
+      <div class="terms-acceptance">
+        <div class="terms-checkbox-wrapper">
+          <svg class="terms-checkmark" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" fill="#10B981" stroke="#34D399" stroke-width="2"/>
+            <path d="M8 12L11 15L16 9" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="terms-text">
+            Ich stimme den
+            <a href="javascript:void(0)" (click)="showTermsModal = true" class="terms-link">
+              Allgemeinen Geschäftsbedingungen
+            </a>
+            zu.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Terms & Conditions Modal -->
+<div class="terms-modal-overlay" *ngIf="showTermsModal" (click)="showTermsModal = false">
+  <div class="terms-modal" (click)="$event.stopPropagation()">
+    <div class="terms-modal-header">
+      <h2 class="terms-modal-title">Allgemeine Geschäftsbedingungen (AGB)</h2>
+      <button class="terms-close-btn" (click)="showTermsModal = false">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="terms-modal-content">
+      <h3 class="terms-section-title">BOOKINK</h3>
+
+      <div class="terms-section">
+        <h4>1. Geltungsbereich</h4>
+        <p>Diese Allgemeinen Geschäftsbedingungen gelten für alle Leistungen, die im Rahmen der Tätowierung zwischen dem vermittelten Partner Tattoostudio und dem Kunden vereinbart werden. Abweichende Bedingungen des Kunden haben keine Gültigkeit.</p>
+      </div>
+
+      <div class="terms-section">
+        <h4>2. Terminvereinbarung & Anzahlung</h4>
+        <ul>
+          <li>Eine Terminvereinbarung ist erst nach Eingang einer Anzahlung in Höhe von mindestens 50€ bzw. eines individuell vereinbarten Betrags verbindlich.</li>
+          <li>Mit Eingang der Anzahlung gilt der Termin als bestätigt.</li>
+          <li>Die Anzahlung wird auf den Gesamtpreis der Tattoo-Sitzung angerechnet.</li>
+        </ul>
+      </div>
+
+      <div class="terms-section">
+        <h4>3. Stornierung, Rücktritt, Nichterscheinen</h4>
+        <ul>
+          <li>Eine kostenfreie Stornierung oder Umbuchung des Termins ist nicht möglich, sobald die Anzahlung geleistet und der Termin bestätigt wurde.</li>
+          <li>Bei Absage oder Nichterscheinen zum vereinbarten Termin – unabhängig vom Grund – wird der volle Preis der Sitzung fällig.</li>
+          <li>In Ausnahmefällen kann nach schriftlicher Vereinbarung und Kulanz eine Umbuchung erfolgen, dies liegt allein im Ermessen des Studios.</li>
+          <li>Die Anzahlung wird bei Stornierung nicht erstattet – auch nicht anteilig.</li>
+        </ul>
+      </div>
+
+      <div class="terms-section">
+        <h4>4. Vorbereitung und Gesundheit</h4>
+        <ul>
+          <li>Der Kunde verpflichtet sich, alle relevanten gesundheitlichen Umstände im Voraus mitzuteilen. Dazu zählen insbesondere: Allergien, Blutkrankheiten, Hauterkrankungen, Einnahme blutverdünnender Mittel, Schwangerschaft etc.</li>
+          <li>Das vermittelte Studio behält sich vor, Termine aus medizinischen oder hygienischen Gründen abzulehnen oder zu verschieben.</li>
+        </ul>
+      </div>
+
+      <div class="terms-section">
+        <h4>5. Haftungsausschluss</h4>
+        <ul>
+          <li>Tätowierungen erfolgen auf eigenes Risiko. Das Vermittelte Studio sowie die Vermittlungsagentur übernimmt keine Haftung für allergische Reaktionen, Infektionen oder andere Komplikationen nach der Sitzung, sofern keine grobe Fahrlässigkeit oder Vorsatz nachweisbar ist.</li>
+          <li>Pflegehinweise werden dem Kunden ausgehändigt oder erklärt. Für mangelhafte Nachsorge seitens des Kunden übernimmt das Studio sowie die Vermittlungsagentur keine Verantwortung.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="terms-modal-footer">
+      <button class="terms-close-footer-btn" (click)="showTermsModal = false">Schließen</button>
     </div>
   </div>
 </div>

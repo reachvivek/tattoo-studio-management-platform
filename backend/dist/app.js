@@ -9,6 +9,7 @@ const path_1 = __importDefault(require("path"));
 const lead_routes_1 = __importDefault(require("./routes/lead.routes"));
 const upload_routes_1 = __importDefault(require("./routes/upload.routes"));
 const analytics_routes_1 = __importDefault(require("./routes/analytics.routes"));
+const analytics_detailed_routes_1 = __importDefault(require("./routes/analytics-detailed.routes"));
 const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const image_routes_1 = __importDefault(require("./routes/image.routes"));
 const email_test_routes_1 = __importDefault(require("./routes/email-test.routes"));
@@ -39,10 +40,11 @@ app.use((0, cors_1.default)({
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma'],
 }));
-app.use(express_1.default.json());
-app.use(express_1.default.urlencoded({ extended: true }));
+// Body parser with increased limits for image uploads (after compression: max 2MB per file, 5 files = 10MB)
+app.use(express_1.default.json({ limit: '15mb' }));
+app.use(express_1.default.urlencoded({ extended: true, limit: '15mb' }));
 app.use(logger_1.logger);
 // Serve uploaded files statically
 app.use('/uploads', express_1.default.static(path_1.default.join(__dirname, '../uploads')));
@@ -60,6 +62,7 @@ app.use(`${apiPrefix}/auth`, auth_routes_1.default);
 app.use(`${apiPrefix}/leads`, lead_routes_1.default);
 app.use(`${apiPrefix}/upload`, upload_routes_1.default);
 app.use(`${apiPrefix}/analytics`, analytics_routes_1.default);
+app.use(`${apiPrefix}/analytics-detailed`, analytics_detailed_routes_1.default);
 app.use(`${apiPrefix}/images`, image_routes_1.default); // Blob endpoint for images
 app.use(`${apiPrefix}/email-test`, email_test_routes_1.default); // Email testing endpoints
 app.use(`${apiPrefix}/queue`, queue_monitor_routes_1.default); // Queue monitoring endpoints

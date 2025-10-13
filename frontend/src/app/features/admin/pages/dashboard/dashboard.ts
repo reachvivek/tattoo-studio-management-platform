@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth } from '../../services/auth';
 import { Lead, LeadData } from '../../services/lead';
 
 @Component({
@@ -22,6 +21,22 @@ export class Dashboard implements OnInit {
   toastMessage = '';
   toastType: 'success' | 'error' = 'success';
 
+  // Pagination
+  currentPage = 1;
+  pageSize = 20;
+  totalLeads = 0;
+  totalPages = 0;
+  Math = Math;
+
+  // Status counts from API
+  statusCounts = {
+    new: 0,
+    contacted: 0,
+    qualified: 0,
+    converted: 0,
+    rejected: 0
+  };
+
   // Bulk selection
   selectedLeads = new Set<number>();
   showBulkDeleteModal = false;
@@ -38,7 +53,6 @@ export class Dashboard implements OnInit {
 
   constructor(
     private leadService: Lead,
-    private authService: Auth,
     private router: Router
   ) {}
 
@@ -46,12 +60,21 @@ export class Dashboard implements OnInit {
     this.loadLeads();
   }
 
-  loadLeads(): void {
+  loadLeads(page: number = 1): void {
     this.isLoading = true;
-    this.leadService.getAll().subscribe({
+    this.currentPage = page;
+
+    this.leadService.getAll(page, this.pageSize).subscribe({
       next: (response) => {
         if (response.success) {
           this.leads = response.data;
+          if (response.pagination) {
+            this.totalLeads = response.pagination.total;
+            this.totalPages = response.pagination.totalPages;
+          }
+          if (response.statusCounts) {
+            this.statusCounts = response.statusCounts;
+          }
           this.applyFilters();
         }
         this.isLoading = false;
@@ -86,11 +109,6 @@ export class Dashboard implements OnInit {
 
   viewLead(id: number): void {
     this.router.navigate(['/admin/leads', id]);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/admin/login']);
   }
 
   getStatusBadgeClass(status: string): string {
@@ -231,5 +249,43 @@ export class Dashboard implements OnInit {
         this.showToastMessage('Fehler beim Löschen der Leads. Bitte versuchen Sie es erneut.', 'error');
       }
     });
+  }
+
+  // Pagination methods
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.loadLeads(this.currentPage + 1);
+      this.selectedLeads.clear();
+    }
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.loadLeads(this.currentPage - 1);
+      this.selectedLeads.clear();
+    }
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.loadLeads(page);
+      this.selectedLeads.clear();
+    }
+  }
+
+  get pages(): number[] {
+    const pages: number[] = [];
+    const maxVisible = 5;
+    let start = Math.max(1, this.currentPage - Math.floor(maxVisible / 2));
+    let end = Math.min(this.totalPages, start + maxVisible - 1);
+
+    if (end - start < maxVisible - 1) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
   }
 }
