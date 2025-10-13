@@ -67,9 +67,6 @@ export class FormStepOne implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    console.log('onSubmit called!');
-    console.log('Form value:', this.leadForm.value);
-
     // Validate form
     if (this.leadForm.invalid) {
       Object.keys(this.leadForm.controls).forEach((key) => {

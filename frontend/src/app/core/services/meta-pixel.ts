@@ -27,9 +27,6 @@ export class MetaPixel {
   trackEvent(eventName: string, parameters?: any): void {
     if (this.isPixelLoaded()) {
       window.fbq!('track', eventName, parameters);
-      console.log(`Meta Pixel: ${eventName}`, parameters);
-    } else {
-      console.warn('Meta Pixel not loaded');
     }
   }
 
@@ -37,9 +34,6 @@ export class MetaPixel {
   trackCustomEvent(eventName: string, parameters?: any): void {
     if (this.isPixelLoaded()) {
       window.fbq!('trackCustom', eventName, parameters);
-      console.log(`Meta Pixel Custom: ${eventName}`, parameters);
-    } else {
-      console.warn('Meta Pixel not loaded');
     }
   }
 

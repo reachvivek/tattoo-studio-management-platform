@@ -85,8 +85,8 @@ export class AnalyticsTracking {
 
     // Send session data to backend
     this.http.post(`${this.apiUrl}/create-session`, sessionData).subscribe({
-      next: () => console.log('Analytics session initialized'),
-      error: (err) => console.error('Failed to initialize analytics session:', err)
+      next: () => {},
+      error: () => {}
     });
   }
 
@@ -108,8 +108,8 @@ export class AnalyticsTracking {
     };
 
     this.http.post(`${this.apiUrl}/track-event`, event).subscribe({
-      next: () => console.log(`Event tracked: ${eventType}`),
-      error: (err) => console.error('Failed to track event:', err)
+      next: () => {},
+      error: () => {}
     });
   }
 
