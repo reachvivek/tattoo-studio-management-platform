@@ -327,13 +327,13 @@
 /* Contact Number Large */
 .contact-number-large {
   color: #10B981;
-  font-size: 0.85rem;
+  font-size: 0.65rem;
   font-weight: 700;
   margin: 0.4rem 0;
   letter-spacing: 0.05em;
 
   @media (min-width: 768px) {
-    font-size: 1.0625rem;
+    font-size: 0.8rem;
     margin: 0.65rem 0;
   }
 }
@@ -341,13 +341,13 @@
 /* Activation Subtext */
 .activation-subtext {
   color: #B0B0B0;
-  font-size: 0.6375rem;
+  font-size: 0.5rem;
   margin-bottom: 0.5rem;
   line-height: 1.4;
   font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
-    font-size: 0.7225rem;
+    font-size: 0.6rem;
     margin-bottom: 0.75rem;
   }
 }
