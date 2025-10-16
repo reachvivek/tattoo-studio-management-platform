@@ -162,24 +162,24 @@
   font-size: 1.125rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.35rem;
   line-height: 1.2;
   letter-spacing: -0.02em;
 
   @media (min-width: 768px) {
     font-size: 1.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 }
 
 /* Prize Section - Integrated */
 .prize-section {
-  margin: 0.75rem 0;
+  margin: 0.35rem 0 0.5rem 0;
   position: relative;
   z-index: 1;
 
   @media (min-width: 768px) {
-    margin: 1.25rem 0;
+    margin: 0.5rem 0 0.75rem 0;
   }
 }
 
@@ -226,13 +226,15 @@
 .activation-text {
   color: #B0B0B0;
   font-size: 0.8rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.35rem;
   line-height: 1.4;
   font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
     font-size: 0.9rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -329,12 +331,12 @@
   color: #10B981;
   font-size: 0.65rem;
   font-weight: 700;
-  margin: 0.4rem 0;
+  margin: 0.25rem 0 0.5rem 0;
   letter-spacing: 0.05em;
 
   @media (min-width: 768px) {
     font-size: 0.8rem;
-    margin: 0.65rem 0;
+    margin: 0.35rem 0 0.75rem 0;
   }
 }
 
@@ -342,19 +344,21 @@
 .activation-subtext {
   color: #B0B0B0;
   font-size: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
   line-height: 1.4;
   font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
     font-size: 0.6rem;
-    margin-bottom: 0.75rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.35rem;
   }
 }
 
 /* Info Notice - Integrated */
 .info-notice {
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   margin-bottom: 0.5rem;
   padding: 0;
   background: transparent;
@@ -364,7 +368,7 @@
   z-index: 1;
 
   @media (min-width: 768px) {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
     margin-bottom: 0.75rem;
     padding: 0;
   }
@@ -392,7 +396,7 @@
 
 .notice-cta {
   color: #10B981;
-  margin: 0.4rem 0 0 0;
+  margin: 0.25rem 0 0 0;
   line-height: 1.4;
   font-size: 0.75rem;
   font-weight: 600;
@@ -402,6 +406,7 @@
 @media (min-width: 768px) {
   .notice-cta {
     font-size: 0.8rem;
+    margin: 0.35rem 0 0 0;
   }
 }
 
@@ -444,14 +449,14 @@
 
 /* Terms Acceptance Section */
 .terms-acceptance {
-  margin-top: 0.75rem;
+  margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
   background: rgba(26, 26, 26, 0.3);
   border-radius: 0.5rem;
   border: 1px solid rgba(16, 185, 129, 0.15);
 
   @media (min-width: 768px) {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     padding: 0.625rem 1rem;
   }
 }
