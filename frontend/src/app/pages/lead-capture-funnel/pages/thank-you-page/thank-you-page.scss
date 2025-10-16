@@ -34,7 +34,7 @@
   background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(15, 15, 15, 0.98) 100%);
   border: 2px solid #10B981;
   border-radius: 1.25rem;
-  padding: 1.25rem 1rem;
+  padding: 0.75rem 0.75rem;
   box-shadow:
     0 20px 60px rgba(16, 185, 129, 0.4),
     inset 0 1px 0 rgba(16, 185, 129, 0.15);
@@ -43,7 +43,7 @@
   overflow: hidden;
 
   @media (min-width: 768px) {
-    padding: 2rem 2rem;
+    padding: 1.25rem 1.5rem;
     border-radius: 1.5rem;
   }
 }
