@@ -191,6 +191,7 @@
   line-height: 1.2;
   position: relative;
   z-index: 1;
+  font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
     font-size: 0.95rem;
@@ -227,6 +228,7 @@
   font-size: 0.8rem;
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
     font-size: 0.9rem;
@@ -325,13 +327,13 @@
 /* Contact Number Large */
 .contact-number-large {
   color: #10B981;
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 700;
   margin: 0.4rem 0;
   letter-spacing: 0.05em;
 
   @media (min-width: 768px) {
-    font-size: 1.25rem;
+    font-size: 1.0625rem;
     margin: 0.65rem 0;
   }
 }
@@ -339,12 +341,13 @@
 /* Activation Subtext */
 .activation-subtext {
   color: #B0B0B0;
-  font-size: 0.75rem;
+  font-size: 0.6375rem;
   margin-bottom: 0.5rem;
   line-height: 1.4;
+  font-family: 'Poppins', sans-serif;
 
   @media (min-width: 768px) {
-    font-size: 0.85rem;
+    font-size: 0.7225rem;
     margin-bottom: 0.75rem;
   }
 }
@@ -370,6 +373,7 @@
   margin: 0;
   line-height: 1.4;
   font-size: 0.7rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -390,6 +394,7 @@
   line-height: 1.4;
   font-size: 0.75rem;
   font-weight: 600;
+  font-family: 'Poppins', sans-serif;
 }
 
 @media (min-width: 768px) {
