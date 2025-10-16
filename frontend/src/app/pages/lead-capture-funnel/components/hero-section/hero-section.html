@@ -6,28 +6,8 @@
 
     <!-- Content Wrapper -->
     <div class="flex-grow flex flex-col justify-center">
-      <!-- Text Content - Top -->
-      <div class="hero-content text-center" style="margin-bottom: 3rem;">
-        <div class="hero-badge inline-block bg-[#1A1A1A] border border-[#10B981]/30 rounded-full" style="padding: 0.375rem 1.25rem; margin-bottom: 2rem;">
-          <span style="font-size: 0.7rem;" class="text-[#10B981] font-medium uppercase tracking-widest">Limitiertes Angebot</span>
-        </div>
-
-        <h1 class="hero-title text-4xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-4" style="margin-bottom: 2rem;">
-          SICHERE DIR JETZT DEIN
-          <span class="hero-subtitle block bg-gradient-to-r from-[#10B981] to-[#059669] bg-clip-text text-transparent" style="margin-top: 1rem;">
-            KOSTENLOSES TATTOO
-          </span>
-        </h1>
-
-        <div class="flex justify-center">
-          <p class="hero-description text-base sm:text-lg text-[#B0B0B0] max-w-2xl px-4 leading-relaxed" style="text-align: center;">
-            Täglich werden 3 Teilnehmer ausgewählt die ein gratis Tattoo ihrer Wahl erhalten
-          </p>
-        </div>
-      </div>
-
-      <!-- Tattoo Gallery - Below Text -->
-      <div class="hero-gallery-wrapper flex justify-center items-center">
+      <!-- Tattoo Gallery - On top for mobile, below text for desktop -->
+      <div class="hero-gallery-wrapper flex justify-center items-center order-1 lg:order-2" style="margin-bottom: 3rem;">
         <div class="hero-gallery grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 max-w-3xl">
           <div class="aspect-square rounded-xl overflow-hidden border-2 border-[#10B981]/20 transform hover:scale-105 transition-transform duration-300 shadow-2xl">
             <img
@@ -50,6 +30,22 @@
               class="w-full h-full object-cover"
             />
           </div>
+        </div>
+      </div>
+
+      <!-- Text Content - Below gallery for mobile, above gallery for desktop -->
+      <div class="hero-content text-center order-2 lg:order-1" style="margin-bottom: 3rem;">
+        <h1 class="hero-title text-4xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight px-4" style="margin-bottom: 2rem;">
+          SICHERE DIR JETZT DEIN
+          <span class="hero-subtitle block bg-gradient-to-r from-[#10B981] to-[#059669] bg-clip-text text-transparent" style="margin-top: 1rem;">
+            KOSTENLOSES TATTOO
+          </span>
+        </h1>
+
+        <div class="flex justify-center">
+          <p class="hero-description text-base sm:text-lg text-[#B0B0B0] max-w-2xl px-4 leading-relaxed" style="text-align: center;">
+            Täglich werden 3 Teilnehmer ausgewählt die ein gratis Tattoo ihrer Wahl erhalten
+          </p>
         </div>
       </div>
     </div>
